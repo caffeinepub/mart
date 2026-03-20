@@ -19,7 +19,11 @@ export function HomePage() {
   const navigate = useNavigate();
 
   const featuredProducts = SAMPLE_PRODUCTS.filter((p) => p.isFeatured);
-  const dealProducts = SAMPLE_PRODUCTS.filter((p) => p.isDeal);
+  const dealProducts = SAMPLE_PRODUCTS.filter((p) => p.isDeal && !p.isFeatured);
+  const dealsToShow =
+    dealProducts.length > 0
+      ? dealProducts
+      : SAMPLE_PRODUCTS.filter((p) => p.isDeal);
 
   const handleFindStore = () => {
     navigate({ to: "/stores", search: { q: pinCode } });
@@ -271,7 +275,7 @@ export function HomePage() {
             </Link>
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-            {dealProducts.map((product, idx) => (
+            {dealsToShow.map((product, idx) => (
               <motion.div
                 key={product.id}
                 initial={{ opacity: 0, y: 20 }}

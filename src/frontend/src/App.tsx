@@ -1,6 +1,8 @@
 import { Layout } from "@/components/Layout";
 import { Toaster } from "@/components/ui/sonner";
 import { CartProvider } from "@/context/CartContext";
+import { ProductsProvider } from "@/context/ProductsContext";
+import { StoresProvider } from "@/context/StoresContext";
 import { AdminPage } from "@/pages/AdminPage";
 import { CartPage } from "@/pages/CartPage";
 import { HomePage } from "@/pages/HomePage";
@@ -87,10 +89,14 @@ declare module "@tanstack/react-router" {
 export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <CartProvider>
-        <RouterProvider router={router} />
-        <Toaster richColors position="top-right" />
-      </CartProvider>
+      <ProductsProvider>
+        <StoresProvider>
+          <CartProvider>
+            <RouterProvider router={router} />
+            <Toaster richColors position="top-right" />
+          </CartProvider>
+        </StoresProvider>
+      </ProductsProvider>
     </QueryClientProvider>
   );
 }

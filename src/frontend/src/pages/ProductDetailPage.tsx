@@ -79,9 +79,18 @@ export function ProductDetailPage() {
         <motion.div
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
-          className="bg-gradient-to-br from-secondary to-muted rounded-xl flex items-center justify-center min-h-[320px] border border-border relative"
+          className="bg-gradient-to-br from-secondary to-muted rounded-xl flex items-center justify-center min-h-[320px] border border-border relative overflow-hidden"
         >
-          <span className="text-[120px]">{product.emoji}</span>
+          {product.image ? (
+            <img
+              src={product.image}
+              alt={product.name}
+              className="w-full h-full object-cover absolute inset-0"
+              style={{ minHeight: 320 }}
+            />
+          ) : (
+            <span className="text-[120px]">{product.emoji}</span>
+          )}
           {product.badge && (
             <Badge className="absolute top-4 left-4 bg-accent text-white border-0 text-sm">
               {product.badge}

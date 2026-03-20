@@ -1,13 +1,15 @@
 import { ProductCard } from "@/components/ProductCard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { CATEGORIES, SAMPLE_PRODUCTS } from "@/data/sampleData";
+import { useProducts } from "@/context/ProductsContext";
+import { CATEGORIES } from "@/data/sampleData";
 import { useSearch } from "@tanstack/react-router";
 import { Search, SlidersHorizontal } from "lucide-react";
 import { motion } from "motion/react";
 import { useEffect, useMemo, useState } from "react";
 
 export function ProductsPage() {
+  const { products } = useProducts();
   const search = useSearch({ from: "/products" }) as {
     category?: string;
     q?: string;
@@ -20,31 +22,29 @@ export function ProductsPage() {
   );
   const [sortBy, setSortBy] = useState("default");
 
-  // Sync state when URL params change (e.g. clicking "All Deals" from homepage)
   useEffect(() => {
     setActiveCategory(search.category || "all");
     setActiveSearch(search.q || "");
     setLocalSearch(search.q || "");
-    // When deals param changes, reset category filter to show all deals
     if (search.deals === "true") {
       setActiveCategory("all");
     }
   }, [search.category, search.q, search.deals]);
 
   const filtered = useMemo(() => {
-    let products = SAMPLE_PRODUCTS;
+    let list = products;
 
     if (search.deals === "true") {
-      products = products.filter((p) => p.isDeal);
+      list = list.filter((p) => p.isDeal);
     }
 
     if (activeCategory && activeCategory !== "all") {
-      products = products.filter((p) => p.category === activeCategory);
+      list = list.filter((p) => p.category === activeCategory);
     }
 
     if (activeSearch) {
       const q = activeSearch.toLowerCase();
-      products = products.filter(
+      list = list.filter(
         (p) =>
           p.name.toLowerCase().includes(q) ||
           p.nameHindi.includes(q) ||
@@ -53,11 +53,11 @@ export function ProductsPage() {
     }
 
     if (sortBy === "price-asc")
-      products = [...products].sort((a, b) => a.price - b.price);
+      list = [...list].sort((a, b) => a.price - b.price);
     if (sortBy === "price-desc")
-      products = [...products].sort((a, b) => b.price - a.price);
+      list = [...list].sort((a, b) => b.price - a.price);
     if (sortBy === "discount") {
-      products = [...products].sort((a, b) => {
+      list = [...list].sort((a, b) => {
         const da = a.originalPrice
           ? (a.originalPrice - a.price) / a.originalPrice
           : 0;
@@ -68,8 +68,8 @@ export function ProductsPage() {
       });
     }
 
-    return products;
-  }, [activeCategory, activeSearch, sortBy, search.deals]);
+    return list;
+  }, [products, activeCategory, activeSearch, sortBy, search.deals]);
 
   const handleSearch = () => setActiveSearch(localSearch);
 
@@ -77,7 +77,6 @@ export function ProductsPage() {
     <div className="max-w-7xl mx-auto px-4 py-8" data-ocid="products.page">
       <h1 className="section-title mb-6">All Products | सभी उत्पाद</h1>
 
-      {/* Deals Banner */}
       {search.deals === "true" && (
         <motion.div
           initial={{ opacity: 0, y: -10 }}
@@ -97,7 +96,6 @@ export function ProductsPage() {
         </motion.div>
       )}
 
-      {/* Search + Sort Bar */}
       <div className="flex flex-col sm:flex-row gap-3 mb-6">
         <div className="flex gap-0 flex-1">
           <Input
@@ -132,7 +130,6 @@ export function ProductsPage() {
         </div>
       </div>
 
-      {/* Category Filter — horizontally scrollable */}
       <div className="flex gap-2 overflow-x-auto pb-1 mb-6 flex-nowrap">
         {CATEGORIES.map((cat) => (
           <button
@@ -151,7 +148,6 @@ export function ProductsPage() {
         ))}
       </div>
 
-      {/* Results */}
       {filtered.length === 0 ? (
         <div className="text-center py-16" data-ocid="products.empty_state">
           <div className="text-5xl mb-4">🔍</div>

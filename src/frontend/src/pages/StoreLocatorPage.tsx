@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { SAMPLE_STORES } from "@/data/sampleData";
-import { useAllStores } from "@/hooks/useQueries";
+import { useStores } from "@/context/StoresContext";
 import { useSearch } from "@tanstack/react-router";
 import { Clock, MapPin, Phone, Search } from "lucide-react";
 import { motion } from "motion/react";
@@ -12,32 +11,18 @@ export function StoreLocatorPage() {
   const [query, setQuery] = useState(search.q || "");
   const [activeQuery, setActiveQuery] = useState(search.q || "");
 
-  const { data: backendStores } = useAllStores();
-
-  const allStores = useMemo(() => {
-    if (backendStores && backendStores.length > 0) {
-      return backendStores.map((s, i) => ({
-        id: i + 100,
-        city: s.city,
-        address: s.address,
-        phone: s.phone,
-        pincode: s.pincode,
-        timings: "9:00 AM – 9:00 PM",
-      }));
-    }
-    return SAMPLE_STORES;
-  }, [backendStores]);
+  const { stores } = useStores();
 
   const filtered = useMemo(() => {
-    if (!activeQuery) return allStores;
+    if (!activeQuery) return stores;
     const q = activeQuery.toLowerCase();
-    return allStores.filter(
+    return stores.filter(
       (s) =>
         s.city.toLowerCase().includes(q) ||
         s.pincode.includes(q) ||
         s.address.toLowerCase().includes(q),
     );
-  }, [allStores, activeQuery]);
+  }, [stores, activeQuery]);
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-8" data-ocid="stores.page">
@@ -47,7 +32,7 @@ export function StoreLocatorPage() {
           अपने नज़दीकी धर्मा Mart स्टोर को खोजें
         </p>
         <p className="text-sm text-muted-foreground">
-          {allStores.length} stores across India
+          {stores.length} stores across India
         </p>
       </div>
 

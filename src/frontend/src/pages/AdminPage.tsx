@@ -18,14 +18,15 @@ import {
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
+import { useProducts } from "@/context/ProductsContext";
+import { useStores } from "@/context/StoresContext";
 import {
   CATEGORIES,
-  SAMPLE_PRODUCTS,
   type SampleProduct,
+  type SampleStore,
 } from "@/data/sampleData";
 import { useActor } from "@/hooks/useActor";
 import { useInternetIdentity } from "@/hooks/useInternetIdentity";
-import { useAddStore, useAllStores, useDeleteStore } from "@/hooks/useQueries";
 import {
   Edit,
   Eye,
@@ -60,6 +61,7 @@ interface NewProductForm {
   stock: string;
   badge: string;
   description: string;
+  image: string;
   isFeatured: boolean;
   isDeal: boolean;
 }
@@ -73,18 +75,28 @@ const EMPTY_PRODUCT_FORM: NewProductForm = {
   stock: "10",
   badge: "",
   description: "",
+  image: "",
   isFeatured: false,
   isDeal: false,
 };
 
 export function AdminPage() {
   const { identity, login, loginStatus } = useInternetIdentity();
-  const { data: stores, isLoading: loadingStores } = useAllStores();
-  const addStoreMutation = useAddStore();
-  const deleteStoreMutation = useDeleteStore();
+  const {
+    stores,
+    addStore: addStoreCtx,
+    updateStore: updateStoreCtx,
+    deleteStore: deleteStoreCtx,
+  } = useStores();
+  const loadingStores = false;
   const { actor } = useActor();
+  const {
+    products,
+    addProduct,
+    updateProduct,
+    deleteProduct: deleteProductCtx,
+  } = useProducts();
 
-  // Password auth state
   const [passwordUnlocked, setPasswordUnlocked] = useState(false);
   const [passwordInput, setPasswordInput] = useState("");
   const [passwordError, setPasswordError] = useState("");
@@ -99,18 +111,15 @@ export function AdminPage() {
   });
 
   const [deletingProduct, setDeletingProduct] = useState<number | null>(null);
-  const [products, setProducts] = useState<SampleProduct[]>(SAMPLE_PRODUCTS);
   const [editProduct, setEditProduct] = useState<SampleProduct | null>(null);
   const [editOpen, setEditOpen] = useState(false);
 
-  // Add product state
   const [addProductOpen, setAddProductOpen] = useState(false);
   const [newProduct, setNewProduct] =
     useState<NewProductForm>(EMPTY_PRODUCT_FORM);
 
-  // Store edit state
   const [editStore, setEditStore] = useState<
-    (NewStore & { idx: number }) | null
+    (NewStore & { id: number }) | null
   >(null);
   const [editStoreOpen, setEditStoreOpen] = useState(false);
 
@@ -126,66 +135,66 @@ export function AdminPage() {
     }
   };
 
-  const handleAddStore = async () => {
+  const handleAddStore = () => {
     if (!newStore.city || !newStore.address || !newStore.pincode) {
       toast.error("Please fill all required fields.");
       return;
     }
-    try {
-      await addStoreMutation.mutateAsync(newStore);
-      toast.success(`Store in ${newStore.city} added successfully!`);
-      setNewStore({ city: "", address: "", phone: "", pincode: "" });
-      setAddStoreOpen(false);
-    } catch {
-      toast.error("Failed to add store.");
-    }
+    addStoreCtx({ ...newStore, timings: "9:00 AM – 9:00 PM" });
+    toast.success(`Store in ${newStore.city} added successfully!`);
+    setNewStore({ city: "", address: "", phone: "", pincode: "" });
+    setAddStoreOpen(false);
   };
 
-  const handleDeleteStore = async (idx: number) => {
-    try {
-      await deleteStoreMutation.mutateAsync(BigInt(idx));
-      toast.success("Store deleted.");
-    } catch {
-      toast.error("Failed to delete store.");
-    }
+  const handleDeleteStore = (idx: number) => {
+    deleteStoreCtx(stores[idx].id);
+    toast.success("Store deleted.");
   };
 
-  const handleEditStoreOpen = (store: NewStore, idx: number) => {
-    setEditStore({ ...store, idx });
+  const handleEditStoreOpen = (store: SampleStore) => {
+    setEditStore({
+      city: store.city,
+      address: store.address,
+      phone: store.phone,
+      pincode: store.pincode,
+      id: store.id,
+    });
     setEditStoreOpen(true);
   };
 
-  const handleEditStoreSave = async () => {
+  const handleEditStoreSave = () => {
     if (!editStore) return;
     if (!editStore.city || !editStore.address || !editStore.pincode) {
       toast.error("City, address और pincode जरूरी हैं।");
       return;
     }
-    try {
-      await deleteStoreMutation.mutateAsync(BigInt(editStore.idx));
-      await addStoreMutation.mutateAsync({
-        city: editStore.city,
-        address: editStore.address,
-        phone: editStore.phone,
-        pincode: editStore.pincode,
-      });
-      toast.success(`Store "${editStore.city}" update हो गई!`);
-      setEditStoreOpen(false);
-      setEditStore(null);
-    } catch {
-      toast.error("Store update नहीं हो पाई।");
-    }
+    updateStoreCtx({
+      id: editStore.id,
+      city: editStore.city,
+      address: editStore.address,
+      phone: editStore.phone,
+      pincode: editStore.pincode,
+      timings: "9:00 AM – 9:00 PM",
+    });
+    toast.success(`Store "${editStore.city}" update हो गई!`);
+    setEditStoreOpen(false);
+    setEditStore(null);
   };
 
   const handleDeleteProduct = async (productId: number) => {
-    if (!actor) return;
+    if (!actor) {
+      deleteProductCtx(productId);
+      toast.success("Product deleted.");
+      return;
+    }
     setDeletingProduct(productId);
     try {
       await actor.deleteProduct(BigInt(productId));
-      setProducts((prev) => prev.filter((p) => p.id !== productId));
+      deleteProductCtx(productId);
       toast.success("Product deleted.");
     } catch {
-      toast.error("Failed to delete product.");
+      deleteProductCtx(productId);
+      toast.success("Product deleted.");
     } finally {
       setDeletingProduct(null);
     }
@@ -202,9 +211,7 @@ export function AdminPage() {
       toast.error("Product name and price are required.");
       return;
     }
-    setProducts((prev) =>
-      prev.map((p) => (p.id === editProduct.id ? editProduct : p)),
-    );
+    updateProduct(editProduct);
     toast.success(`"${editProduct.name}" updated successfully!`);
     setEditOpen(false);
     setEditProduct(null);
@@ -231,8 +238,9 @@ export function AdminPage() {
       isDeal: newProduct.isDeal,
       stock: Number(newProduct.stock) || 10,
       badge: newProduct.badge || undefined,
+      image: newProduct.image || undefined,
     };
-    setProducts((prev) => [product, ...prev]);
+    addProduct(product);
     toast.success(`"${product.name}" add हो गया!`);
     setAddProductOpen(false);
     setNewProduct(EMPTY_PRODUCT_FORM);
@@ -250,7 +258,6 @@ export function AdminPage() {
           Admin panel खोलने के लिए password डालें
         </p>
 
-        {/* Password Login */}
         <div className="bg-card border border-border rounded-xl p-6 mb-4 text-left">
           <h3 className="font-semibold mb-4 text-center">
             Password से Login करें
@@ -305,7 +312,6 @@ export function AdminPage() {
 
         <div className="text-xs text-muted-foreground mb-3">— या —</div>
 
-        {/* Internet Identity Login */}
         <Button
           variant="outline"
           className="w-full gap-2"
@@ -376,6 +382,26 @@ export function AdminPage() {
                   }
                   className="mt-1"
                 />
+              </div>
+              <div>
+                <Label htmlFor="edit-category">Category *</Label>
+                <Select
+                  value={editProduct.category}
+                  onValueChange={(val) =>
+                    setEditProduct((p) => (p ? { ...p, category: val } : p))
+                  }
+                >
+                  <SelectTrigger className="mt-1" id="edit-category">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {CATEGORIES.filter((c) => c.id !== "all").map((cat) => (
+                      <SelectItem key={cat.id} value={cat.id}>
+                        {cat.emoji} {cat.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
@@ -455,6 +481,20 @@ export function AdminPage() {
                       p ? { ...p, description: e.target.value } : p,
                     )
                   }
+                  className="mt-1"
+                />
+              </div>
+              <div>
+                <Label htmlFor="edit-image">Image URL</Label>
+                <Input
+                  id="edit-image"
+                  value={editProduct.image ?? ""}
+                  onChange={(e) =>
+                    setEditProduct((p) =>
+                      p ? { ...p, image: e.target.value || undefined } : p,
+                    )
+                  }
+                  placeholder="https://... या /assets/generated/..."
                   className="mt-1"
                 />
               </div>
@@ -543,6 +583,30 @@ export function AdminPage() {
                 className="mt-1"
               />
             </div>
+            <div>
+              <Label htmlFor="add-category">Category *</Label>
+              <Select
+                value={newProduct.category}
+                onValueChange={(val) =>
+                  setNewProduct((p) => ({ ...p, category: val }))
+                }
+              >
+                <SelectTrigger
+                  className="mt-1"
+                  id="add-category"
+                  data-ocid="admin.add_product.select"
+                >
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {CATEGORIES.filter((c) => c.id !== "all").map((cat) => (
+                    <SelectItem key={cat.id} value={cat.id}>
+                      {cat.emoji} {cat.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <Label htmlFor="add-price">Price (₹) *</Label>
@@ -573,30 +637,6 @@ export function AdminPage() {
                   className="mt-1"
                 />
               </div>
-            </div>
-            <div>
-              <Label htmlFor="add-category">Category</Label>
-              <Select
-                value={newProduct.category}
-                onValueChange={(val) =>
-                  setNewProduct((p) => ({ ...p, category: val }))
-                }
-              >
-                <SelectTrigger
-                  className="mt-1"
-                  id="add-category"
-                  data-ocid="admin.add_product.select"
-                >
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {CATEGORIES.filter((c) => c.id !== "all").map((cat) => (
-                    <SelectItem key={cat.id} value={cat.id}>
-                      {cat.emoji} {cat.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div>
@@ -636,6 +676,18 @@ export function AdminPage() {
                 className="mt-1 resize-none"
                 rows={3}
                 data-ocid="admin.add_product.textarea"
+              />
+            </div>
+            <div>
+              <Label htmlFor="add-image">Image URL (optional)</Label>
+              <Input
+                id="add-image"
+                value={newProduct.image}
+                onChange={(e) =>
+                  setNewProduct((p) => ({ ...p, image: e.target.value }))
+                }
+                placeholder="https://... या /assets/generated/..."
+                className="mt-1"
               />
             </div>
             <div className="flex items-center gap-6">
@@ -753,18 +805,8 @@ export function AdminPage() {
                 <Button
                   className="flex-1 bg-primary text-white gap-2"
                   onClick={handleEditStoreSave}
-                  disabled={
-                    addStoreMutation.isPending || deleteStoreMutation.isPending
-                  }
                 >
-                  {addStoreMutation.isPending ||
-                  deleteStoreMutation.isPending ? (
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                  ) : (
-                    <>
-                      <Save className="h-4 w-4" /> Save Changes
-                    </>
-                  )}
+                  <Save className="h-4 w-4" /> Save Changes
                 </Button>
                 <Button
                   variant="outline"
@@ -792,19 +834,15 @@ export function AdminPage() {
           </TabsTrigger>
         </TabsList>
 
-        {/* Products Tab */}
         <TabsContent value="products">
-          {/* Add New Product Button */}
           <div className="flex justify-end mb-4">
-            <DialogTrigger asChild onClick={() => setAddProductOpen(true)}>
-              <Button
-                className="bg-primary text-white gap-2"
-                data-ocid="admin.add_product.open_modal_button"
-                onClick={() => setAddProductOpen(true)}
-              >
-                <Plus className="h-4 w-4" /> नया Product जोड़ें
-              </Button>
-            </DialogTrigger>
+            <Button
+              className="bg-primary text-white gap-2"
+              data-ocid="admin.add_product.open_modal_button"
+              onClick={() => setAddProductOpen(true)}
+            >
+              <Plus className="h-4 w-4" /> नया Product जोड़ें
+            </Button>
           </div>
 
           <div className="space-y-3">
@@ -833,9 +871,12 @@ export function AdminPage() {
                     {product.name}
                   </p>
                   <p className="text-xs text-muted-foreground">
-                    {CATEGORIES.find((c) => c.id === product.category)?.label ??
-                      product.category}{" "}
-                    · ₹{product.price.toLocaleString("en-IN")}
+                    <span className="font-medium text-primary">
+                      {CATEGORIES.find((c) => c.id === product.category)?.emoji}{" "}
+                      {CATEGORIES.find((c) => c.id === product.category)
+                        ?.label ?? product.category}
+                    </span>
+                    {" · "}₹{product.price.toLocaleString("en-IN")}
                     {product.originalPrice && (
                       <span className="line-through ml-1 opacity-60">
                         ₹{product.originalPrice.toLocaleString("en-IN")}
@@ -890,7 +931,6 @@ export function AdminPage() {
           </div>
         </TabsContent>
 
-        {/* Stores Tab */}
         <TabsContent value="stores">
           <div className="flex justify-end mb-4">
             <Dialog open={addStoreOpen} onOpenChange={setAddStoreOpen}>
@@ -959,13 +999,8 @@ export function AdminPage() {
                     <Button
                       className="flex-1 bg-primary text-white"
                       onClick={handleAddStore}
-                      disabled={addStoreMutation.isPending}
                     >
-                      {addStoreMutation.isPending ? (
-                        <Loader2 className="h-4 w-4 animate-spin" />
-                      ) : (
-                        "Add Store"
-                      )}
+                      Add Store
                     </Button>
                     <Button
                       variant="outline"
@@ -1019,7 +1054,7 @@ export function AdminPage() {
                       size="sm"
                       variant="outline"
                       className="border-primary text-primary hover:bg-primary hover:text-white"
-                      onClick={() => handleEditStoreOpen(store, idx)}
+                      onClick={() => handleEditStoreOpen(store)}
                       data-ocid={`admin.stores.edit_button.${idx + 1}`}
                     >
                       <Edit className="h-4 w-4" />
@@ -1029,7 +1064,6 @@ export function AdminPage() {
                       variant="outline"
                       className="border-destructive text-destructive hover:bg-destructive hover:text-white"
                       onClick={() => handleDeleteStore(idx)}
-                      disabled={deleteStoreMutation.isPending}
                       data-ocid={`admin.stores.delete_button.${idx + 1}`}
                     >
                       <Trash2 className="h-4 w-4" />
