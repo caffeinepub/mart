@@ -117,7 +117,7 @@ export function HomePage() {
         </div>
       </section>
 
-      {/* Product Categories */}
+      {/* Product Categories — scrollable row */}
       <section
         className="max-w-7xl mx-auto px-4 py-10"
         data-ocid="categories.section"
@@ -131,27 +131,28 @@ export function HomePage() {
             View All <ArrowRight className="h-4 w-4" />
           </Link>
         </div>
-        <div className="grid grid-cols-3 sm:grid-cols-6 gap-3">
+        <div className="flex gap-3 overflow-x-auto pb-2 -mx-1 px-1">
           {CATEGORIES.map((cat, idx) => (
             <motion.div
               key={cat.id}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: idx * 0.05 }}
+              transition={{ delay: idx * 0.04 }}
+              className="flex-shrink-0"
             >
               <Link
                 to="/products"
                 search={{ category: cat.id }}
-                className="flex flex-col items-center gap-2 bg-card rounded-xl p-4 border border-border shadow-sm hover:shadow-md hover:border-primary/30 transition-all group"
+                className="flex flex-col items-center gap-2 bg-card rounded-xl p-3 border border-border shadow-sm hover:shadow-md hover:border-primary/30 transition-all group min-w-[80px] w-[90px]"
                 data-ocid={`categories.item.${idx + 1}`}
               >
-                <span className="text-3xl group-hover:scale-110 transition-transform">
+                <span className="text-2xl group-hover:scale-110 transition-transform">
                   {cat.emoji}
                 </span>
-                <span className="text-xs font-semibold text-primary text-center uppercase leading-tight">
+                <span className="text-[10px] font-semibold text-primary text-center uppercase leading-tight">
                   {cat.label}
                 </span>
-                <span className="text-[10px] text-muted-foreground font-devanagari">
+                <span className="text-[9px] text-muted-foreground font-devanagari text-center leading-tight">
                   {cat.labelHindi}
                 </span>
               </Link>
@@ -264,6 +265,7 @@ export function HomePage() {
               to="/products"
               search={{ deals: "true" }}
               className="text-primary text-sm font-semibold hover:text-accent transition-colors flex items-center gap-1"
+              data-ocid="deals.all_deals.link"
             >
               All Deals <ArrowRight className="h-4 w-4" />
             </Link>

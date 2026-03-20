@@ -5,7 +5,7 @@ import { CATEGORIES, SAMPLE_PRODUCTS } from "@/data/sampleData";
 import { useSearch } from "@tanstack/react-router";
 import { Search, SlidersHorizontal } from "lucide-react";
 import { motion } from "motion/react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 export function ProductsPage() {
   const search = useSearch({ from: "/products" }) as {
@@ -19,6 +19,17 @@ export function ProductsPage() {
     search.category || "all",
   );
   const [sortBy, setSortBy] = useState("default");
+
+  // Sync state when URL params change (e.g. clicking "All Deals" from homepage)
+  useEffect(() => {
+    setActiveCategory(search.category || "all");
+    setActiveSearch(search.q || "");
+    setLocalSearch(search.q || "");
+    // When deals param changes, reset category filter to show all deals
+    if (search.deals === "true") {
+      setActiveCategory("all");
+    }
+  }, [search.category, search.q, search.deals]);
 
   const filtered = useMemo(() => {
     let products = SAMPLE_PRODUCTS;
@@ -66,6 +77,26 @@ export function ProductsPage() {
     <div className="max-w-7xl mx-auto px-4 py-8" data-ocid="products.page">
       <h1 className="section-title mb-6">All Products | सभी उत्पाद</h1>
 
+      {/* Deals Banner */}
+      {search.deals === "true" && (
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-destructive/10 border border-destructive/30 rounded-xl px-5 py-3 mb-6 flex items-center gap-3"
+          data-ocid="products.deals.panel"
+        >
+          <span className="text-2xl">🔥</span>
+          <div>
+            <p className="font-bold text-destructive text-base">
+              Today's Deals — Limited Time Offers
+            </p>
+            <p className="text-xs text-muted-foreground">
+              Grab the best deals before they're gone!
+            </p>
+          </div>
+        </motion.div>
+      )}
+
       {/* Search + Sort Bar */}
       <div className="flex flex-col sm:flex-row gap-3 mb-6">
         <div className="flex gap-0 flex-1">
@@ -101,14 +132,14 @@ export function ProductsPage() {
         </div>
       </div>
 
-      {/* Category Filter */}
-      <div className="flex gap-2 flex-wrap mb-6">
+      {/* Category Filter — horizontally scrollable */}
+      <div className="flex gap-2 overflow-x-auto pb-1 mb-6 flex-nowrap">
         {CATEGORIES.map((cat) => (
           <button
             type="button"
             key={cat.id}
             onClick={() => setActiveCategory(cat.id)}
-            className={`px-4 py-1.5 rounded-full text-xs font-bold border transition-colors uppercase ${
+            className={`flex-shrink-0 px-4 py-1.5 rounded-full text-xs font-bold border transition-colors uppercase ${
               activeCategory === cat.id
                 ? "bg-primary text-white border-primary"
                 : "bg-card border-border text-foreground hover:border-primary hover:text-primary"

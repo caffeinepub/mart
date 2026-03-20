@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Dialog,
   DialogContent,
@@ -8,7 +9,15 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Textarea } from "@/components/ui/textarea";
 import {
   CATEGORIES,
   SAMPLE_PRODUCTS,
@@ -19,6 +28,8 @@ import { useInternetIdentity } from "@/hooks/useInternetIdentity";
 import { useAddStore, useAllStores, useDeleteStore } from "@/hooks/useQueries";
 import {
   Edit,
+  Eye,
+  EyeOff,
   Loader2,
   Lock,
   MapPin,
@@ -31,6 +42,8 @@ import { motion } from "motion/react";
 import { useState } from "react";
 import { toast } from "sonner";
 
+const ADMIN_PASSWORD = "dharma@admin123";
+
 interface NewStore {
   city: string;
   address: string;
@@ -38,12 +51,44 @@ interface NewStore {
   pincode: string;
 }
 
+interface NewProductForm {
+  name: string;
+  nameHindi: string;
+  price: string;
+  originalPrice: string;
+  category: string;
+  stock: string;
+  badge: string;
+  description: string;
+  isFeatured: boolean;
+  isDeal: boolean;
+}
+
+const EMPTY_PRODUCT_FORM: NewProductForm = {
+  name: "",
+  nameHindi: "",
+  price: "",
+  originalPrice: "",
+  category: "electronics",
+  stock: "10",
+  badge: "",
+  description: "",
+  isFeatured: false,
+  isDeal: false,
+};
+
 export function AdminPage() {
   const { identity, login, loginStatus } = useInternetIdentity();
   const { data: stores, isLoading: loadingStores } = useAllStores();
   const addStoreMutation = useAddStore();
   const deleteStoreMutation = useDeleteStore();
   const { actor } = useActor();
+
+  // Password auth state
+  const [passwordUnlocked, setPasswordUnlocked] = useState(false);
+  const [passwordInput, setPasswordInput] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const [addStoreOpen, setAddStoreOpen] = useState(false);
   const [newStore, setNewStore] = useState<NewStore>({
@@ -57,6 +102,29 @@ export function AdminPage() {
   const [products, setProducts] = useState<SampleProduct[]>(SAMPLE_PRODUCTS);
   const [editProduct, setEditProduct] = useState<SampleProduct | null>(null);
   const [editOpen, setEditOpen] = useState(false);
+
+  // Add product state
+  const [addProductOpen, setAddProductOpen] = useState(false);
+  const [newProduct, setNewProduct] =
+    useState<NewProductForm>(EMPTY_PRODUCT_FORM);
+
+  // Store edit state
+  const [editStore, setEditStore] = useState<
+    (NewStore & { idx: number }) | null
+  >(null);
+  const [editStoreOpen, setEditStoreOpen] = useState(false);
+
+  const isLoggedIn = identity || passwordUnlocked;
+
+  const handlePasswordLogin = () => {
+    if (passwordInput === ADMIN_PASSWORD) {
+      setPasswordUnlocked(true);
+      setPasswordError("");
+      toast.success("Admin panel unlock हो गई!");
+    } else {
+      setPasswordError("Password गलत है। दोबारा try करें।");
+    }
+  };
 
   const handleAddStore = async () => {
     if (!newStore.city || !newStore.address || !newStore.pincode) {
@@ -79,6 +147,33 @@ export function AdminPage() {
       toast.success("Store deleted.");
     } catch {
       toast.error("Failed to delete store.");
+    }
+  };
+
+  const handleEditStoreOpen = (store: NewStore, idx: number) => {
+    setEditStore({ ...store, idx });
+    setEditStoreOpen(true);
+  };
+
+  const handleEditStoreSave = async () => {
+    if (!editStore) return;
+    if (!editStore.city || !editStore.address || !editStore.pincode) {
+      toast.error("City, address और pincode जरूरी हैं।");
+      return;
+    }
+    try {
+      await deleteStoreMutation.mutateAsync(BigInt(editStore.idx));
+      await addStoreMutation.mutateAsync({
+        city: editStore.city,
+        address: editStore.address,
+        phone: editStore.phone,
+        pincode: editStore.pincode,
+      });
+      toast.success(`Store "${editStore.city}" update हो गई!`);
+      setEditStoreOpen(false);
+      setEditStore(null);
+    } catch {
+      toast.error("Store update नहीं हो पाई।");
     }
   };
 
@@ -115,27 +210,105 @@ export function AdminPage() {
     setEditProduct(null);
   };
 
-  if (!identity) {
+  const handleAddProductSave = () => {
+    if (!newProduct.name || !newProduct.price) {
+      toast.error("Product का नाम और price जरूरी हैं।");
+      return;
+    }
+    const product: SampleProduct = {
+      id: Date.now(),
+      name: newProduct.name,
+      nameHindi: newProduct.nameHindi || newProduct.name,
+      description: newProduct.description,
+      price: Number(newProduct.price),
+      originalPrice: newProduct.originalPrice
+        ? Number(newProduct.originalPrice)
+        : undefined,
+      category: newProduct.category,
+      emoji:
+        CATEGORIES.find((c) => c.id === newProduct.category)?.emoji ?? "📦",
+      isFeatured: newProduct.isFeatured,
+      isDeal: newProduct.isDeal,
+      stock: Number(newProduct.stock) || 10,
+      badge: newProduct.badge || undefined,
+    };
+    setProducts((prev) => [product, ...prev]);
+    toast.success(`"${product.name}" add हो गया!`);
+    setAddProductOpen(false);
+    setNewProduct(EMPTY_PRODUCT_FORM);
+  };
+
+  if (!isLoggedIn) {
     return (
       <div
-        className="max-w-md mx-auto px-4 py-20 text-center"
+        className="max-w-md mx-auto px-4 py-16 text-center"
         data-ocid="admin.login.card"
       >
         <div className="text-5xl mb-4">🔐</div>
-        <h2 className="text-2xl font-bold text-primary mb-2">
-          Admin Login Required
-        </h2>
-        <p className="text-muted-foreground mb-2">
-          Admin panel use करने के लिए पहले login करें।
+        <h2 className="text-2xl font-bold text-primary mb-2">Admin Login</h2>
+        <p className="text-muted-foreground mb-6">
+          Admin panel खोलने के लिए password डालें
         </p>
-        <p className="text-sm text-muted-foreground mb-6 bg-secondary/50 rounded-lg p-3">
-          <strong>Internet Identity</strong> एक secure digital login है।
-          <br />
-          नीचे button दबाएं, एक popup खुलेगा — वहाँ <strong>"Create New"</strong> या
-          अपना existing ID डालें।
-        </p>
+
+        {/* Password Login */}
+        <div className="bg-card border border-border rounded-xl p-6 mb-4 text-left">
+          <h3 className="font-semibold mb-4 text-center">
+            Password से Login करें
+          </h3>
+          <div className="space-y-3">
+            <div>
+              <Label htmlFor="admin-password">Admin Password</Label>
+              <div className="relative mt-1">
+                <Input
+                  id="admin-password"
+                  type={showPassword ? "text" : "password"}
+                  value={passwordInput}
+                  onChange={(e) => {
+                    setPasswordInput(e.target.value);
+                    setPasswordError("");
+                  }}
+                  onKeyDown={(e) => e.key === "Enter" && handlePasswordLogin()}
+                  placeholder="Admin password डालें"
+                  className={passwordError ? "border-destructive" : ""}
+                  data-ocid="admin.login.input"
+                />
+                <button
+                  type="button"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+                  onClick={() => setShowPassword((v) => !v)}
+                >
+                  {showPassword ? (
+                    <EyeOff className="h-4 w-4" />
+                  ) : (
+                    <Eye className="h-4 w-4" />
+                  )}
+                </button>
+              </div>
+              {passwordError && (
+                <p
+                  className="text-destructive text-xs mt-1"
+                  data-ocid="admin.login.error_state"
+                >
+                  {passwordError}
+                </p>
+              )}
+            </div>
+            <Button
+              className="w-full bg-primary text-white gap-2"
+              onClick={handlePasswordLogin}
+              data-ocid="admin.login.submit_button"
+            >
+              <Lock className="h-4 w-4" /> Admin Panel खोलें
+            </Button>
+          </div>
+        </div>
+
+        <div className="text-xs text-muted-foreground mb-3">— या —</div>
+
+        {/* Internet Identity Login */}
         <Button
-          className="bg-primary text-white px-8"
+          variant="outline"
+          className="w-full gap-2"
           onClick={() => login()}
           disabled={loginStatus === "logging-in"}
           data-ocid="admin.login.primary_button"
@@ -164,7 +337,9 @@ export function AdminPage() {
           </p>
         </div>
         <div className="text-xs text-muted-foreground bg-card border border-border rounded px-3 py-1.5">
-          Logged in: {identity?.getPrincipal().toString().slice(0, 12)}...
+          {identity
+            ? `Logged in: ${identity?.getPrincipal().toString().slice(0, 12)}...`
+            : "Password से logged in"}
         </div>
       </div>
 
@@ -175,7 +350,7 @@ export function AdminPage() {
             <DialogTitle>Product Edit करें</DialogTitle>
           </DialogHeader>
           {editProduct && (
-            <div className="space-y-4 mt-2">
+            <div className="space-y-4 mt-2 max-h-[70vh] overflow-y-auto pr-1">
               <div>
                 <Label htmlFor="edit-name">Product का नाम *</Label>
                 <Input
@@ -187,7 +362,6 @@ export function AdminPage() {
                     )
                   }
                   className="mt-1"
-                  data-ocid="admin.edit_product.name_input"
                 />
               </div>
               <div>
@@ -201,7 +375,6 @@ export function AdminPage() {
                     )
                   }
                   className="mt-1"
-                  data-ocid="admin.edit_product.hindi_name_input"
                 />
               </div>
               <div className="grid grid-cols-2 gap-3">
@@ -217,7 +390,6 @@ export function AdminPage() {
                       )
                     }
                     className="mt-1"
-                    data-ocid="admin.edit_product.price_input"
                   />
                 </div>
                 <div>
@@ -240,7 +412,6 @@ export function AdminPage() {
                       )
                     }
                     className="mt-1"
-                    data-ocid="admin.edit_product.original_price_input"
                   />
                 </div>
               </div>
@@ -257,7 +428,6 @@ export function AdminPage() {
                       )
                     }
                     className="mt-1"
-                    data-ocid="admin.edit_product.stock_input"
                   />
                 </div>
                 <div>
@@ -272,7 +442,6 @@ export function AdminPage() {
                     }
                     placeholder="e.g. New, Deal"
                     className="mt-1"
-                    data-ocid="admin.edit_product.badge_input"
                   />
                 </div>
               </div>
@@ -287,7 +456,6 @@ export function AdminPage() {
                     )
                   }
                   className="mt-1"
-                  data-ocid="admin.edit_product.description_input"
                 />
               </div>
               <div className="flex items-center gap-4">
@@ -343,26 +511,302 @@ export function AdminPage() {
         </DialogContent>
       </Dialog>
 
+      {/* Add Product Dialog */}
+      <Dialog open={addProductOpen} onOpenChange={setAddProductOpen}>
+        <DialogContent data-ocid="admin.add_product.dialog">
+          <DialogHeader>
+            <DialogTitle>नया Product जोड़ें</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 mt-2 max-h-[70vh] overflow-y-auto pr-1">
+            <div>
+              <Label htmlFor="add-name">Product का नाम *</Label>
+              <Input
+                id="add-name"
+                value={newProduct.name}
+                onChange={(e) =>
+                  setNewProduct((p) => ({ ...p, name: e.target.value }))
+                }
+                placeholder="e.g. Samsung Galaxy S24"
+                className="mt-1"
+                data-ocid="admin.add_product.input"
+              />
+            </div>
+            <div>
+              <Label htmlFor="add-hindi">Hindi नाम</Label>
+              <Input
+                id="add-hindi"
+                value={newProduct.nameHindi}
+                onChange={(e) =>
+                  setNewProduct((p) => ({ ...p, nameHindi: e.target.value }))
+                }
+                placeholder="e.g. सैमसंग गैलेक्सी"
+                className="mt-1"
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <Label htmlFor="add-price">Price (₹) *</Label>
+                <Input
+                  id="add-price"
+                  type="number"
+                  value={newProduct.price}
+                  onChange={(e) =>
+                    setNewProduct((p) => ({ ...p, price: e.target.value }))
+                  }
+                  placeholder="999"
+                  className="mt-1"
+                />
+              </div>
+              <div>
+                <Label htmlFor="add-original-price">Original Price (₹)</Label>
+                <Input
+                  id="add-original-price"
+                  type="number"
+                  value={newProduct.originalPrice}
+                  onChange={(e) =>
+                    setNewProduct((p) => ({
+                      ...p,
+                      originalPrice: e.target.value,
+                    }))
+                  }
+                  placeholder="1299"
+                  className="mt-1"
+                />
+              </div>
+            </div>
+            <div>
+              <Label htmlFor="add-category">Category</Label>
+              <Select
+                value={newProduct.category}
+                onValueChange={(val) =>
+                  setNewProduct((p) => ({ ...p, category: val }))
+                }
+              >
+                <SelectTrigger
+                  className="mt-1"
+                  id="add-category"
+                  data-ocid="admin.add_product.select"
+                >
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {CATEGORIES.filter((c) => c.id !== "all").map((cat) => (
+                    <SelectItem key={cat.id} value={cat.id}>
+                      {cat.emoji} {cat.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <Label htmlFor="add-stock">Stock</Label>
+                <Input
+                  id="add-stock"
+                  type="number"
+                  value={newProduct.stock}
+                  onChange={(e) =>
+                    setNewProduct((p) => ({ ...p, stock: e.target.value }))
+                  }
+                  className="mt-1"
+                />
+              </div>
+              <div>
+                <Label htmlFor="add-badge">Badge</Label>
+                <Input
+                  id="add-badge"
+                  value={newProduct.badge}
+                  onChange={(e) =>
+                    setNewProduct((p) => ({ ...p, badge: e.target.value }))
+                  }
+                  placeholder="e.g. New, Sale"
+                  className="mt-1"
+                />
+              </div>
+            </div>
+            <div>
+              <Label htmlFor="add-desc">Description</Label>
+              <Textarea
+                id="add-desc"
+                value={newProduct.description}
+                onChange={(e) =>
+                  setNewProduct((p) => ({ ...p, description: e.target.value }))
+                }
+                placeholder="Product description..."
+                className="mt-1 resize-none"
+                rows={3}
+                data-ocid="admin.add_product.textarea"
+              />
+            </div>
+            <div className="flex items-center gap-6">
+              <div className="flex items-center gap-2">
+                <Checkbox
+                  id="add-featured"
+                  checked={newProduct.isFeatured}
+                  onCheckedChange={(v) =>
+                    setNewProduct((p) => ({ ...p, isFeatured: !!v }))
+                  }
+                  data-ocid="admin.add_product.checkbox"
+                />
+                <Label htmlFor="add-featured" className="cursor-pointer">
+                  Featured
+                </Label>
+              </div>
+              <div className="flex items-center gap-2">
+                <Checkbox
+                  id="add-deal"
+                  checked={newProduct.isDeal}
+                  onCheckedChange={(v) =>
+                    setNewProduct((p) => ({ ...p, isDeal: !!v }))
+                  }
+                />
+                <Label htmlFor="add-deal" className="cursor-pointer">
+                  Deal
+                </Label>
+              </div>
+            </div>
+            <div className="flex gap-3 pt-2">
+              <Button
+                className="flex-1 bg-primary text-white gap-2"
+                onClick={handleAddProductSave}
+                data-ocid="admin.add_product.submit_button"
+              >
+                <Plus className="h-4 w-4" /> Product जोड़ें
+              </Button>
+              <Button
+                variant="outline"
+                className="flex-1"
+                onClick={() => {
+                  setAddProductOpen(false);
+                  setNewProduct(EMPTY_PRODUCT_FORM);
+                }}
+                data-ocid="admin.add_product.cancel_button"
+              >
+                Cancel
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit Store Dialog */}
+      <Dialog open={editStoreOpen} onOpenChange={setEditStoreOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Store Edit करें</DialogTitle>
+          </DialogHeader>
+          {editStore && (
+            <div className="space-y-4 mt-2">
+              <div>
+                <Label>City / शहर का नाम *</Label>
+                <Input
+                  value={editStore.city}
+                  onChange={(e) =>
+                    setEditStore((s) =>
+                      s ? { ...s, city: e.target.value } : s,
+                    )
+                  }
+                  className="mt-1"
+                  placeholder="e.g. Delhi"
+                />
+              </div>
+              <div>
+                <Label>Address / पता *</Label>
+                <Input
+                  value={editStore.address}
+                  onChange={(e) =>
+                    setEditStore((s) =>
+                      s ? { ...s, address: e.target.value } : s,
+                    )
+                  }
+                  className="mt-1"
+                  placeholder="Full store address"
+                />
+              </div>
+              <div>
+                <Label>Phone / संपर्क नंबर</Label>
+                <Input
+                  value={editStore.phone}
+                  onChange={(e) =>
+                    setEditStore((s) =>
+                      s ? { ...s, phone: e.target.value } : s,
+                    )
+                  }
+                  className="mt-1"
+                  placeholder="Contact number"
+                />
+              </div>
+              <div>
+                <Label>PIN Code *</Label>
+                <Input
+                  value={editStore.pincode}
+                  onChange={(e) =>
+                    setEditStore((s) =>
+                      s ? { ...s, pincode: e.target.value } : s,
+                    )
+                  }
+                  className="mt-1"
+                  placeholder="6-digit PIN code"
+                />
+              </div>
+              <div className="flex gap-3 pt-2">
+                <Button
+                  className="flex-1 bg-primary text-white gap-2"
+                  onClick={handleEditStoreSave}
+                  disabled={
+                    addStoreMutation.isPending || deleteStoreMutation.isPending
+                  }
+                >
+                  {addStoreMutation.isPending ||
+                  deleteStoreMutation.isPending ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <>
+                      <Save className="h-4 w-4" /> Save Changes
+                    </>
+                  )}
+                </Button>
+                <Button
+                  variant="outline"
+                  className="flex-1"
+                  onClick={() => {
+                    setEditStoreOpen(false);
+                    setEditStore(null);
+                  }}
+                >
+                  Cancel
+                </Button>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
       <Tabs defaultValue="products" data-ocid="admin.tabs">
         <TabsList className="mb-6">
-          <TabsTrigger
-            value="products"
-            className="gap-2"
-            data-ocid="admin.products.tab"
-          >
+          <TabsTrigger value="products" className="gap-2">
             <Package className="h-4 w-4" /> Products ({products.length})
           </TabsTrigger>
-          <TabsTrigger
-            value="stores"
-            className="gap-2"
-            data-ocid="admin.stores.tab"
-          >
+          <TabsTrigger value="stores" className="gap-2">
             <MapPin className="h-4 w-4" /> Stores ({stores?.length ?? 0})
           </TabsTrigger>
         </TabsList>
 
         {/* Products Tab */}
         <TabsContent value="products">
+          {/* Add New Product Button */}
+          <div className="flex justify-end mb-4">
+            <DialogTrigger asChild onClick={() => setAddProductOpen(true)}>
+              <Button
+                className="bg-primary text-white gap-2"
+                data-ocid="admin.add_product.open_modal_button"
+                onClick={() => setAddProductOpen(true)}
+              >
+                <Plus className="h-4 w-4" /> नया Product जोड़ें
+              </Button>
+            </DialogTrigger>
+          </div>
+
           <div className="space-y-3">
             {products.map((product, idx) => (
               <motion.div
@@ -371,9 +815,8 @@ export function AdminPage() {
                 animate={{ opacity: 1 }}
                 transition={{ delay: idx * 0.03 }}
                 className="bg-card border border-border rounded-lg p-4 flex items-center gap-4"
-                data-ocid={`admin.product.item.${idx + 1}`}
+                data-ocid={`admin.products.item.${idx + 1}`}
               >
-                {/* Thumbnail */}
                 <div className="w-12 h-12 rounded-lg overflow-hidden flex-shrink-0 bg-secondary flex items-center justify-center">
                   {product.image ? (
                     <img
@@ -423,7 +866,7 @@ export function AdminPage() {
                     variant="outline"
                     className="border-primary text-primary hover:bg-primary hover:text-white h-8"
                     onClick={() => handleEditOpen(product)}
-                    data-ocid={`admin.product.edit_button.${idx + 1}`}
+                    data-ocid={`admin.products.edit_button.${idx + 1}`}
                   >
                     <Edit className="h-3.5 w-3.5" />
                   </Button>
@@ -433,7 +876,7 @@ export function AdminPage() {
                     className="border-destructive text-destructive hover:bg-destructive hover:text-white h-8"
                     onClick={() => handleDeleteProduct(product.id)}
                     disabled={deletingProduct === product.id}
-                    data-ocid={`admin.product.delete_button.${idx + 1}`}
+                    data-ocid={`admin.products.delete_button.${idx + 1}`}
                   >
                     {deletingProduct === product.id ? (
                       <Loader2 className="h-3.5 w-3.5 animate-spin" />
@@ -459,7 +902,7 @@ export function AdminPage() {
                   <Plus className="h-4 w-4" /> Add New Store
                 </Button>
               </DialogTrigger>
-              <DialogContent data-ocid="admin.add_store.dialog">
+              <DialogContent>
                 <DialogHeader>
                   <DialogTitle>Add New Store Location</DialogTitle>
                 </DialogHeader>
@@ -474,7 +917,6 @@ export function AdminPage() {
                         setNewStore((s) => ({ ...s, city: e.target.value }))
                       }
                       className="mt-1"
-                      data-ocid="admin.store_city.input"
                     />
                   </div>
                   <div>
@@ -487,7 +929,6 @@ export function AdminPage() {
                         setNewStore((s) => ({ ...s, address: e.target.value }))
                       }
                       className="mt-1"
-                      data-ocid="admin.store_address.input"
                     />
                   </div>
                   <div>
@@ -500,11 +941,10 @@ export function AdminPage() {
                         setNewStore((s) => ({ ...s, pincode: e.target.value }))
                       }
                       className="mt-1"
-                      data-ocid="admin.store_pincode.input"
                     />
                   </div>
                   <div>
-                    <Label htmlFor="phone">Phone</Label>
+                    <Label htmlFor="phone">Phone / संपर्क नंबर</Label>
                     <Input
                       id="phone"
                       placeholder="Contact number"
@@ -513,7 +953,6 @@ export function AdminPage() {
                         setNewStore((s) => ({ ...s, phone: e.target.value }))
                       }
                       className="mt-1"
-                      data-ocid="admin.store_phone.input"
                     />
                   </div>
                   <div className="flex gap-3 pt-2">
@@ -521,7 +960,6 @@ export function AdminPage() {
                       className="flex-1 bg-primary text-white"
                       onClick={handleAddStore}
                       disabled={addStoreMutation.isPending}
-                      data-ocid="admin.add_store.confirm_button"
                     >
                       {addStoreMutation.isPending ? (
                         <Loader2 className="h-4 w-4 animate-spin" />
@@ -533,7 +971,6 @@ export function AdminPage() {
                       variant="outline"
                       className="flex-1"
                       onClick={() => setAddStoreOpen(false)}
-                      data-ocid="admin.add_store.cancel_button"
                     >
                       Cancel
                     </Button>
@@ -544,10 +981,7 @@ export function AdminPage() {
           </div>
 
           {loadingStores ? (
-            <div
-              className="flex items-center justify-center py-12"
-              data-ocid="admin.stores.loading_state"
-            >
+            <div className="flex items-center justify-center py-12">
               <Loader2 className="h-6 w-6 animate-spin text-primary" />
             </div>
           ) : !stores || stores.length === 0 ? (
@@ -566,7 +1000,7 @@ export function AdminPage() {
                 <div
                   key={`${store.city}-${store.pincode}`}
                   className="bg-card border border-border rounded-lg p-4 flex items-center gap-4"
-                  data-ocid={`admin.store.item.${idx + 1}`}
+                  data-ocid={`admin.stores.item.${idx + 1}`}
                 >
                   <MapPin className="h-6 w-6 text-primary flex-shrink-0" />
                   <div className="flex-1">
@@ -574,17 +1008,33 @@ export function AdminPage() {
                     <p className="text-sm text-muted-foreground">
                       {store.address} · PIN: {store.pincode}
                     </p>
+                    {store.phone && (
+                      <p className="text-xs text-muted-foreground">
+                        📞 {store.phone}
+                      </p>
+                    )}
                   </div>
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    className="border-destructive text-destructive hover:bg-destructive hover:text-white"
-                    onClick={() => handleDeleteStore(idx)}
-                    disabled={deleteStoreMutation.isPending}
-                    data-ocid={`admin.store.delete_button.${idx + 1}`}
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
+                  <div className="flex gap-2">
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="border-primary text-primary hover:bg-primary hover:text-white"
+                      onClick={() => handleEditStoreOpen(store, idx)}
+                      data-ocid={`admin.stores.edit_button.${idx + 1}`}
+                    >
+                      <Edit className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="border-destructive text-destructive hover:bg-destructive hover:text-white"
+                      onClick={() => handleDeleteStore(idx)}
+                      disabled={deleteStoreMutation.isPending}
+                      data-ocid={`admin.stores.delete_button.${idx + 1}`}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
                 </div>
               ))}
             </div>
