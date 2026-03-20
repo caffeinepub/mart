@@ -199,7 +199,18 @@ export function AdminPage() {
                 className="bg-card border border-border rounded-lg p-4 flex items-center gap-4"
                 data-ocid={`admin.product.item.${idx + 1}`}
               >
-                <span className="text-3xl">{product.emoji}</span>
+                {/* Thumbnail */}
+                <div className="w-12 h-12 rounded-lg overflow-hidden flex-shrink-0 bg-secondary flex items-center justify-center">
+                  {product.image ? (
+                    <img
+                      src={product.image}
+                      alt={product.name}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <span className="text-2xl">{product.emoji}</span>
+                  )}
+                </div>
                 <div className="flex-1 min-w-0">
                   <p className="font-semibold text-sm truncate">
                     {product.name}

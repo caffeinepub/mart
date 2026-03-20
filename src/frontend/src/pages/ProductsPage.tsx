@@ -62,11 +62,6 @@ export function ProductsPage() {
 
   const handleSearch = () => setActiveSearch(localSearch);
 
-  const allCategories = [
-    { id: "all", label: "ALL", emoji: "🛒" },
-    ...CATEGORIES,
-  ];
-
   return (
     <div className="max-w-7xl mx-auto px-4 py-8" data-ocid="products.page">
       <h1 className="section-title mb-6">All Products | सभी उत्पाद</h1>
@@ -108,7 +103,7 @@ export function ProductsPage() {
 
       {/* Category Filter */}
       <div className="flex gap-2 flex-wrap mb-6">
-        {allCategories.map((cat) => (
+        {CATEGORIES.map((cat) => (
           <button
             type="button"
             key={cat.id}
@@ -120,7 +115,7 @@ export function ProductsPage() {
             }`}
             data-ocid="products.category.tab"
           >
-            {(cat as { emoji?: string }).emoji} {cat.label}
+            {cat.emoji} {cat.label}
           </button>
         ))}
       </div>

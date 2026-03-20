@@ -36,10 +36,18 @@ export function ProductCard({ product, index = 1 }: ProductCardProps) {
     >
       <div className="bg-card rounded-lg border border-border shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden flex flex-col">
         {/* Image Area */}
-        <div className="relative bg-gradient-to-br from-secondary to-muted flex items-center justify-center h-44 text-7xl">
-          <span className="group-hover:scale-110 transition-transform duration-200">
-            {product.emoji}
-          </span>
+        <div className="relative bg-gradient-to-br from-secondary to-muted flex items-center justify-center h-44 overflow-hidden">
+          {product.image ? (
+            <img
+              src={product.image}
+              alt={product.name}
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+            />
+          ) : (
+            <span className="text-7xl group-hover:scale-110 transition-transform duration-200">
+              {product.emoji}
+            </span>
+          )}
           {product.badge && (
             <Badge className="absolute top-2 left-2 bg-accent text-white text-[10px] border-0 font-semibold">
               {product.badge}
