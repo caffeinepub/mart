@@ -9,15 +9,14 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { SAMPLE_PRODUCTS } from "@/data/sampleData";
+import {
+  CATEGORIES,
+  SAMPLE_PRODUCTS,
+  type SampleProduct,
+} from "@/data/sampleData";
 import { useActor } from "@/hooks/useActor";
 import { useInternetIdentity } from "@/hooks/useInternetIdentity";
-import {
-  useAddStore,
-  useAllStores,
-  useDeleteStore,
-  useIsAdmin,
-} from "@/hooks/useQueries";
+import { useAddStore, useAllStores, useDeleteStore } from "@/hooks/useQueries";
 import {
   Edit,
   Loader2,
@@ -25,6 +24,7 @@ import {
   MapPin,
   Package,
   Plus,
+  Save,
   Trash2,
 } from "lucide-react";
 import { motion } from "motion/react";
@@ -40,7 +40,6 @@ interface NewStore {
 
 export function AdminPage() {
   const { identity, login, loginStatus } = useInternetIdentity();
-  const { data: isAdmin, isLoading: checkingAdmin } = useIsAdmin();
   const { data: stores, isLoading: loadingStores } = useAllStores();
   const addStoreMutation = useAddStore();
   const deleteStoreMutation = useDeleteStore();
@@ -55,6 +54,9 @@ export function AdminPage() {
   });
 
   const [deletingProduct, setDeletingProduct] = useState<number | null>(null);
+  const [products, setProducts] = useState<SampleProduct[]>(SAMPLE_PRODUCTS);
+  const [editProduct, setEditProduct] = useState<SampleProduct | null>(null);
+  const [editOpen, setEditOpen] = useState(false);
 
   const handleAddStore = async () => {
     if (!newStore.city || !newStore.address || !newStore.pincode) {
@@ -85,12 +87,32 @@ export function AdminPage() {
     setDeletingProduct(productId);
     try {
       await actor.deleteProduct(BigInt(productId));
+      setProducts((prev) => prev.filter((p) => p.id !== productId));
       toast.success("Product deleted.");
     } catch {
       toast.error("Failed to delete product.");
     } finally {
       setDeletingProduct(null);
     }
+  };
+
+  const handleEditOpen = (product: SampleProduct) => {
+    setEditProduct({ ...product });
+    setEditOpen(true);
+  };
+
+  const handleEditSave = () => {
+    if (!editProduct) return;
+    if (!editProduct.name || !editProduct.price) {
+      toast.error("Product name and price are required.");
+      return;
+    }
+    setProducts((prev) =>
+      prev.map((p) => (p.id === editProduct.id ? editProduct : p)),
+    );
+    toast.success(`"${editProduct.name}" updated successfully!`);
+    setEditOpen(false);
+    setEditProduct(null);
   };
 
   if (!identity) {
@@ -103,8 +125,14 @@ export function AdminPage() {
         <h2 className="text-2xl font-bold text-primary mb-2">
           Admin Login Required
         </h2>
-        <p className="text-muted-foreground mb-6">
-          Please login to access the admin panel.
+        <p className="text-muted-foreground mb-2">
+          Admin panel use करने के लिए पहले login करें।
+        </p>
+        <p className="text-sm text-muted-foreground mb-6 bg-secondary/50 rounded-lg p-3">
+          <strong>Internet Identity</strong> एक secure digital login है।
+          <br />
+          नीचे button दबाएं, एक popup खुलेगा — वहाँ <strong>"Create New"</strong> या
+          अपना existing ID डालें।
         </p>
         <Button
           className="bg-primary text-white px-8"
@@ -126,48 +154,194 @@ export function AdminPage() {
     );
   }
 
-  if (checkingAdmin) {
-    return (
-      <div
-        className="flex items-center justify-center py-20"
-        data-ocid="admin.loading_state"
-      >
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-        <span className="ml-3 text-muted-foreground">
-          Checking permissions...
-        </span>
-      </div>
-    );
-  }
-
-  if (!isAdmin) {
-    return (
-      <div
-        className="max-w-md mx-auto px-4 py-20 text-center"
-        data-ocid="admin.error_state"
-      >
-        <div className="text-5xl mb-4">🚫</div>
-        <h2 className="text-2xl font-bold text-primary mb-2">Access Denied</h2>
-        <p className="text-muted-foreground">
-          You don't have admin privileges. Contact the store administrator.
-        </p>
-      </div>
-    );
-  }
-
   return (
     <div className="max-w-5xl mx-auto px-4 py-8" data-ocid="admin.page">
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="section-title">Admin Panel</h1>
           <p className="text-muted-foreground text-sm mt-1">
-            Manage products and store locations for धर्मा Mart
+            धर्मा Mart के products और stores manage करें
           </p>
         </div>
         <div className="text-xs text-muted-foreground bg-card border border-border rounded px-3 py-1.5">
           Logged in: {identity?.getPrincipal().toString().slice(0, 12)}...
         </div>
       </div>
+
+      {/* Edit Product Dialog */}
+      <Dialog open={editOpen} onOpenChange={setEditOpen}>
+        <DialogContent data-ocid="admin.edit_product.dialog">
+          <DialogHeader>
+            <DialogTitle>Product Edit करें</DialogTitle>
+          </DialogHeader>
+          {editProduct && (
+            <div className="space-y-4 mt-2">
+              <div>
+                <Label htmlFor="edit-name">Product का नाम *</Label>
+                <Input
+                  id="edit-name"
+                  value={editProduct.name}
+                  onChange={(e) =>
+                    setEditProduct((p) =>
+                      p ? { ...p, name: e.target.value } : p,
+                    )
+                  }
+                  className="mt-1"
+                  data-ocid="admin.edit_product.name_input"
+                />
+              </div>
+              <div>
+                <Label htmlFor="edit-hindi">Hindi नाम</Label>
+                <Input
+                  id="edit-hindi"
+                  value={editProduct.nameHindi}
+                  onChange={(e) =>
+                    setEditProduct((p) =>
+                      p ? { ...p, nameHindi: e.target.value } : p,
+                    )
+                  }
+                  className="mt-1"
+                  data-ocid="admin.edit_product.hindi_name_input"
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <Label htmlFor="edit-price">Price (₹) *</Label>
+                  <Input
+                    id="edit-price"
+                    type="number"
+                    value={editProduct.price}
+                    onChange={(e) =>
+                      setEditProduct((p) =>
+                        p ? { ...p, price: Number(e.target.value) } : p,
+                      )
+                    }
+                    className="mt-1"
+                    data-ocid="admin.edit_product.price_input"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="edit-original-price">
+                    Original Price (₹)
+                  </Label>
+                  <Input
+                    id="edit-original-price"
+                    type="number"
+                    value={editProduct.originalPrice ?? ""}
+                    onChange={(e) =>
+                      setEditProduct((p) =>
+                        p
+                          ? {
+                              ...p,
+                              originalPrice:
+                                Number(e.target.value) || undefined,
+                            }
+                          : p,
+                      )
+                    }
+                    className="mt-1"
+                    data-ocid="admin.edit_product.original_price_input"
+                  />
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <Label htmlFor="edit-stock">Stock</Label>
+                  <Input
+                    id="edit-stock"
+                    type="number"
+                    value={editProduct.stock}
+                    onChange={(e) =>
+                      setEditProduct((p) =>
+                        p ? { ...p, stock: Number(e.target.value) } : p,
+                      )
+                    }
+                    className="mt-1"
+                    data-ocid="admin.edit_product.stock_input"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="edit-badge">Badge</Label>
+                  <Input
+                    id="edit-badge"
+                    value={editProduct.badge ?? ""}
+                    onChange={(e) =>
+                      setEditProduct((p) =>
+                        p ? { ...p, badge: e.target.value } : p,
+                      )
+                    }
+                    placeholder="e.g. New, Deal"
+                    className="mt-1"
+                    data-ocid="admin.edit_product.badge_input"
+                  />
+                </div>
+              </div>
+              <div>
+                <Label htmlFor="edit-description">Description</Label>
+                <Input
+                  id="edit-description"
+                  value={editProduct.description}
+                  onChange={(e) =>
+                    setEditProduct((p) =>
+                      p ? { ...p, description: e.target.value } : p,
+                    )
+                  }
+                  className="mt-1"
+                  data-ocid="admin.edit_product.description_input"
+                />
+              </div>
+              <div className="flex items-center gap-4">
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={editProduct.isFeatured}
+                    onChange={(e) =>
+                      setEditProduct((p) =>
+                        p ? { ...p, isFeatured: e.target.checked } : p,
+                      )
+                    }
+                    className="w-4 h-4 accent-primary"
+                  />
+                  <span className="text-sm">Featured</span>
+                </label>
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={editProduct.isDeal}
+                    onChange={(e) =>
+                      setEditProduct((p) =>
+                        p ? { ...p, isDeal: e.target.checked } : p,
+                      )
+                    }
+                    className="w-4 h-4 accent-primary"
+                  />
+                  <span className="text-sm">Deal</span>
+                </label>
+              </div>
+              <div className="flex gap-3 pt-2">
+                <Button
+                  className="flex-1 bg-primary text-white gap-2"
+                  onClick={handleEditSave}
+                  data-ocid="admin.edit_product.save_button"
+                >
+                  <Save className="h-4 w-4" /> Save Changes
+                </Button>
+                <Button
+                  variant="outline"
+                  className="flex-1"
+                  onClick={() => {
+                    setEditOpen(false);
+                    setEditProduct(null);
+                  }}
+                  data-ocid="admin.edit_product.cancel_button"
+                >
+                  Cancel
+                </Button>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
 
       <Tabs defaultValue="products" data-ocid="admin.tabs">
         <TabsList className="mb-6">
@@ -176,7 +350,7 @@ export function AdminPage() {
             className="gap-2"
             data-ocid="admin.products.tab"
           >
-            <Package className="h-4 w-4" /> Products ({SAMPLE_PRODUCTS.length})
+            <Package className="h-4 w-4" /> Products ({products.length})
           </TabsTrigger>
           <TabsTrigger
             value="stores"
@@ -190,7 +364,7 @@ export function AdminPage() {
         {/* Products Tab */}
         <TabsContent value="products">
           <div className="space-y-3">
-            {SAMPLE_PRODUCTS.map((product, idx) => (
+            {products.map((product, idx) => (
               <motion.div
                 key={product.id}
                 initial={{ opacity: 0 }}
@@ -216,8 +390,14 @@ export function AdminPage() {
                     {product.name}
                   </p>
                   <p className="text-xs text-muted-foreground">
-                    {product.category} · ₹
-                    {product.price.toLocaleString("en-IN")}
+                    {CATEGORIES.find((c) => c.id === product.category)?.label ??
+                      product.category}{" "}
+                    · ₹{product.price.toLocaleString("en-IN")}
+                    {product.originalPrice && (
+                      <span className="line-through ml-1 opacity-60">
+                        ₹{product.originalPrice.toLocaleString("en-IN")}
+                      </span>
+                    )}
                   </p>
                   <div className="flex gap-1 mt-1">
                     {product.isFeatured && (
@@ -230,6 +410,11 @@ export function AdminPage() {
                         Deal
                       </span>
                     )}
+                    {product.badge && (
+                      <span className="text-[10px] bg-secondary text-secondary-foreground px-1.5 py-0.5 rounded">
+                        {product.badge}
+                      </span>
+                    )}
                   </div>
                 </div>
                 <div className="flex gap-2">
@@ -237,6 +422,7 @@ export function AdminPage() {
                     size="sm"
                     variant="outline"
                     className="border-primary text-primary hover:bg-primary hover:text-white h-8"
+                    onClick={() => handleEditOpen(product)}
                     data-ocid={`admin.product.edit_button.${idx + 1}`}
                   >
                     <Edit className="h-3.5 w-3.5" />
