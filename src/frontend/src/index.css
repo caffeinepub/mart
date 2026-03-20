@@ -1,0 +1,74 @@
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;600;700;800&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Primary dark teal: #0F3F45 */
+    --primary: 0.28 0.055 196;
+    --primary-foreground: 1 0 0;
+
+    /* Accent orange/gold: #E3A14A */
+    --accent: 0.72 0.13 61;
+    --accent-foreground: 0.15 0.01 250;
+
+    /* Background light gray: #F2F4F5 */
+    --background: 0.96 0.006 214;
+    --foreground: 0.18 0.02 250;
+
+    /* Card white */
+    --card: 1 0 0;
+    --card-foreground: 0.18 0.02 250;
+
+    --popover: 1 0 0;
+    --popover-foreground: 0.18 0.02 250;
+
+    --secondary: 0.93 0.01 214;
+    --secondary-foreground: 0.3 0.03 214;
+
+    --muted: 0.93 0.008 214;
+    --muted-foreground: 0.55 0.02 214;
+
+    --destructive: 0.55 0.22 25;
+    --destructive-foreground: 1 0 0;
+
+    --border: 0.88 0.01 214;
+    --input: 0.88 0.01 214;
+    --ring: 0.28 0.055 196;
+
+    --radius: 0.5rem;
+
+    /* Sidebar */
+    --sidebar-background: 1 0 0;
+    --sidebar-foreground: 0.18 0.02 250;
+    --sidebar-primary: 0.28 0.055 196;
+    --sidebar-primary-foreground: 1 0 0;
+    --sidebar-accent: 0.93 0.01 214;
+    --sidebar-accent-foreground: 0.18 0.02 250;
+    --sidebar-border: 0.88 0.01 214;
+    --sidebar-ring: 0.28 0.055 196;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground font-sans;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-primary text-primary-foreground hover:opacity-90 transition-opacity;
+  }
+  .btn-accent {
+    @apply bg-accent text-accent-foreground hover:opacity-90 transition-opacity;
+  }
+  .section-title {
+    @apply text-2xl font-bold uppercase tracking-wider text-primary;
+  }
+}
