@@ -3,13 +3,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useProducts } from "@/context/ProductsContext";
 import { CATEGORIES } from "@/data/sampleData";
-import { useSearch } from "@tanstack/react-router";
-import { Search, SlidersHorizontal } from "lucide-react";
+import { Link, useNavigate, useSearch } from "@tanstack/react-router";
+import { ArrowLeft, Search, SlidersHorizontal } from "lucide-react";
 import { motion } from "motion/react";
 import { useEffect, useMemo, useState } from "react";
 
 export function ProductsPage() {
   const { products } = useProducts();
+  const navigate = useNavigate();
   const search = useSearch({ from: "/products" }) as {
     category?: string;
     q?: string;
@@ -47,7 +48,7 @@ export function ProductsPage() {
       list = list.filter(
         (p) =>
           p.name.toLowerCase().includes(q) ||
-          p.nameHindi.includes(q) ||
+          p.nameHindi?.includes(q) ||
           p.category.includes(q),
       );
     }
@@ -73,8 +74,26 @@ export function ProductsPage() {
 
   const handleSearch = () => setActiveSearch(localSearch);
 
+  const handleCategoryClick = (catId: string) => {
+    if (catId === "all") {
+      navigate({ to: "/products" });
+    } else {
+      navigate({ to: "/products", search: { category: catId } });
+    }
+  };
+
   return (
     <div className="max-w-7xl mx-auto px-4 py-8" data-ocid="products.page">
+      <div className="flex items-center gap-3 mb-4">
+        <Link to="/">
+          <button
+            type="button"
+            className="flex items-center gap-1 text-sm font-medium text-primary hover:underline"
+          >
+            <ArrowLeft className="h-4 w-4" /> Home / होम
+          </button>
+        </Link>
+      </div>
       <h1 className="section-title mb-6">All Products | सभी उत्पाद</h1>
 
       {search.deals === "true" && (
@@ -135,7 +154,7 @@ export function ProductsPage() {
           <button
             type="button"
             key={cat.id}
-            onClick={() => setActiveCategory(cat.id)}
+            onClick={() => handleCategoryClick(cat.id)}
             className={`flex-shrink-0 px-4 py-1.5 rounded-full text-xs font-bold border transition-colors uppercase ${
               activeCategory === cat.id
                 ? "bg-primary text-white border-primary"
@@ -160,7 +179,7 @@ export function ProductsPage() {
           <Button
             className="mt-4 bg-primary text-white"
             onClick={() => {
-              setActiveCategory("all");
+              navigate({ to: "/products" });
               setActiveSearch("");
               setLocalSearch("");
             }}

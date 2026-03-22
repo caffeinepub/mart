@@ -126,6 +126,15 @@ export function Footer() {
                   Personal Care
                 </Link>
               </li>
+              <li>
+                <Link
+                  to="/upcoming"
+                  className="hover:text-accent transition-colors font-semibold text-accent/80"
+                  data-ocid="footer.upcoming.link"
+                >
+                  🔜 Upcoming Products
+                </Link>
+              </li>
             </ul>
           </div>
 

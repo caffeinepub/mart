@@ -2,8 +2,9 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useCart } from "@/context/CartContext";
+import { useCustomer } from "@/context/CustomerContext";
 import { Link, useNavigate } from "@tanstack/react-router";
-import { MapPin, Menu, Search, ShoppingCart, X } from "lucide-react";
+import { MapPin, Menu, Search, ShoppingCart, User, X } from "lucide-react";
 import { useState } from "react";
 
 const CATEGORIES = [
@@ -15,8 +16,11 @@ const CATEGORIES = [
   { id: "snacks", label: "BEST SELLERS" },
 ];
 
+const UPCOMING_LINK = { to: "/upcoming" as const, label: "🔜 UPCOMING" };
+
 export function Header() {
   const { totalItems } = useCart();
+  const { customer } = useCustomer();
   const [searchQuery, setSearchQuery] = useState("");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
@@ -53,7 +57,7 @@ export function Header() {
               className="hover:text-accent transition-colors"
               data-ocid="utility.cart.link"
             >
-              Wishlist
+              Cart
             </Link>
           </div>
         </div>
@@ -99,7 +103,7 @@ export function Header() {
           </div>
 
           {/* Right Icons */}
-          <div className="flex items-center gap-4 flex-shrink-0">
+          <div className="flex items-center gap-3 flex-shrink-0">
             <Link
               to="/stores"
               className="hidden md:flex flex-col items-center text-white/80 hover:text-white transition-colors text-xs"
@@ -108,6 +112,24 @@ export function Header() {
               <MapPin className="h-5 w-5" />
               <span>Stores</span>
             </Link>
+
+            {/* My Account */}
+            <Link
+              to={customer ? "/my-account" : "/customer-login"}
+              className="hidden md:flex flex-col items-center text-white/80 hover:text-white transition-colors text-xs"
+              data-ocid="nav.account.link"
+            >
+              <div className="relative">
+                <User className="h-5 w-5" />
+                {customer && (
+                  <span className="absolute -top-1.5 -right-1.5 w-2.5 h-2.5 bg-accent rounded-full border border-primary" />
+                )}
+              </div>
+              <span className="max-w-[60px] truncate">
+                {customer ? customer.name.split(" ")[0] : "Account"}
+              </span>
+            </Link>
+
             <Link
               to="/cart"
               className="flex flex-col items-center text-white/80 hover:text-white transition-colors text-xs relative"
@@ -154,6 +176,13 @@ export function Header() {
                 {cat.label}
               </Link>
             ))}
+            <Link
+              to={UPCOMING_LINK.to}
+              className="px-4 py-3 text-xs font-bold text-accent hover:opacity-80 transition-colors uppercase tracking-wider border-l border-border ml-auto"
+              data-ocid="nav.upcoming.link"
+            >
+              {UPCOMING_LINK.label}
+            </Link>
           </div>
         </div>
       </nav>
@@ -161,6 +190,16 @@ export function Header() {
       {/* Mobile Menu */}
       {mobileMenuOpen && (
         <div className="md:hidden bg-white border-b shadow-lg">
+          {/* Mobile Account Link */}
+          <Link
+            to={customer ? "/my-account" : "/customer-login"}
+            className="flex items-center gap-3 px-4 py-3 text-sm font-semibold text-primary border-b border-border bg-primary/5"
+            onClick={() => setMobileMenuOpen(false)}
+            data-ocid="nav.account.mobile.link"
+          >
+            <User className="h-4 w-4" />
+            {customer ? `${customer.name} का खाता` : "Login / मेरा खाता"}
+          </Link>
           {CATEGORIES.map((cat) => (
             <Link
               key={cat.id}
@@ -172,6 +211,14 @@ export function Header() {
               {cat.label}
             </Link>
           ))}
+          <Link
+            to="/upcoming"
+            className="block px-4 py-3 text-sm font-bold text-accent border-b border-border uppercase"
+            onClick={() => setMobileMenuOpen(false)}
+            data-ocid="nav.upcoming.mobile.link"
+          >
+            🔜 Upcoming Products
+          </Link>
           <Link
             to="/stores"
             className="block px-4 py-3 text-sm font-semibold text-primary"

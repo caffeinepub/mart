@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
+import { type Customer, useCustomer } from "@/context/CustomerContext";
 import { useProducts } from "@/context/ProductsContext";
 import { useStores } from "@/context/StoresContext";
 import {
@@ -38,6 +39,7 @@ import {
   Plus,
   Save,
   Trash2,
+  Users,
 } from "lucide-react";
 import { motion } from "motion/react";
 import { useState } from "react";
@@ -62,8 +64,11 @@ interface NewProductForm {
   badge: string;
   description: string;
   image: string;
+  image2: string;
+  image3: string;
   isFeatured: boolean;
   isDeal: boolean;
+  isUpcoming: boolean;
 }
 
 const EMPTY_PRODUCT_FORM: NewProductForm = {
@@ -76,8 +81,11 @@ const EMPTY_PRODUCT_FORM: NewProductForm = {
   badge: "",
   description: "",
   image: "",
+  image2: "",
+  image3: "",
   isFeatured: false,
   isDeal: false,
+  isUpcoming: false,
 };
 
 export function AdminPage() {
@@ -90,6 +98,8 @@ export function AdminPage() {
   } = useStores();
   const loadingStores = false;
   const { actor } = useActor();
+  const { allCustomers, deleteCustomer, getWishlist } = useCustomer();
+  const [expandedCustomer, setExpandedCustomer] = useState<string | null>(null);
   const {
     products,
     addProduct,
@@ -236,9 +246,13 @@ export function AdminPage() {
         CATEGORIES.find((c) => c.id === newProduct.category)?.emoji ?? "📦",
       isFeatured: newProduct.isFeatured,
       isDeal: newProduct.isDeal,
+      isUpcoming: newProduct.isUpcoming,
       stock: Number(newProduct.stock) || 10,
       badge: newProduct.badge || undefined,
       image: newProduct.image || undefined,
+      images:
+        ([newProduct.image2, newProduct.image3].filter(Boolean) as string[]) ||
+        undefined,
     };
     addProduct(product);
     toast.success(`"${product.name}" add हो गया!`);
@@ -498,6 +512,42 @@ export function AdminPage() {
                   className="mt-1"
                 />
               </div>
+              <div>
+                <Label htmlFor="edit-image2">Additional Image 2 URL</Label>
+                <Input
+                  id="edit-image2"
+                  value={editProduct.images?.[0] ?? ""}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    setEditProduct((p) => {
+                      if (!p) return p;
+                      const imgs = [...(p.images ?? [])];
+                      imgs[0] = val;
+                      return { ...p, images: imgs.filter(Boolean) };
+                    });
+                  }}
+                  placeholder="https://... या /assets/generated/..."
+                  className="mt-1"
+                />
+              </div>
+              <div>
+                <Label htmlFor="edit-image3">Additional Image 3 URL</Label>
+                <Input
+                  id="edit-image3"
+                  value={editProduct.images?.[1] ?? ""}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    setEditProduct((p) => {
+                      if (!p) return p;
+                      const imgs = [...(p.images ?? [])];
+                      imgs[1] = val;
+                      return { ...p, images: imgs.filter(Boolean) };
+                    });
+                  }}
+                  placeholder="https://... या /assets/generated/..."
+                  className="mt-1"
+                />
+              </div>
               <div className="flex items-center gap-4">
                 <label className="flex items-center gap-2 cursor-pointer">
                   <input
@@ -524,6 +574,19 @@ export function AdminPage() {
                     className="w-4 h-4 accent-primary"
                   />
                   <span className="text-sm">Deal</span>
+                </label>
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={editProduct.isUpcoming ?? false}
+                    onChange={(e) =>
+                      setEditProduct((p) =>
+                        p ? { ...p, isUpcoming: e.target.checked } : p,
+                      )
+                    }
+                    className="w-4 h-4 accent-primary"
+                  />
+                  <span className="text-sm">Upcoming</span>
                 </label>
               </div>
               <div className="flex gap-3 pt-2">
@@ -690,6 +753,30 @@ export function AdminPage() {
                 className="mt-1"
               />
             </div>
+            <div>
+              <Label htmlFor="add-image2">Additional Image 2 URL</Label>
+              <Input
+                id="add-image2"
+                value={newProduct.image2}
+                onChange={(e) =>
+                  setNewProduct((p) => ({ ...p, image2: e.target.value }))
+                }
+                placeholder="https://... या /assets/generated/..."
+                className="mt-1"
+              />
+            </div>
+            <div>
+              <Label htmlFor="add-image3">Additional Image 3 URL</Label>
+              <Input
+                id="add-image3"
+                value={newProduct.image3}
+                onChange={(e) =>
+                  setNewProduct((p) => ({ ...p, image3: e.target.value }))
+                }
+                placeholder="https://... या /assets/generated/..."
+                className="mt-1"
+              />
+            </div>
             <div className="flex items-center gap-6">
               <div className="flex items-center gap-2">
                 <Checkbox
@@ -714,6 +801,19 @@ export function AdminPage() {
                 />
                 <Label htmlFor="add-deal" className="cursor-pointer">
                   Deal
+                </Label>
+              </div>
+              <div className="flex items-center gap-2">
+                <Checkbox
+                  id="add-upcoming"
+                  checked={newProduct.isUpcoming}
+                  onCheckedChange={(v) =>
+                    setNewProduct((p) => ({ ...p, isUpcoming: !!v }))
+                  }
+                  data-ocid="admin.add_product.upcoming.checkbox"
+                />
+                <Label htmlFor="add-upcoming" className="cursor-pointer">
+                  Upcoming Product
                 </Label>
               </div>
             </div>
@@ -831,6 +931,10 @@ export function AdminPage() {
           </TabsTrigger>
           <TabsTrigger value="stores" className="gap-2">
             <MapPin className="h-4 w-4" /> Stores ({stores?.length ?? 0})
+          </TabsTrigger>
+          <TabsTrigger value="customers" className="gap-2">
+            <Users className="h-4 w-4" /> Customers / ग्राहक (
+            {allCustomers.length})
           </TabsTrigger>
         </TabsList>
 
@@ -1071,6 +1175,122 @@ export function AdminPage() {
                   </div>
                 </div>
               ))}
+            </div>
+          )}
+        </TabsContent>
+
+        <TabsContent value="customers">
+          <div className="mb-4 flex items-center gap-3">
+            <div className="bg-primary/10 rounded-lg px-4 py-2 text-sm font-semibold text-primary">
+              कुल ग्राहक: {allCustomers.length}
+            </div>
+          </div>
+          {allCustomers.length === 0 ? (
+            <div
+              className="text-center py-12"
+              data-ocid="admin.customers.empty_state"
+            >
+              <div className="text-4xl mb-3">👤</div>
+              <p className="text-muted-foreground">
+                अभी कोई ग्राहक नहीं है। जब customers login करेंगे, यहाँ दिखेंगे।
+              </p>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {allCustomers.map((cust: Customer, idx: number) => {
+                const wl = getWishlist(cust.id);
+                const isExpanded = expandedCustomer === cust.id;
+                return (
+                  <motion.div
+                    key={cust.id}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: idx * 0.03 }}
+                    className="bg-card border border-border rounded-lg overflow-hidden"
+                    data-ocid={`admin.customers.item.${idx + 1}`}
+                  >
+                    <button
+                      type="button"
+                      className="p-4 flex items-center gap-4 cursor-pointer hover:bg-secondary/30 transition-colors w-full text-left"
+                      onClick={() =>
+                        setExpandedCustomer(isExpanded ? null : cust.id)
+                      }
+                    >
+                      <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                        <Users className="h-5 w-5 text-primary" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="font-semibold text-sm">{cust.name}</p>
+                        <p className="text-xs text-muted-foreground">
+                          📞 {cust.mobile} · 🏙️ {cust.city}
+                        </p>
+                        <p className="text-xs text-muted-foreground truncate">
+                          📍 {cust.address}
+                        </p>
+                      </div>
+                      <div className="flex items-center gap-3 flex-shrink-0">
+                        <span className="text-xs bg-accent/10 text-accent px-2 py-1 rounded-full font-medium">
+                          ❤️ {wl.length} wishlist
+                        </span>
+                        <span className="text-xs text-muted-foreground">
+                          {new Date(cust.registeredAt).toLocaleDateString(
+                            "hi-IN",
+                          )}
+                        </span>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="border-destructive text-destructive hover:bg-destructive hover:text-white h-7 w-7 p-0"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            deleteCustomer(cust.id);
+                            toast.success("Customer हटाया गया");
+                          }}
+                          data-ocid={`admin.customers.delete_button.${idx + 1}`}
+                        >
+                          <Trash2 className="h-3.5 w-3.5" />
+                        </Button>
+                      </div>
+                    </button>
+                    {isExpanded && wl.length > 0 && (
+                      <div className="border-t border-border bg-secondary/20 px-4 py-3">
+                        <p className="text-xs font-semibold text-muted-foreground mb-2">
+                          Wishlist Items:
+                        </p>
+                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                          {wl.map((item) => (
+                            <div
+                              key={item.id}
+                              className="flex items-center gap-2 bg-card rounded-lg p-2 border border-border"
+                            >
+                              {item.image && (
+                                <img
+                                  src={item.image}
+                                  alt={item.name}
+                                  className="w-8 h-8 rounded object-cover flex-shrink-0"
+                                />
+                              )}
+                              <div className="min-w-0">
+                                <p className="text-xs font-medium truncate">
+                                  {item.name}
+                                </p>
+                                <p className="text-xs text-primary font-bold">
+                                  ₹{item.price.toLocaleString("en-IN")}
+                                </p>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                    {isExpanded && wl.length === 0 && (
+                      <div className="border-t border-border bg-secondary/20 px-4 py-3 text-center text-sm text-muted-foreground">
+                        इस customer की wishlist खाली है
+                      </div>
+                    )}
+                  </motion.div>
+                );
+              })}
             </div>
           )}
         </TabsContent>

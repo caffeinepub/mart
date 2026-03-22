@@ -75,4 +75,8 @@ export interface backendInterface {
     saveCallerUserProfile(profile: UserProfile): Promise<void>;
     updateProduct(productId: bigint, product: Product): Promise<void>;
     updateStore(storeId: bigint, store: Store): Promise<void>;
+    getProductSnapshot(): Promise<string>;
+    saveProductSnapshot(data: string): Promise<void>;
+    getStoreSnapshot(): Promise<string>;
+    saveStoreSnapshot(data: string): Promise<void>;
 }

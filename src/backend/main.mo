@@ -130,6 +130,38 @@ actor {
   };
 
   /////////////////////////////
+  // Snapshot Storage (Admin Panel Persistence)
+  // No auth required - admin panel is password protected on frontend
+  /////////////////////////////
+  var productSnapshot : Text = "";
+  var storeSnapshot : Text = "";
+  var customerSnapshot : Text = "";
+
+  public query func getProductSnapshot() : async Text {
+    productSnapshot;
+  };
+
+  public func saveProductSnapshot(data : Text) : async () {
+    productSnapshot := data;
+  };
+
+  public query func getStoreSnapshot() : async Text {
+    storeSnapshot;
+  };
+
+  public func saveStoreSnapshot(data : Text) : async () {
+    storeSnapshot := data;
+  };
+
+  public query func getCustomerSnapshot() : async Text {
+    customerSnapshot;
+  };
+
+  public func saveCustomerSnapshot(data : Text) : async () {
+    customerSnapshot := data;
+  };
+
+  /////////////////////////////
   // Product Management ///////
   /////////////////////////////
   public shared ({ caller }) func createProduct(product : Product) : async Nat {

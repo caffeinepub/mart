@@ -1,7 +1,8 @@
 import { ProductCard } from "@/components/ProductCard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { CATEGORIES, SAMPLE_PRODUCTS, SAMPLE_STORES } from "@/data/sampleData";
+import { useProducts } from "@/context/ProductsContext";
+import { CATEGORIES, SAMPLE_STORES } from "@/data/sampleData";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { ArrowRight, MapPin, Sparkles, Store, Tag } from "lucide-react";
 import { motion } from "motion/react";
@@ -17,13 +18,12 @@ const USP_LIST = [
 export function HomePage() {
   const [pinCode, setPinCode] = useState("");
   const navigate = useNavigate();
+  const { products } = useProducts();
 
-  const featuredProducts = SAMPLE_PRODUCTS.filter((p) => p.isFeatured);
-  const dealProducts = SAMPLE_PRODUCTS.filter((p) => p.isDeal && !p.isFeatured);
+  const featuredProducts = products.filter((p) => p.isFeatured);
+  const dealProducts = products.filter((p) => p.isDeal && !p.isFeatured);
   const dealsToShow =
-    dealProducts.length > 0
-      ? dealProducts
-      : SAMPLE_PRODUCTS.filter((p) => p.isDeal);
+    dealProducts.length > 0 ? dealProducts : products.filter((p) => p.isDeal);
 
   const handleFindStore = () => {
     navigate({ to: "/stores", search: { q: pinCode } });

@@ -1,23 +1,24 @@
 import { Layout } from "@/components/Layout";
 import { Toaster } from "@/components/ui/sonner";
 import { CartProvider } from "@/context/CartContext";
+import { CustomerProvider } from "@/context/CustomerContext";
 import { ProductsProvider } from "@/context/ProductsContext";
 import { StoresProvider } from "@/context/StoresContext";
 import { AdminPage } from "@/pages/AdminPage";
 import { CartPage } from "@/pages/CartPage";
+import { CustomerLoginPage } from "@/pages/CustomerLoginPage";
 import { HomePage } from "@/pages/HomePage";
+import { MyAccountPage } from "@/pages/MyAccountPage";
 import { ProductDetailPage } from "@/pages/ProductDetailPage";
 import { ProductsPage } from "@/pages/ProductsPage";
 import { StoreLocatorPage } from "@/pages/StoreLocatorPage";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { UpcomingProductsPage } from "@/pages/UpcomingProductsPage";
 import {
   RouterProvider,
   createRootRoute,
   createRoute,
   createRouter,
 } from "@tanstack/react-router";
-
-const queryClient = new QueryClient();
 
 const rootRoute = createRootRoute({ component: Layout });
 
@@ -63,10 +64,28 @@ const storesRoute = createRoute({
   },
 });
 
+const upcomingRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/upcoming",
+  component: UpcomingProductsPage,
+});
+
 const adminRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/admin",
   component: AdminPage,
+});
+
+const customerLoginRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/customer-login",
+  component: CustomerLoginPage,
+});
+
+const myAccountRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/my-account",
+  component: MyAccountPage,
 });
 
 const routeTree = rootRoute.addChildren([
@@ -75,7 +94,10 @@ const routeTree = rootRoute.addChildren([
   productDetailRoute,
   cartRoute,
   storesRoute,
+  upcomingRoute,
   adminRoute,
+  customerLoginRoute,
+  myAccountRoute,
 ]);
 
 const router = createRouter({ routeTree });
@@ -88,7 +110,7 @@ declare module "@tanstack/react-router" {
 
 export default function App() {
   return (
-    <QueryClientProvider client={queryClient}>
+    <CustomerProvider>
       <ProductsProvider>
         <StoresProvider>
           <CartProvider>
@@ -97,6 +119,6 @@ export default function App() {
           </CartProvider>
         </StoresProvider>
       </ProductsProvider>
-    </QueryClientProvider>
+    </CustomerProvider>
   );
 }
