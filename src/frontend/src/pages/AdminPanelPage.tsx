@@ -32,6 +32,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { useCustomer } from "@/context/CustomerContext";
 import { useProducts } from "@/context/ProductsContext";
+import { useStores } from "@/context/StoresContext";
 import type { SampleProduct } from "@/data/sampleData";
 import { CATEGORIES } from "@/data/sampleData";
 import { Link } from "@tanstack/react-router";
@@ -53,6 +54,7 @@ import {
   ShieldCheck,
   ShoppingBag,
   ShoppingCart,
+  Store,
   Tag,
   Trash2,
   TrendingUp,
@@ -61,7 +63,9 @@ import {
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
-const ADMIN_PASSWORD = "dharma@admin123";
+function getNewAdminPanelPw() {
+  return localStorage.getItem("dharma_admin_panel_pw") || "dharma@admin123";
+}
 
 type AdminSection =
   | "dashboard"
@@ -71,7 +75,8 @@ type AdminSection =
   | "payment"
   | "marketing"
   | "reports"
-  | "security";
+  | "security"
+  | "stores";
 
 interface Order {
   id: string;
@@ -269,6 +274,12 @@ const NAV_ITEMS: {
     label: "Security",
     labelHindi: "सुरक्षा",
   },
+  {
+    id: "stores",
+    icon: <Store className="h-5 w-5" />,
+    label: "Store Inventory",
+    labelHindi: "स्टोर इन्वेंट्री",
+  },
 ];
 
 // ─── Main Component ───────────────────────────────────────────────────────────
@@ -282,7 +293,7 @@ export function AdminPanelPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
   const handleLogin = () => {
-    if (pwInput === ADMIN_PASSWORD) {
+    if (pwInput === getNewAdminPanelPw()) {
       setAuthed(true);
       saveLS("dharma_admin_panel_auth", true);
       logActivity("Admin logged in to Admin Panel");
@@ -478,7 +489,7 @@ export function AdminPanelPage() {
           </div>
         </header>
 
-        <ScrollArea className="flex-1">
+        <div className="flex-1 overflow-y-auto">
           <div className="p-6">
             {activeSection === "dashboard" && (
               <DashboardSection onNavigate={setActiveSection} />
@@ -490,8 +501,9 @@ export function AdminPanelPage() {
             {activeSection === "marketing" && <MarketingSection />}
             {activeSection === "reports" && <ReportsSection />}
             {activeSection === "security" && <SecuritySection />}
+            {activeSection === "stores" && <StoreInventorySection />}
           </div>
-        </ScrollArea>
+        </div>
       </main>
     </div>
   );
@@ -920,6 +932,7 @@ function ProductsSection() {
     originalPrice: 0,
     category: "",
     description: "",
+    details: "",
     image: "",
     stock: 0,
     isDeal: false,
@@ -1553,6 +1566,18 @@ function ProductsSection() {
                 }
                 rows={2}
                 data-ocid="products.description.textarea"
+              />
+            </div>
+            <div className="col-span-2">
+              <Label>Product Details / विस्तृत विवरण</Label>
+              <Textarea
+                value={form.details ?? ""}
+                onChange={(e) =>
+                  setForm((f) => ({ ...f, details: e.target.value }))
+                }
+                rows={4}
+                placeholder="Product की विशेषताएँ, specifications, size, material, brand info, warranty आदि..."
+                data-ocid="products.details.textarea"
               />
             </div>
             <div className="col-span-2">
@@ -3040,7 +3065,7 @@ function SecuritySection() {
   const [pwMsg, setPwMsg] = useState("");
   const activityLog: string[] = loadLS("dharma_admin_log", []);
 
-  const storedPw = useRef(loadLS<string>("dharma_admin_pw", ADMIN_PASSWORD));
+  const storedPw = useRef(getNewAdminPanelPw());
 
   const addUser = () => {
     if (!newUser.name) return;
@@ -3075,7 +3100,7 @@ function SecuritySection() {
       return;
     }
     storedPw.current = pwForm.new1;
-    saveLS("dharma_admin_pw", pwForm.new1);
+    saveLS("dharma_admin_panel_pw", pwForm.new1);
     setPwMsg("Password changed successfully!");
     setPwForm({ current: "", new1: "", new2: "" });
     logActivity("Admin password changed");
@@ -3155,105 +3180,154 @@ function SecuritySection() {
         </CardContent>
       </Card>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Data Security */}
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-base">
-              Data Security / डेटा सुरक्षा
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-              <div>
-                <p className="text-sm font-medium">Auto Backup</p>
-                <p className="text-xs text-muted-foreground">
-                  Last backup: {new Date().toLocaleDateString("en-IN")}
-                </p>
-              </div>
-              <Switch
-                checked={autoBackup}
-                onCheckedChange={(v) => {
-                  setAutoBackup(v);
-                  saveLS("dharma_auto_backup", v);
-                }}
-                data-ocid="security.auto_backup.switch"
-              />
-            </div>
-            <div className="flex items-center gap-2 p-3 bg-green-50 rounded-lg border border-green-200">
-              <ShieldCheck className="h-5 w-5 text-green-600" />
-              <div>
-                <p className="text-sm font-medium text-green-700">
-                  Data Encrypted
-                </p>
-                <p className="text-xs text-green-600">
-                  All customer data is secured
-                </p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Change Password */}
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-base">
-              Change Password / पासवर्ड बदलें
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <div>
-              <Label className="text-xs">Current Password</Label>
-              <Input
-                type="password"
-                value={pwForm.current}
-                onChange={(e) =>
-                  setPwForm((f) => ({ ...f, current: e.target.value }))
-                }
-                data-ocid="security.current_pw.input"
-              />
-            </div>
-            <div>
-              <Label className="text-xs">New Password</Label>
-              <Input
-                type="password"
-                value={pwForm.new1}
-                onChange={(e) =>
-                  setPwForm((f) => ({ ...f, new1: e.target.value }))
-                }
-                data-ocid="security.new_pw.input"
-              />
-            </div>
-            <div>
-              <Label className="text-xs">Confirm New Password</Label>
-              <Input
-                type="password"
-                value={pwForm.new2}
-                onChange={(e) =>
-                  setPwForm((f) => ({ ...f, new2: e.target.value }))
-                }
-                data-ocid="security.confirm_pw.input"
-              />
-            </div>
-            {pwMsg && (
-              <p
-                className={`text-xs ${pwMsg.includes("success") ? "text-green-600" : "text-destructive"}`}
-                data-ocid="security.pw_change.success_state"
-              >
-                {pwMsg}
+      {/* Password Management Section */}
+      <div className="space-y-6">
+        <h3 className="text-base font-semibold text-foreground flex items-center gap-2">
+          🔑 Password Management / पासवर्ड प्रबंधन
+        </h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Classic Admin Panel Password */}
+          <ClassicAdminPasswordCard />
+          {/* New Admin Panel Password */}
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-base flex items-center gap-2">
+                🛡️ New Admin Panel (/admin-panel) Password
+              </CardTitle>
+              <p className="text-xs text-muted-foreground">
+                इस panel का पासवर्ड बदलें
               </p>
-            )}
-            <Button
-              onClick={changePw}
-              className="w-full bg-teal-700 hover:bg-teal-800 text-white"
-              data-ocid="security.change_pw.button"
-            >
-              Change Password
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <div>
+                <Label className="text-xs">Current Password</Label>
+                <Input
+                  type="password"
+                  value={pwForm.current}
+                  onChange={(e) =>
+                    setPwForm((f) => ({ ...f, current: e.target.value }))
+                  }
+                  data-ocid="security.current_pw.input"
+                />
+              </div>
+              <div>
+                <Label className="text-xs">New Password</Label>
+                <Input
+                  type="password"
+                  value={pwForm.new1}
+                  onChange={(e) =>
+                    setPwForm((f) => ({ ...f, new1: e.target.value }))
+                  }
+                  data-ocid="security.new_pw.input"
+                />
+              </div>
+              <div>
+                <Label className="text-xs">Confirm New Password</Label>
+                <Input
+                  type="password"
+                  value={pwForm.new2}
+                  onChange={(e) =>
+                    setPwForm((f) => ({ ...f, new2: e.target.value }))
+                  }
+                  data-ocid="security.confirm_pw.input"
+                />
+              </div>
+              {pwMsg && (
+                <p
+                  className={`text-xs ${pwMsg.includes("success") ? "text-green-600" : "text-destructive"}`}
+                  data-ocid="security.pw_change.success_state"
+                >
+                  {pwMsg}
+                </p>
+              )}
+              <div className="flex gap-2">
+                <Button
+                  onClick={changePw}
+                  className="flex-1 bg-teal-700 hover:bg-teal-800 text-white"
+                  data-ocid="security.change_pw.button"
+                >
+                  Change Password
+                </Button>
+                <Button
+                  variant="outline"
+                  className="text-xs border-red-200 text-red-600 hover:bg-red-50"
+                  onClick={() => {
+                    saveLS("dharma_admin_panel_pw", "dharma@admin123");
+                    storedPw.current = "dharma@admin123";
+                    setPwMsg("Reset to: dharma@admin123");
+                  }}
+                  data-ocid="security.reset_admin_pw.button"
+                >
+                  Reset Default
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
 
+        {/* Store Passwords */}
+        <StorePasswordsCard />
+
+        {/* Data Security */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-base">
+                Data Security / डेटा सुरक्षा
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                <div>
+                  <p className="text-sm font-medium">Auto Backup</p>
+                  <p className="text-xs text-muted-foreground">
+                    Last backup: {new Date().toLocaleDateString("en-IN")}
+                  </p>
+                </div>
+                <Switch
+                  checked={autoBackup}
+                  onCheckedChange={(v) => {
+                    setAutoBackup(v);
+                    saveLS("dharma_auto_backup", v);
+                  }}
+                  data-ocid="security.auto_backup.switch"
+                />
+              </div>
+              <div className="flex items-center gap-2 p-3 bg-green-50 rounded-lg border border-green-200">
+                <ShieldCheck className="h-5 w-5 text-green-600" />
+                <div>
+                  <p className="text-sm font-medium text-green-700">
+                    Data Encrypted
+                  </p>
+                  <p className="text-xs text-green-600">
+                    All customer data is secured
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+          {/* User Password Reset */}
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-base">
+                User Password Reset / यूजर पासवर्ड रिसेट
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <div className="p-3 bg-amber-50 rounded-lg border border-amber-200 flex items-start gap-2">
+                <ShieldCheck className="h-4 w-4 text-amber-600 mt-0.5 flex-shrink-0" />
+                <p className="text-xs text-amber-700">
+                  Customer accounts का password reset करें
+                </p>
+              </div>
+              <p className="text-xs font-medium text-gray-600">
+                Customer Accounts / ग्राहक खाते
+              </p>
+              <CustomerPasswordResetList />
+            </CardContent>
+          </Card>
+        </div>
+      </div>
       {/* Activity Log */}
       <Card>
         <CardHeader className="pb-2">
@@ -3338,6 +3412,658 @@ function SecuritySection() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+    </div>
+  );
+}
+
+function ClassicAdminPasswordCard() {
+  const [form, setForm] = useState({ current: "", new1: "", new2: "" });
+  const [msg, setMsg] = useState("");
+  const [showCurrent, setShowCurrent] = useState(false);
+
+  const currentPw =
+    localStorage.getItem("dharma_admin_classic_pw") || "dharma@admin123";
+
+  const changePw = () => {
+    if (form.current !== currentPw) {
+      setMsg("Current password incorrect / गलत पासवर्ड");
+      return;
+    }
+    if (form.new1.length < 6) {
+      setMsg("New password must be at least 6 characters");
+      return;
+    }
+    if (form.new1 !== form.new2) {
+      setMsg("Passwords do not match");
+      return;
+    }
+    localStorage.setItem("dharma_admin_classic_pw", form.new1);
+    setMsg("Password changed successfully! ✓");
+    setForm({ current: "", new1: "", new2: "" });
+    logActivity("Classic Admin password changed");
+  };
+
+  return (
+    <Card>
+      <CardHeader className="pb-2">
+        <CardTitle className="text-base flex items-center gap-2">
+          🔧 Classic Admin (/admin) Password
+        </CardTitle>
+        <p className="text-xs text-muted-foreground">
+          पुराने admin panel का पासवर्ड बदलें
+        </p>
+      </CardHeader>
+      <CardContent className="space-y-3">
+        <div className="flex items-center gap-2 p-2 bg-gray-50 rounded border text-xs">
+          <span className="text-muted-foreground">Current:</span>
+          <span className="font-mono font-medium">
+            {showCurrent ? currentPw : "••••••••"}
+          </span>
+          <button
+            type="button"
+            className="ml-auto text-teal-600 underline text-xs"
+            onClick={() => setShowCurrent((v) => !v)}
+          >
+            {showCurrent ? "Hide" : "Show"}
+          </button>
+        </div>
+        <div>
+          <Label className="text-xs">Current Password</Label>
+          <Input
+            type="password"
+            value={form.current}
+            onChange={(e) =>
+              setForm((f) => ({ ...f, current: e.target.value }))
+            }
+            data-ocid="security.classic_current_pw.input"
+          />
+        </div>
+        <div>
+          <Label className="text-xs">New Password</Label>
+          <Input
+            type="password"
+            value={form.new1}
+            onChange={(e) => setForm((f) => ({ ...f, new1: e.target.value }))}
+            data-ocid="security.classic_new_pw.input"
+          />
+        </div>
+        <div>
+          <Label className="text-xs">Confirm New Password</Label>
+          <Input
+            type="password"
+            value={form.new2}
+            onChange={(e) => setForm((f) => ({ ...f, new2: e.target.value }))}
+            data-ocid="security.classic_confirm_pw.input"
+          />
+        </div>
+        {msg && (
+          <p
+            className={`text-xs ${msg.includes("success") ? "text-green-600" : "text-destructive"}`}
+          >
+            {msg}
+          </p>
+        )}
+        <div className="flex gap-2">
+          <Button
+            onClick={changePw}
+            className="flex-1 bg-teal-700 hover:bg-teal-800 text-white"
+            data-ocid="security.classic_change_pw.button"
+          >
+            Change Password
+          </Button>
+          <Button
+            variant="outline"
+            className="text-xs border-red-200 text-red-600 hover:bg-red-50"
+            onClick={() => {
+              localStorage.setItem(
+                "dharma_admin_classic_pw",
+                "dharma@admin123",
+              );
+              setMsg("Reset to: dharma@admin123");
+              logActivity("Classic Admin password reset to default");
+            }}
+            data-ocid="security.classic_reset_pw.button"
+          >
+            Reset Default
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
+function StorePasswordsCard() {
+  const { stores } = useStores();
+  const [storePws, setStorePws] = useState<Record<string, string>>(() => {
+    const obj: Record<string, string> = {};
+    for (const s of stores) {
+      obj[String(s.id)] =
+        localStorage.getItem(`dharma_store_pw_${s.id}`) ||
+        s.password ||
+        "store@123";
+    }
+    return obj;
+  });
+  const [editPws, setEditPws] = useState<Record<string, string>>({});
+  const [showPws, setShowPws] = useState<Record<string, boolean>>({});
+  const [msgs, setMsgs] = useState<Record<string, string>>({});
+
+  const saveStorePw = (storeId: string) => {
+    const newPw = editPws[storeId];
+    if (!newPw || newPw.length < 4) {
+      setMsgs((m) => ({
+        ...m,
+        [storeId]: "Password at least 4 characters / कम से कम 4 अक्षर",
+      }));
+      return;
+    }
+    localStorage.setItem(`dharma_store_pw_${storeId}`, newPw);
+    setStorePws((p) => ({ ...p, [storeId]: newPw }));
+    setEditPws((p) => ({ ...p, [storeId]: "" }));
+    setMsgs((m) => ({ ...m, [storeId]: "✓ Saved!" }));
+    logActivity(`Store #${storeId} password changed`);
+    setTimeout(() => setMsgs((m) => ({ ...m, [storeId]: "" })), 2000);
+  };
+
+  const resetStorePw = (storeId: string) => {
+    localStorage.setItem(`dharma_store_pw_${storeId}`, "store@123");
+    setStorePws((p) => ({ ...p, [storeId]: "store@123" }));
+    setMsgs((m) => ({ ...m, [storeId]: "✓ Reset to store@123" }));
+    logActivity(`Store #${storeId} password reset to default`);
+    setTimeout(() => setMsgs((m) => ({ ...m, [storeId]: "" })), 2000);
+  };
+
+  const resetAllStores = () => {
+    for (const s of stores) {
+      localStorage.setItem(`dharma_store_pw_${s.id}`, "store@123");
+    }
+    const allPws: Record<string, string> = {};
+    for (const s of stores) {
+      allPws[String(s.id)] = "store@123";
+    }
+    setStorePws(allPws);
+    logActivity("All store passwords reset to default");
+  };
+
+  return (
+    <Card>
+      <CardHeader className="pb-3">
+        <div className="flex items-center justify-between flex-wrap gap-2">
+          <div>
+            <CardTitle className="text-base flex items-center gap-2">
+              🏪 Store Passwords / स्टोर पासवर्ड
+            </CardTitle>
+            <p className="text-xs text-muted-foreground mt-1">
+              हर store का अलग password set करें
+            </p>
+          </div>
+          <Button
+            size="sm"
+            variant="outline"
+            className="text-xs border-red-200 text-red-600 hover:bg-red-50"
+            onClick={resetAllStores}
+            data-ocid="security.reset_all_stores.button"
+          >
+            Reset All to Default (store@123)
+          </Button>
+        </div>
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-3">
+          {stores.map((store, idx) => {
+            const sid = String(store.id);
+            return (
+              <div
+                key={store.id}
+                className="p-3 border rounded-lg bg-gray-50 space-y-2"
+                data-ocid={`security.store.item.${idx + 1}`}
+              >
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-semibold">
+                      {store.name || store.city}
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      {store.address} · {store.city}
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-1 text-xs bg-white border rounded px-2 py-1">
+                    <span className="font-mono">
+                      {showPws[sid] ? storePws[sid] : "••••••••"}
+                    </span>
+                    <button
+                      type="button"
+                      className="text-teal-600 ml-1"
+                      onClick={() =>
+                        setShowPws((p) => ({ ...p, [sid]: !p[sid] }))
+                      }
+                    >
+                      {showPws[sid] ? "🙈" : "👁"}
+                    </button>
+                  </div>
+                </div>
+                <div className="flex gap-2">
+                  <Input
+                    placeholder="New password / नया पासवर्ड"
+                    type="password"
+                    className="h-8 text-xs"
+                    value={editPws[sid] || ""}
+                    onChange={(e) =>
+                      setEditPws((p) => ({ ...p, [sid]: e.target.value }))
+                    }
+                    data-ocid={`security.store_pw.input.${idx + 1}`}
+                  />
+                  <Button
+                    size="sm"
+                    className="h-8 bg-teal-700 hover:bg-teal-800 text-white text-xs px-3"
+                    onClick={() => saveStorePw(sid)}
+                    data-ocid={`security.store_pw.save_button.${idx + 1}`}
+                  >
+                    Save
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="h-8 text-xs px-2 border-orange-200 text-orange-600 hover:bg-orange-50"
+                    onClick={() => resetStorePw(sid)}
+                    data-ocid={`security.store_pw.delete_button.${idx + 1}`}
+                  >
+                    Reset
+                  </Button>
+                </div>
+                {msgs[sid] && (
+                  <p
+                    className={`text-xs ${msgs[sid].includes("✓") ? "text-green-600" : "text-destructive"}`}
+                  >
+                    {msgs[sid]}
+                  </p>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
+function CustomerPasswordResetList() {
+  const { allCustomers: customers } = useCustomer();
+  const [resetFor, setResetFor] = useState<string | null>(null);
+  const [newPw, setNewPw] = useState("");
+  const [msg, setMsg] = useState<Record<string, string>>({});
+
+  const doReset = (mobile: string, name: string) => {
+    if (newPw.length < 4) {
+      setMsg((m) => ({ ...m, [mobile]: "Min 4 characters" }));
+      return;
+    }
+    saveLS(`dharma_customer_pw_${mobile}`, newPw);
+    setMsg((m) => ({ ...m, [mobile]: `✅ Reset for ${name}` }));
+    setResetFor(null);
+    setNewPw("");
+  };
+
+  if (customers.length === 0) {
+    return (
+      <p className="text-xs text-muted-foreground">
+        No customers registered yet
+      </p>
+    );
+  }
+
+  return (
+    <div className="space-y-2 max-h-48 overflow-y-auto pr-1">
+      {customers.map((c) => (
+        <div
+          key={c.mobile}
+          className="flex flex-col gap-1 p-2 bg-gray-50 rounded border text-xs"
+        >
+          <div className="flex items-center justify-between">
+            <div>
+              <span className="font-medium">{c.name}</span>
+              <span className="text-muted-foreground ml-2">{c.mobile}</span>
+            </div>
+            <Button
+              size="sm"
+              variant="outline"
+              className="h-6 text-xs px-2"
+              onClick={() => {
+                setResetFor(c.mobile);
+                setNewPw("");
+              }}
+              data-ocid="security.customer_reset.button"
+            >
+              Reset
+            </Button>
+          </div>
+          {resetFor === c.mobile && (
+            <div className="flex gap-1 mt-1">
+              <Input
+                type="password"
+                placeholder="New password"
+                value={newPw}
+                onChange={(e) => setNewPw(e.target.value)}
+                className="h-6 text-xs"
+                data-ocid="security.customer_new_pw.input"
+              />
+              <Button
+                size="sm"
+                className="h-6 text-xs bg-teal-700 hover:bg-teal-800 text-white px-2"
+                onClick={() => doReset(c.mobile, c.name)}
+                data-ocid="security.customer_reset_confirm.button"
+              >
+                OK
+              </Button>
+            </div>
+          )}
+          {msg[c.mobile] && (
+            <p
+              className={`text-xs ${msg[c.mobile].startsWith("✅") ? "text-green-600" : "text-destructive"}`}
+            >
+              {msg[c.mobile]}
+            </p>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// ─── Store Inventory Section ──────────────────────────────────────────────────
+function StoreInventorySection() {
+  const { stores } = useStores();
+  const { products } = useProducts();
+  const [selectedStoreId, setSelectedStoreId] = useState<number | null>(null);
+
+  // Only stores that have submitted products
+  const storeStats = stores
+    .map((store) => {
+      const storeProducts = products.filter(
+        (p) =>
+          (p as unknown as { storeId?: number; storeSubmitted?: boolean })
+            .storeId === store.id &&
+          (p as unknown as { storeSubmitted?: boolean }).storeSubmitted ===
+            true,
+      );
+      const totalStock = storeProducts.reduce(
+        (sum, p) => sum + (p.stock ?? 0),
+        0,
+      );
+      const inStockCount = storeProducts.filter(
+        (p) => (p.stock ?? 0) > 0,
+      ).length;
+      const outOfStockCount = storeProducts.filter(
+        (p) => (p.stock ?? 0) === 0,
+      ).length;
+      return {
+        store,
+        storeProducts,
+        totalStock,
+        inStockCount,
+        outOfStockCount,
+      };
+    })
+    .filter((s) => s.storeProducts.length > 0);
+
+  const selectedStore =
+    storeStats.find((s) => s.store.id === selectedStoreId) ??
+    storeStats[0] ??
+    null;
+
+  return (
+    <div className="space-y-6">
+      <div>
+        <h2 className="text-2xl font-bold text-gray-800">
+          🏪 स्टोर इन्वेंट्री / Store Inventory
+        </h2>
+        <p className="text-gray-500 text-sm mt-1">
+          किस स्टोर ने कितना माल जोड़ा है और स्टॉक की स्थिति
+        </p>
+      </div>
+
+      {storeStats.length === 0 ? (
+        <Card>
+          <CardContent className="py-16 text-center text-gray-400">
+            <div className="text-5xl mb-3">🏪</div>
+            <p className="text-lg font-medium">
+              अभी कोई स्टोर ने प्रोडक्ट नहीं जोड़े हैं
+            </p>
+            <p className="text-sm mt-1">
+              Store owners को <strong>/store-login</strong> से login करके products
+              add करने को कहें।
+            </p>
+          </CardContent>
+        </Card>
+      ) : (
+        <>
+          {/* Summary Cards */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <Card className="border-teal-200 bg-teal-50">
+              <CardContent className="pt-4 pb-3">
+                <p className="text-xs text-teal-600 font-medium">
+                  कुल स्टोर (Products वाले)
+                </p>
+                <p className="text-3xl font-bold text-teal-700 mt-1">
+                  {storeStats.length}
+                </p>
+              </CardContent>
+            </Card>
+            <Card className="border-orange-200 bg-orange-50">
+              <CardContent className="pt-4 pb-3">
+                <p className="text-xs text-orange-600 font-medium">
+                  कुल Products
+                </p>
+                <p className="text-3xl font-bold text-orange-700 mt-1">
+                  {storeStats.reduce((s, x) => s + x.storeProducts.length, 0)}
+                </p>
+              </CardContent>
+            </Card>
+            <Card className="border-green-200 bg-green-50">
+              <CardContent className="pt-4 pb-3">
+                <p className="text-xs text-green-600 font-medium">
+                  कुल Stock (Units)
+                </p>
+                <p className="text-3xl font-bold text-green-700 mt-1">
+                  {storeStats.reduce((s, x) => s + x.totalStock, 0)}
+                </p>
+              </CardContent>
+            </Card>
+            <Card className="border-red-200 bg-red-50">
+              <CardContent className="pt-4 pb-3">
+                <p className="text-xs text-red-600 font-medium">
+                  Out of Stock Products
+                </p>
+                <p className="text-3xl font-bold text-red-700 mt-1">
+                  {storeStats.reduce((s, x) => s + x.outOfStockCount, 0)}
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Store Cards Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {storeStats.map(
+              ({
+                store,
+                storeProducts,
+                totalStock,
+                inStockCount,
+                outOfStockCount,
+              }) => (
+                <Card
+                  key={store.id}
+                  className={`cursor-pointer transition-all border-2 hover:shadow-md ${
+                    selectedStore?.store.id === store.id
+                      ? "border-teal-500 shadow-md"
+                      : "border-gray-200"
+                  }`}
+                  onClick={() => setSelectedStoreId(store.id)}
+                >
+                  <CardHeader className="pb-2 pt-4 px-4">
+                    <CardTitle className="text-base flex items-center gap-2">
+                      <span className="text-xl">🏪</span>
+                      <div>
+                        <div className="font-bold text-gray-800">
+                          {store.name || store.city}
+                        </div>
+                        <div className="text-xs text-gray-500 font-normal">
+                          {store.city} · {store.address}
+                        </div>
+                      </div>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="px-4 pb-4">
+                    <div className="grid grid-cols-3 gap-2 mt-1">
+                      <div className="text-center bg-teal-50 rounded-lg py-2">
+                        <div className="text-xl font-bold text-teal-700">
+                          {storeProducts.length}
+                        </div>
+                        <div className="text-xs text-teal-600">Products</div>
+                      </div>
+                      <div className="text-center bg-green-50 rounded-lg py-2">
+                        <div className="text-xl font-bold text-green-700">
+                          {totalStock}
+                        </div>
+                        <div className="text-xs text-green-600">
+                          Total Stock
+                        </div>
+                      </div>
+                      <div className="text-center bg-red-50 rounded-lg py-2">
+                        <div className="text-xl font-bold text-red-700">
+                          {outOfStockCount}
+                        </div>
+                        <div className="text-xs text-red-600">Out of Stock</div>
+                      </div>
+                    </div>
+                    <div className="mt-3">
+                      <div className="flex justify-between text-xs text-gray-500 mb-1">
+                        <span>In Stock: {inStockCount}</span>
+                        <span>
+                          {storeProducts.length > 0
+                            ? Math.round(
+                                (inStockCount / storeProducts.length) * 100,
+                              )
+                            : 0}
+                          %
+                        </span>
+                      </div>
+                      <Progress
+                        value={
+                          storeProducts.length > 0
+                            ? (inStockCount / storeProducts.length) * 100
+                            : 0
+                        }
+                        className="h-2"
+                      />
+                    </div>
+                  </CardContent>
+                </Card>
+              ),
+            )}
+          </div>
+
+          {/* Selected Store Products Table */}
+          {selectedStore && (
+            <Card>
+              <CardHeader className="pb-2">
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <span>🏪</span>
+                  <span>
+                    {selectedStore.store.name || selectedStore.store.city} —
+                    प्रोडक्ट लिस्ट
+                  </span>
+                  <Badge className="ml-2 bg-teal-600">
+                    {selectedStore.storeProducts.length} items
+                  </Badge>
+                </CardTitle>
+                <p className="text-xs text-gray-500">
+                  {selectedStore.store.city} · {selectedStore.store.address}
+                </p>
+              </CardHeader>
+              <CardContent>
+                <div className="overflow-x-auto">
+                  <Table>
+                    <TableHeader>
+                      <TableRow className="bg-gray-50">
+                        <TableHead className="w-12">#</TableHead>
+                        <TableHead>प्रोडक्ट नाम</TableHead>
+                        <TableHead>Category</TableHead>
+                        <TableHead>Price</TableHead>
+                        <TableHead>Stock</TableHead>
+                        <TableHead>Status</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {selectedStore.storeProducts.map((p, idx) => (
+                        <TableRow
+                          key={p.id}
+                          className={
+                            p.stock === 0
+                              ? "bg-red-50"
+                              : p.stock < 10
+                                ? "bg-yellow-50"
+                                : ""
+                          }
+                        >
+                          <TableCell className="text-gray-400 text-sm">
+                            {idx + 1}
+                          </TableCell>
+                          <TableCell>
+                            <div className="flex items-center gap-2">
+                              {p.image && (
+                                <img
+                                  src={p.image}
+                                  alt={p.name}
+                                  className="w-8 h-8 object-cover rounded"
+                                  onError={(e) => {
+                                    (
+                                      e.target as HTMLImageElement
+                                    ).style.display = "none";
+                                  }}
+                                />
+                              )}
+                              <span className="font-medium text-gray-800">
+                                {p.name}
+                              </span>
+                            </div>
+                          </TableCell>
+                          <TableCell className="text-gray-600 text-sm">
+                            {p.category}
+                          </TableCell>
+                          <TableCell className="font-semibold text-gray-800">
+                            ₹{p.price?.toLocaleString("en-IN")}
+                          </TableCell>
+                          <TableCell
+                            className={`font-bold ${p.stock === 0 ? "text-red-600" : p.stock < 10 ? "text-yellow-600" : "text-green-700"}`}
+                          >
+                            {p.stock ?? 0}
+                          </TableCell>
+                          <TableCell>
+                            {p.stock === 0 ? (
+                              <Badge className="bg-red-500 text-white text-xs">
+                                Out of Stock
+                              </Badge>
+                            ) : p.stock < 10 ? (
+                              <Badge className="bg-yellow-500 text-white text-xs">
+                                Low Stock
+                              </Badge>
+                            ) : (
+                              <Badge className="bg-green-500 text-white text-xs">
+                                In Stock
+                              </Badge>
+                            )}
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+        </>
+      )}
     </div>
   );
 }

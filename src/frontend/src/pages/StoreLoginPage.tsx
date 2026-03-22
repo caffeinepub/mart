@@ -26,7 +26,10 @@ export function StoreLoginPage() {
       setError("Store not found");
       return;
     }
-    const storePass = store.password || "store@123";
+    const storePass =
+      localStorage.getItem(`dharma_store_pw_${store.id}`) ||
+      store.password ||
+      "store@123";
     if (password !== storePass) {
       setError("गलत पासवर्ड। कृपया फिर कोशिश करें।");
       return;

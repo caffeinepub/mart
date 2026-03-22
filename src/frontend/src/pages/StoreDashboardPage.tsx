@@ -38,6 +38,8 @@ export function StoreDashboardPage() {
     null,
   );
   const [activeTab, setActiveTab] = useState("my-products");
+  const [pwForm, setPwForm] = useState({ new1: "", new2: "" });
+  const [pwMsg, setPwMsg] = useState("");
 
   if (!storeId || !store) {
     return (
@@ -204,6 +206,13 @@ export function StoreDashboardPage() {
             >
               <Plus className="h-4 w-4" />
               {editingProduct ? "Edit Product" : "Add Product / उत्पाद जोड़ें"}
+            </TabsTrigger>
+            <TabsTrigger
+              value="change-password"
+              className="gap-2 data-[state=active]:bg-primary data-[state=active]:text-white"
+              data-ocid="store_dashboard.tab"
+            >
+              🔑 Password
             </TabsTrigger>
           </TabsList>
 
@@ -441,6 +450,87 @@ export function StoreDashboardPage() {
                     </Button>
                   )}
                 </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+          {/* Change Password Tab */}
+          <TabsContent value="change-password">
+            <Card className="max-w-md mx-auto">
+              <CardHeader>
+                <CardTitle className="text-base flex items-center gap-2">
+                  🔑 Change Password / पासवर्ड बदलें
+                </CardTitle>
+                <p className="text-xs text-muted-foreground">
+                  यह password मुख्य Admin Panel से भी बदला जा सकता है।
+                </p>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex items-center gap-2 p-2 bg-gray-50 rounded border text-xs">
+                  <span className="text-muted-foreground">
+                    Current password:
+                  </span>
+                  <span className="font-mono font-medium">
+                    {localStorage.getItem(`dharma_store_pw_${storeId}`) ||
+                      store.password ||
+                      "store@123"}
+                  </span>
+                </div>
+                <div>
+                  <Label className="text-xs">
+                    New Password / नया पासवर्ड (min 6 chars)
+                  </Label>
+                  <Input
+                    type="password"
+                    value={pwForm.new1}
+                    onChange={(e) =>
+                      setPwForm((f) => ({ ...f, new1: e.target.value }))
+                    }
+                    placeholder="Enter new password"
+                    data-ocid="store_dashboard.new_pw.input"
+                  />
+                </div>
+                <div>
+                  <Label className="text-xs">Confirm Password / पुष्टि करें</Label>
+                  <Input
+                    type="password"
+                    value={pwForm.new2}
+                    onChange={(e) =>
+                      setPwForm((f) => ({ ...f, new2: e.target.value }))
+                    }
+                    placeholder="Confirm new password"
+                    data-ocid="store_dashboard.confirm_pw.input"
+                  />
+                </div>
+                {pwMsg && (
+                  <p
+                    className={`text-xs ${pwMsg.includes("✓") ? "text-green-600" : "text-destructive"}`}
+                    data-ocid="store_dashboard.pw_change.success_state"
+                  >
+                    {pwMsg}
+                  </p>
+                )}
+                <Button
+                  className="w-full bg-teal-700 hover:bg-teal-800 text-white"
+                  onClick={() => {
+                    if (pwForm.new1.length < 6) {
+                      setPwMsg("Password कम से कम 6 characters का होना चाहिए");
+                      return;
+                    }
+                    if (pwForm.new1 !== pwForm.new2) {
+                      setPwMsg("Passwords match नहीं हो रहे");
+                      return;
+                    }
+                    localStorage.setItem(
+                      `dharma_store_pw_${storeId}`,
+                      pwForm.new1,
+                    );
+                    setPwMsg("✓ Password successfully saved!");
+                    setPwForm({ new1: "", new2: "" });
+                  }}
+                  data-ocid="store_dashboard.save_pw.button"
+                >
+                  Save New Password / नया पासवर्ड सहेजें
+                </Button>
               </CardContent>
             </Card>
           </TabsContent>

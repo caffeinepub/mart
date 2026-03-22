@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button";
 import { useCustomer } from "@/context/CustomerContext";
-import { getProductImage } from "@/utils/productImages";
 import { Link, useNavigate } from "@tanstack/react-router";
 import {
   Heart,
@@ -16,7 +15,7 @@ import { useEffect } from "react";
 import { toast } from "sonner";
 
 export function MyAccountPage() {
-  const { customer, logout, getWishlist } = useCustomer();
+  const { customer, logout, wishlistItems } = useCustomer();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -26,8 +25,6 @@ export function MyAccountPage() {
   }, [customer, navigate]);
 
   if (!customer) return null;
-
-  const wishlist = getWishlist(customer.id);
 
   const handleLogout = () => {
     logout();
@@ -125,7 +122,7 @@ export function MyAccountPage() {
             className="w-full h-14 bg-accent hover:opacity-90 text-white gap-2 font-semibold"
             data-ocid="customer.shop.button"
           >
-            🛗 Shop Now
+            🛒 Shop Now
           </Button>
         </Link>
       </div>
@@ -143,11 +140,11 @@ export function MyAccountPage() {
             My Wishlist / मेरी विशलिस्ट
           </h2>
           <span className="ml-auto text-sm text-muted-foreground">
-            {wishlist.length} items
+            {wishlistItems.length} items
           </span>
         </div>
 
-        {wishlist.length === 0 ? (
+        {wishlistItems.length === 0 ? (
           <div
             className="text-center py-12 px-6"
             data-ocid="customer.wishlist.empty_state"
@@ -170,7 +167,7 @@ export function MyAccountPage() {
           </div>
         ) : (
           <div className="divide-y divide-border">
-            {wishlist.map((item, idx) => (
+            {wishlistItems.map((item, idx) => (
               <motion.div
                 key={item.id}
                 initial={{ opacity: 0 }}
@@ -186,12 +183,12 @@ export function MyAccountPage() {
                       alt={item.name}
                       className="w-full h-full object-cover"
                       onError={(e) => {
-                        e.currentTarget.src = `https://picsum.photos/seed/${encodeURIComponent(item.name)}/56/56`;
+                        e.currentTarget.style.display = "none";
                       }}
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center text-2xl">
-                      🛗
+                      🛒
                     </div>
                   )}
                 </div>

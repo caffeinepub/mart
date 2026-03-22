@@ -47,7 +47,9 @@ import { motion } from "motion/react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
-const ADMIN_PASSWORD = "dharma@admin123";
+function getClassicAdminPw() {
+  return localStorage.getItem("dharma_admin_classic_pw") || "dharma@admin123";
+}
 
 interface NewStore {
   city: string;
@@ -65,6 +67,7 @@ interface NewProductForm {
   stock: string;
   badge: string;
   description: string;
+  details: string;
   image: string;
   image2: string;
   image3: string;
@@ -82,6 +85,7 @@ const EMPTY_PRODUCT_FORM: NewProductForm = {
   stock: "10",
   badge: "",
   description: "",
+  details: "",
   image: "",
   image2: "",
   image3: "",
@@ -139,6 +143,63 @@ export function AdminPage() {
   const [productFilter, setProductFilter] = useState<"all" | "store">("all");
   const [showStorePassId, setShowStorePassId] = useState<number | null>(null);
 
+  // Category management state
+  const [productSubTab, setProductSubTab] = useState<"list" | "categories">(
+    "list",
+  );
+  const [customCategories, setCustomCategories] = useState<
+    { id: string; label: string; labelHindi: string; emoji: string }[]
+  >(() => {
+    try {
+      const saved = localStorage.getItem("dharma_custom_categories");
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
+  const [newCatForm, setNewCatForm] = useState({
+    label: "",
+    labelHindi: "",
+    emoji: "📦",
+  });
+  const allCategories = [
+    ...CATEGORIES.filter((c) => c.id !== "all"),
+    ...customCategories,
+  ];
+
+  const saveCustomCategories = (cats: typeof customCategories) => {
+    setCustomCategories(cats);
+    localStorage.setItem("dharma_custom_categories", JSON.stringify(cats));
+  };
+
+  const handleAddCategory = () => {
+    if (!newCatForm.label.trim()) return;
+    const id = newCatForm.label
+      .toLowerCase()
+      .replace(/\s+/g, "-")
+      .replace(/[^a-z0-9-]/g, "");
+    if (allCategories.some((c) => c.id === id)) {
+      toast.error("यह category पहले से है!");
+      return;
+    }
+    saveCustomCategories([
+      ...customCategories,
+      {
+        id,
+        label: newCatForm.label.toUpperCase(),
+        labelHindi: newCatForm.labelHindi,
+        emoji: newCatForm.emoji,
+      },
+    ]);
+    setNewCatForm({ label: "", labelHindi: "", emoji: "📦" });
+    toast.success(`Category "${newCatForm.label}" add हो गई!`);
+  };
+
+  const handleDeleteCustomCategory = (id: string) => {
+    saveCustomCategories(customCategories.filter((c) => c.id !== id));
+    toast.success("Category हटा दी गई!");
+  };
+
   const isLoggedIn = identity || passwordUnlocked;
 
   useEffect(() => {
@@ -159,7 +220,7 @@ export function AdminPage() {
   }, [isLoggedIn, actor]);
 
   const handlePasswordLogin = () => {
-    if (passwordInput === ADMIN_PASSWORD) {
+    if (passwordInput === getClassicAdminPw()) {
       setPasswordUnlocked(true);
       setPasswordError("");
       toast.success("Admin panel unlock हो गई!");
@@ -260,6 +321,7 @@ export function AdminPage() {
       name: newProduct.name,
       nameHindi: newProduct.nameHindi || newProduct.name,
       description: newProduct.description,
+      details: newProduct.details || undefined,
       price: Number(newProduct.price),
       originalPrice: newProduct.originalPrice
         ? Number(newProduct.originalPrice)
@@ -522,6 +584,21 @@ export function AdminPage() {
                 />
               </div>
               <div>
+                <div>
+                  <Label htmlFor="edit-details">Product Details / विवरण</Label>
+                  <Textarea
+                    id="edit-details"
+                    value={editProduct.details ?? ""}
+                    onChange={(e) =>
+                      setEditProduct((p) =>
+                        p ? { ...p, details: e.target.value } : p,
+                      )
+                    }
+                    placeholder="Product की विशेषताएँ, specifications, size, material आदि..."
+                    className="mt-1 resize-none"
+                    rows={4}
+                  />
+                </div>
                 <Label htmlFor="edit-image">Image URL</Label>
                 <Input
                   id="edit-image"
@@ -765,6 +842,20 @@ export function AdminPage() {
               />
             </div>
             <div>
+              <Label htmlFor="add-details">Product Details / विवरण</Label>
+              <Textarea
+                id="add-details"
+                value={newProduct.details}
+                onChange={(e) =>
+                  setNewProduct((p) => ({ ...p, details: e.target.value }))
+                }
+                placeholder="Product की विशेषताएँ, specifications, size, material, brand info आदि..."
+                className="mt-1 resize-none"
+                rows={4}
+                data-ocid="admin.add_product.details.textarea"
+              />
+            </div>
+            <div>
               <Label htmlFor="add-image">Image URL (optional)</Label>
               <Input
                 id="add-image"
@@ -965,132 +1056,283 @@ export function AdminPage() {
         </TabsList>
 
         <TabsContent value="products">
-          <div className="flex items-center justify-between mb-4 gap-3 flex-wrap">
-            <div className="flex gap-2">
-              <button
-                type="button"
-                onClick={() => setProductFilter("all")}
-                className={
-                  productFilter === "all"
-                    ? "px-3 py-1 rounded-full text-sm font-medium bg-primary text-white"
-                    : "px-3 py-1 rounded-full text-sm font-medium bg-secondary text-muted-foreground hover:bg-primary/10"
-                }
-                data-ocid="admin.products.tab"
-              >
-                सभी Products ({products.length})
-              </button>
-              <button
-                type="button"
-                onClick={() => setProductFilter("store")}
-                className={
-                  productFilter === "store"
-                    ? "px-3 py-1 rounded-full text-sm font-medium bg-accent text-white"
-                    : "px-3 py-1 rounded-full text-sm font-medium bg-secondary text-muted-foreground hover:bg-accent/10"
-                }
-                data-ocid="admin.products.tab"
-              >
-                🏪 Store Submitted (
-                {products.filter((p) => p.storeSubmitted).length})
-              </button>
-            </div>
-            <Button
-              className="bg-primary text-white gap-2"
-              data-ocid="admin.add_product.open_modal_button"
-              onClick={() => setAddProductOpen(true)}
+          {/* Sub-tab navigation */}
+          <div className="flex gap-2 mb-4 border-b border-border pb-2">
+            <button
+              type="button"
+              onClick={() => setProductSubTab("list")}
+              className={
+                productSubTab === "list"
+                  ? "px-4 py-1.5 rounded-t text-sm font-semibold bg-primary text-white"
+                  : "px-4 py-1.5 rounded-t text-sm font-medium bg-secondary text-muted-foreground hover:bg-primary/10"
+              }
             >
-              <Plus className="h-4 w-4" /> नया Product जोड़ें
-            </Button>
+              📦 Products ({products.length})
+            </button>
+            <button
+              type="button"
+              onClick={() => setProductSubTab("categories")}
+              className={
+                productSubTab === "categories"
+                  ? "px-4 py-1.5 rounded-t text-sm font-semibold bg-primary text-white"
+                  : "px-4 py-1.5 rounded-t text-sm font-medium bg-secondary text-muted-foreground hover:bg-primary/10"
+              }
+            >
+              🏷️ Categories / श्रेणियाँ ({allCategories.length})
+            </button>
           </div>
 
-          <div className="space-y-3">
-            {products
-              .filter((p) => productFilter === "all" || p.storeSubmitted)
-              .map((product, idx) => (
-                <motion.div
-                  key={product.id}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: idx * 0.03 }}
-                  className="bg-card border border-border rounded-lg p-4 flex items-center gap-4"
-                  data-ocid={`admin.products.item.${idx + 1}`}
-                >
-                  <div className="w-12 h-12 rounded-lg overflow-hidden flex-shrink-0 bg-secondary flex items-center justify-center">
-                    {product.image ? (
-                      <img
-                        src={product.image}
-                        alt={product.name}
-                        className="w-full h-full object-cover"
-                      />
-                    ) : (
-                      <span className="text-2xl">{product.emoji}</span>
-                    )}
+          {productSubTab === "categories" && (
+            <div className="space-y-6">
+              {/* Add new category form */}
+              <div className="bg-card border border-border rounded-lg p-4">
+                <h3 className="font-semibold mb-3 text-sm">
+                  ➕ नई Category जोड़ें
+                </h3>
+                <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
+                  <div>
+                    <Label className="text-xs">English Name *</Label>
+                    <Input
+                      placeholder="e.g. Toys"
+                      value={newCatForm.label}
+                      onChange={(e) =>
+                        setNewCatForm((p) => ({ ...p, label: e.target.value }))
+                      }
+                      className="mt-1"
+                    />
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="font-semibold text-sm truncate">
-                      {product.name}
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      <span className="font-medium text-primary">
-                        {
-                          CATEGORIES.find((c) => c.id === product.category)
-                            ?.emoji
-                        }{" "}
-                        {CATEGORIES.find((c) => c.id === product.category)
-                          ?.label ?? product.category}
-                      </span>
-                      {" · "}₹{product.price.toLocaleString("en-IN")}
-                      {product.originalPrice && (
-                        <span className="line-through ml-1 opacity-60">
-                          ₹{product.originalPrice.toLocaleString("en-IN")}
-                        </span>
-                      )}
-                    </p>
-                    <div className="flex gap-1 mt-1">
-                      {product.isFeatured && (
-                        <span className="text-[10px] bg-accent/20 text-accent px-1.5 py-0.5 rounded font-semibold">
-                          Featured
-                        </span>
-                      )}
-                      {product.isDeal && (
-                        <span className="text-[10px] bg-destructive/10 text-destructive px-1.5 py-0.5 rounded font-semibold">
-                          Deal
-                        </span>
-                      )}
-                      {product.badge && (
-                        <span className="text-[10px] bg-secondary text-secondary-foreground px-1.5 py-0.5 rounded">
-                          {product.badge}
-                        </span>
-                      )}
+                  <div>
+                    <Label className="text-xs">Hindi Name</Label>
+                    <Input
+                      placeholder="e.g. खिलौने"
+                      value={newCatForm.labelHindi}
+                      onChange={(e) =>
+                        setNewCatForm((p) => ({
+                          ...p,
+                          labelHindi: e.target.value,
+                        }))
+                      }
+                      className="mt-1"
+                    />
+                  </div>
+                  <div>
+                    <Label className="text-xs">Emoji</Label>
+                    <Input
+                      placeholder="🧸"
+                      value={newCatForm.emoji}
+                      onChange={(e) =>
+                        setNewCatForm((p) => ({ ...p, emoji: e.target.value }))
+                      }
+                      className="mt-1"
+                    />
+                  </div>
+                  <div className="flex items-end">
+                    <Button
+                      className="w-full bg-primary text-white gap-2"
+                      onClick={handleAddCategory}
+                    >
+                      <Plus className="h-4 w-4" /> Add
+                    </Button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Built-in categories */}
+              <div>
+                <h3 className="font-semibold text-sm mb-2 text-muted-foreground">
+                  Default Categories (हटाए नहीं जा सकते)
+                </h3>
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
+                  {CATEGORIES.filter((c) => c.id !== "all").map((cat) => (
+                    <div
+                      key={cat.id}
+                      className="flex items-center gap-2 bg-secondary/50 rounded-lg px-3 py-2 text-sm"
+                    >
+                      <span>{cat.emoji}</span>
+                      <div className="min-w-0">
+                        <p className="font-medium text-xs truncate">
+                          {cat.label}
+                        </p>
+                        {cat.labelHindi && (
+                          <p className="text-[10px] text-muted-foreground truncate">
+                            {cat.labelHindi}
+                          </p>
+                        )}
+                      </div>
                     </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Custom categories */}
+              {customCategories.length > 0 && (
+                <div>
+                  <h3 className="font-semibold text-sm mb-2 text-muted-foreground">
+                    Custom Categories (आपने जोड़ी हैं)
+                  </h3>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
+                    {customCategories.map((cat) => (
+                      <div
+                        key={cat.id}
+                        className="flex items-center gap-2 bg-accent/10 border border-accent/20 rounded-lg px-3 py-2 text-sm"
+                      >
+                        <span>{cat.emoji}</span>
+                        <div className="flex-1 min-w-0">
+                          <p className="font-medium text-xs truncate">
+                            {cat.label}
+                          </p>
+                          {cat.labelHindi && (
+                            <p className="text-[10px] text-muted-foreground truncate">
+                              {cat.labelHindi}
+                            </p>
+                          )}
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => handleDeleteCustomCategory(cat.id)}
+                          className="text-destructive hover:text-destructive/80 flex-shrink-0"
+                          title="Delete"
+                        >
+                          <Trash2 className="h-3.5 w-3.5" />
+                        </button>
+                      </div>
+                    ))}
                   </div>
-                  <div className="flex gap-2">
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      className="border-primary text-primary hover:bg-primary hover:text-white h-8"
-                      onClick={() => handleEditOpen(product)}
-                      data-ocid={`admin.products.edit_button.${idx + 1}`}
+                </div>
+              )}
+            </div>
+          )}
+
+          {productSubTab === "list" && (
+            <>
+              <div className="flex items-center justify-between mb-4 gap-3 flex-wrap">
+                <div className="flex gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setProductFilter("all")}
+                    className={
+                      productFilter === "all"
+                        ? "px-3 py-1 rounded-full text-sm font-medium bg-primary text-white"
+                        : "px-3 py-1 rounded-full text-sm font-medium bg-secondary text-muted-foreground hover:bg-primary/10"
+                    }
+                    data-ocid="admin.products.tab"
+                  >
+                    सभी Products ({products.length})
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setProductFilter("store")}
+                    className={
+                      productFilter === "store"
+                        ? "px-3 py-1 rounded-full text-sm font-medium bg-accent text-white"
+                        : "px-3 py-1 rounded-full text-sm font-medium bg-secondary text-muted-foreground hover:bg-accent/10"
+                    }
+                    data-ocid="admin.products.tab"
+                  >
+                    🏪 Store Submitted (
+                    {products.filter((p) => p.storeSubmitted).length})
+                  </button>
+                </div>
+                <Button
+                  className="bg-primary text-white gap-2"
+                  data-ocid="admin.add_product.open_modal_button"
+                  onClick={() => setAddProductOpen(true)}
+                >
+                  <Plus className="h-4 w-4" /> नया Product जोड़ें
+                </Button>
+              </div>
+
+              <div className="space-y-3">
+                {products
+                  .filter((p) => productFilter === "all" || p.storeSubmitted)
+                  .map((product, idx) => (
+                    <motion.div
+                      key={product.id}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ delay: idx * 0.03 }}
+                      className="bg-card border border-border rounded-lg p-4 flex items-center gap-4"
+                      data-ocid={`admin.products.item.${idx + 1}`}
                     >
-                      <Edit className="h-3.5 w-3.5" />
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      className="border-destructive text-destructive hover:bg-destructive hover:text-white h-8"
-                      onClick={() => handleDeleteProduct(product.id)}
-                      disabled={deletingProduct === product.id}
-                      data-ocid={`admin.products.delete_button.${idx + 1}`}
-                    >
-                      {deletingProduct === product.id ? (
-                        <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                      ) : (
-                        <Trash2 className="h-3.5 w-3.5" />
-                      )}
-                    </Button>
-                  </div>
-                </motion.div>
-              ))}
-          </div>
+                      <div className="w-12 h-12 rounded-lg overflow-hidden flex-shrink-0 bg-secondary flex items-center justify-center">
+                        {product.image ? (
+                          <img
+                            src={product.image}
+                            alt={product.name}
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <span className="text-2xl">{product.emoji}</span>
+                        )}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="font-semibold text-sm truncate">
+                          {product.name}
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          <span className="font-medium text-primary">
+                            {
+                              CATEGORIES.find((c) => c.id === product.category)
+                                ?.emoji
+                            }{" "}
+                            {CATEGORIES.find((c) => c.id === product.category)
+                              ?.label ?? product.category}
+                          </span>
+                          {" · "}₹{product.price.toLocaleString("en-IN")}
+                          {product.originalPrice && (
+                            <span className="line-through ml-1 opacity-60">
+                              ₹{product.originalPrice.toLocaleString("en-IN")}
+                            </span>
+                          )}
+                        </p>
+                        <div className="flex gap-1 mt-1">
+                          {product.isFeatured && (
+                            <span className="text-[10px] bg-accent/20 text-accent px-1.5 py-0.5 rounded font-semibold">
+                              Featured
+                            </span>
+                          )}
+                          {product.isDeal && (
+                            <span className="text-[10px] bg-destructive/10 text-destructive px-1.5 py-0.5 rounded font-semibold">
+                              Deal
+                            </span>
+                          )}
+                          {product.badge && (
+                            <span className="text-[10px] bg-secondary text-secondary-foreground px-1.5 py-0.5 rounded">
+                              {product.badge}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                      <div className="flex gap-2">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="border-primary text-primary hover:bg-primary hover:text-white h-8"
+                          onClick={() => handleEditOpen(product)}
+                          data-ocid={`admin.products.edit_button.${idx + 1}`}
+                        >
+                          <Edit className="h-3.5 w-3.5" />
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="border-destructive text-destructive hover:bg-destructive hover:text-white h-8"
+                          onClick={() => handleDeleteProduct(product.id)}
+                          disabled={deletingProduct === product.id}
+                          data-ocid={`admin.products.delete_button.${idx + 1}`}
+                        >
+                          {deletingProduct === product.id ? (
+                            <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                          ) : (
+                            <Trash2 className="h-3.5 w-3.5" />
+                          )}
+                        </Button>
+                      </div>
+                    </motion.div>
+                  ))}
+              </div>
+            </>
+          )}
         </TabsContent>
 
         <TabsContent value="stores">

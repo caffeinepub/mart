@@ -5,6 +5,7 @@ export interface SampleProduct {
   name: string;
   nameHindi?: string;
   description?: string;
+  details?: string;
   price: number;
   originalPrice?: number;
   category: string;

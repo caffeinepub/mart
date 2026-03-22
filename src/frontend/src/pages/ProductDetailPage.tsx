@@ -498,6 +498,20 @@ export function ProductDetailPage() {
       </div>
 
       {/* Reviews Section */}
+      {/* Product Details Section */}
+      {product.details && (
+        <div
+          className="mt-8 bg-card border border-border rounded-xl p-6"
+          data-ocid="product.details.section"
+        >
+          <h2 className="text-xl font-bold text-primary mb-4 flex items-center gap-2">
+            📋 Product Details / उत्पाद विवरण
+          </h2>
+          <div className="text-foreground/80 text-sm leading-relaxed whitespace-pre-line">
+            {product.details}
+          </div>
+        </div>
+      )}
       <div className="mt-10" data-ocid="product.reviews.section">
         <h2 className="text-xl font-bold text-primary mb-6 flex items-center gap-2">
           ⭐ Reviews / समीक्षा ({reviews.length})

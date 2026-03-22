@@ -12,6 +12,15 @@ export interface Customer {
 const CUSTOMER_KEY = "dharma_customer";
 const ALL_CUSTOMERS_KEY = "dharma_all_customers";
 
+export interface WishlistItem {
+  id: number;
+  name: string;
+  nameHindi?: string;
+  price: number;
+  image?: string;
+  category?: string;
+}
+
 interface CustomerContextType {
   customer: Customer | null;
   login: (c: Customer) => void;
@@ -22,15 +31,7 @@ interface CustomerContextType {
   getWishlist: (customerId: string) => WishlistItem[];
   toggleWishlist: (product: WishlistItem) => void;
   isWishlisted: (productId: number) => boolean;
-}
-
-export interface WishlistItem {
-  id: number;
-  name: string;
-  nameHindi?: string;
-  price: number;
-  image?: string;
-  category?: string;
+  wishlistItems: WishlistItem[];
 }
 
 const CustomerContext = createContext<CustomerContextType | null>(null);
@@ -54,13 +55,34 @@ export function CustomerProvider({ children }: { children: React.ReactNode }) {
     }
   });
 
+  const [wishlistItems, setWishlistItems] = useState<WishlistItem[]>(() => {
+    try {
+      const raw = localStorage.getItem(CUSTOMER_KEY);
+      const cust = raw ? JSON.parse(raw) : null;
+      if (!cust) return [];
+      const wRaw = localStorage.getItem(`dharma_wishlist_${cust.id}`);
+      return wRaw ? JSON.parse(wRaw) : [];
+    } catch {
+      return [];
+    }
+  });
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: intentional - only re-run when customer id changes
   useEffect(() => {
     if (customer) {
       localStorage.setItem(CUSTOMER_KEY, JSON.stringify(customer));
+      // Load wishlist for this customer
+      try {
+        const wRaw = localStorage.getItem(`dharma_wishlist_${customer.id}`);
+        setWishlistItems(wRaw ? JSON.parse(wRaw) : []);
+      } catch {
+        setWishlistItems([]);
+      }
     } else {
       localStorage.removeItem(CUSTOMER_KEY);
+      setWishlistItems([]);
     }
-  }, [customer]);
+  }, [customer?.id]);
 
   useEffect(() => {
     localStorage.setItem(ALL_CUSTOMERS_KEY, JSON.stringify(allCustomers));
@@ -103,23 +125,19 @@ export function CustomerProvider({ children }: { children: React.ReactNode }) {
   const toggleWishlist = (product: WishlistItem) => {
     if (!customer) return;
     const key = `dharma_wishlist_${customer.id}`;
-    const current = getWishlist(customer.id);
-    const idx = current.findIndex((p) => p.id === product.id);
-    let updated: WishlistItem[];
-    if (idx >= 0) {
-      updated = current.filter((p) => p.id !== product.id);
-    } else {
-      updated = [...current, product];
-    }
-    localStorage.setItem(key, JSON.stringify(updated));
-    // Force re-render by dummy state update
-    setCustomer((prev) => (prev ? { ...prev } : prev));
+    setWishlistItems((current) => {
+      const idx = current.findIndex((p) => p.id === product.id);
+      const updated =
+        idx >= 0
+          ? current.filter((p) => p.id !== product.id)
+          : [...current, product];
+      localStorage.setItem(key, JSON.stringify(updated));
+      return updated;
+    });
   };
 
   const isWishlisted = (productId: number): boolean => {
-    if (!customer) return false;
-    const list = getWishlist(customer.id);
-    return list.some((p) => p.id === productId);
+    return wishlistItems.some((p) => p.id === productId);
   };
 
   return (
@@ -134,6 +152,7 @@ export function CustomerProvider({ children }: { children: React.ReactNode }) {
         getWishlist,
         toggleWishlist,
         isWishlisted,
+        wishlistItems,
       }}
     >
       {children}
