@@ -136,6 +136,8 @@ export function AdminPage() {
   const [editStoreOpen, setEditStoreOpen] = useState(false);
 
   const [orders, setOrders] = useState<any[]>([]);
+  const [productFilter, setProductFilter] = useState<"all" | "store">("all");
+  const [showStorePassId, setShowStorePassId] = useState<number | null>(null);
 
   const isLoggedIn = identity || passwordUnlocked;
 
@@ -963,7 +965,34 @@ export function AdminPage() {
         </TabsList>
 
         <TabsContent value="products">
-          <div className="flex justify-end mb-4">
+          <div className="flex items-center justify-between mb-4 gap-3 flex-wrap">
+            <div className="flex gap-2">
+              <button
+                type="button"
+                onClick={() => setProductFilter("all")}
+                className={
+                  productFilter === "all"
+                    ? "px-3 py-1 rounded-full text-sm font-medium bg-primary text-white"
+                    : "px-3 py-1 rounded-full text-sm font-medium bg-secondary text-muted-foreground hover:bg-primary/10"
+                }
+                data-ocid="admin.products.tab"
+              >
+                सभी Products ({products.length})
+              </button>
+              <button
+                type="button"
+                onClick={() => setProductFilter("store")}
+                className={
+                  productFilter === "store"
+                    ? "px-3 py-1 rounded-full text-sm font-medium bg-accent text-white"
+                    : "px-3 py-1 rounded-full text-sm font-medium bg-secondary text-muted-foreground hover:bg-accent/10"
+                }
+                data-ocid="admin.products.tab"
+              >
+                🏪 Store Submitted (
+                {products.filter((p) => p.storeSubmitted).length})
+              </button>
+            </div>
             <Button
               className="bg-primary text-white gap-2"
               data-ocid="admin.add_product.open_modal_button"
@@ -974,88 +1003,93 @@ export function AdminPage() {
           </div>
 
           <div className="space-y-3">
-            {products.map((product, idx) => (
-              <motion.div
-                key={product.id}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: idx * 0.03 }}
-                className="bg-card border border-border rounded-lg p-4 flex items-center gap-4"
-                data-ocid={`admin.products.item.${idx + 1}`}
-              >
-                <div className="w-12 h-12 rounded-lg overflow-hidden flex-shrink-0 bg-secondary flex items-center justify-center">
-                  {product.image ? (
-                    <img
-                      src={product.image}
-                      alt={product.name}
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <span className="text-2xl">{product.emoji}</span>
-                  )}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="font-semibold text-sm truncate">
-                    {product.name}
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    <span className="font-medium text-primary">
-                      {CATEGORIES.find((c) => c.id === product.category)?.emoji}{" "}
-                      {CATEGORIES.find((c) => c.id === product.category)
-                        ?.label ?? product.category}
-                    </span>
-                    {" · "}₹{product.price.toLocaleString("en-IN")}
-                    {product.originalPrice && (
-                      <span className="line-through ml-1 opacity-60">
-                        ₹{product.originalPrice.toLocaleString("en-IN")}
-                      </span>
-                    )}
-                  </p>
-                  <div className="flex gap-1 mt-1">
-                    {product.isFeatured && (
-                      <span className="text-[10px] bg-accent/20 text-accent px-1.5 py-0.5 rounded font-semibold">
-                        Featured
-                      </span>
-                    )}
-                    {product.isDeal && (
-                      <span className="text-[10px] bg-destructive/10 text-destructive px-1.5 py-0.5 rounded font-semibold">
-                        Deal
-                      </span>
-                    )}
-                    {product.badge && (
-                      <span className="text-[10px] bg-secondary text-secondary-foreground px-1.5 py-0.5 rounded">
-                        {product.badge}
-                      </span>
+            {products
+              .filter((p) => productFilter === "all" || p.storeSubmitted)
+              .map((product, idx) => (
+                <motion.div
+                  key={product.id}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: idx * 0.03 }}
+                  className="bg-card border border-border rounded-lg p-4 flex items-center gap-4"
+                  data-ocid={`admin.products.item.${idx + 1}`}
+                >
+                  <div className="w-12 h-12 rounded-lg overflow-hidden flex-shrink-0 bg-secondary flex items-center justify-center">
+                    {product.image ? (
+                      <img
+                        src={product.image}
+                        alt={product.name}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <span className="text-2xl">{product.emoji}</span>
                     )}
                   </div>
-                </div>
-                <div className="flex gap-2">
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    className="border-primary text-primary hover:bg-primary hover:text-white h-8"
-                    onClick={() => handleEditOpen(product)}
-                    data-ocid={`admin.products.edit_button.${idx + 1}`}
-                  >
-                    <Edit className="h-3.5 w-3.5" />
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    className="border-destructive text-destructive hover:bg-destructive hover:text-white h-8"
-                    onClick={() => handleDeleteProduct(product.id)}
-                    disabled={deletingProduct === product.id}
-                    data-ocid={`admin.products.delete_button.${idx + 1}`}
-                  >
-                    {deletingProduct === product.id ? (
-                      <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                    ) : (
-                      <Trash2 className="h-3.5 w-3.5" />
-                    )}
-                  </Button>
-                </div>
-              </motion.div>
-            ))}
+                  <div className="flex-1 min-w-0">
+                    <p className="font-semibold text-sm truncate">
+                      {product.name}
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      <span className="font-medium text-primary">
+                        {
+                          CATEGORIES.find((c) => c.id === product.category)
+                            ?.emoji
+                        }{" "}
+                        {CATEGORIES.find((c) => c.id === product.category)
+                          ?.label ?? product.category}
+                      </span>
+                      {" · "}₹{product.price.toLocaleString("en-IN")}
+                      {product.originalPrice && (
+                        <span className="line-through ml-1 opacity-60">
+                          ₹{product.originalPrice.toLocaleString("en-IN")}
+                        </span>
+                      )}
+                    </p>
+                    <div className="flex gap-1 mt-1">
+                      {product.isFeatured && (
+                        <span className="text-[10px] bg-accent/20 text-accent px-1.5 py-0.5 rounded font-semibold">
+                          Featured
+                        </span>
+                      )}
+                      {product.isDeal && (
+                        <span className="text-[10px] bg-destructive/10 text-destructive px-1.5 py-0.5 rounded font-semibold">
+                          Deal
+                        </span>
+                      )}
+                      {product.badge && (
+                        <span className="text-[10px] bg-secondary text-secondary-foreground px-1.5 py-0.5 rounded">
+                          {product.badge}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                  <div className="flex gap-2">
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="border-primary text-primary hover:bg-primary hover:text-white h-8"
+                      onClick={() => handleEditOpen(product)}
+                      data-ocid={`admin.products.edit_button.${idx + 1}`}
+                    >
+                      <Edit className="h-3.5 w-3.5" />
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="border-destructive text-destructive hover:bg-destructive hover:text-white h-8"
+                      onClick={() => handleDeleteProduct(product.id)}
+                      disabled={deletingProduct === product.id}
+                      data-ocid={`admin.products.delete_button.${idx + 1}`}
+                    >
+                      {deletingProduct === product.id ? (
+                        <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                      ) : (
+                        <Trash2 className="h-3.5 w-3.5" />
+                      )}
+                    </Button>
+                  </div>
+                </motion.div>
+              ))}
           </div>
         </TabsContent>
 
@@ -1162,40 +1196,83 @@ export function AdminPage() {
               {stores.map((store, idx) => (
                 <div
                   key={`${store.city}-${store.pincode}`}
-                  className="bg-card border border-border rounded-lg p-4 flex items-center gap-4"
+                  className="bg-card border border-border rounded-lg p-4"
                   data-ocid={`admin.stores.item.${idx + 1}`}
                 >
-                  <MapPin className="h-6 w-6 text-primary flex-shrink-0" />
-                  <div className="flex-1">
-                    <p className="font-semibold">{store.city}</p>
-                    <p className="text-sm text-muted-foreground">
-                      {store.address} · PIN: {store.pincode}
-                    </p>
-                    {store.phone && (
-                      <p className="text-xs text-muted-foreground">
-                        📞 {store.phone}
+                  <div className="flex items-center gap-4">
+                    <MapPin className="h-6 w-6 text-primary flex-shrink-0" />
+                    <div className="flex-1">
+                      <p className="font-semibold">
+                        {store.name || store.city}
                       </p>
-                    )}
-                  </div>
-                  <div className="flex gap-2">
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      className="border-primary text-primary hover:bg-primary hover:text-white"
-                      onClick={() => handleEditStoreOpen(store)}
-                      data-ocid={`admin.stores.edit_button.${idx + 1}`}
-                    >
-                      <Edit className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      className="border-destructive text-destructive hover:bg-destructive hover:text-white"
-                      onClick={() => handleDeleteStore(idx)}
-                      data-ocid={`admin.stores.delete_button.${idx + 1}`}
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
+                      <p className="text-sm text-muted-foreground">
+                        {store.address} · PIN: {store.pincode}
+                      </p>
+                      {store.phone && (
+                        <p className="text-xs text-muted-foreground">
+                          📞 {store.phone}
+                        </p>
+                      )}
+                      <div className="flex items-center gap-2 mt-1 flex-wrap">
+                        <span className="text-xs text-muted-foreground">
+                          Password:
+                        </span>
+                        <code className="text-xs bg-muted px-1 rounded">
+                          {showStorePassId === store.id
+                            ? store.password || "store@123"
+                            : "••••••••"}
+                        </code>
+                        <button
+                          type="button"
+                          className="text-xs text-primary hover:underline"
+                          onClick={() =>
+                            setShowStorePassId(
+                              showStorePassId === store.id ? null : store.id,
+                            )
+                          }
+                        >
+                          {showStorePassId === store.id ? "Hide" : "Show"}
+                        </button>
+                        <button
+                          type="button"
+                          className="text-xs text-accent hover:underline"
+                          onClick={() => {
+                            const url = `${window.location.origin}/store-login`;
+                            navigator.clipboard
+                              .writeText(url)
+                              .then(() => {
+                                toast.success("Store Login link copied!");
+                              })
+                              .catch(() => {
+                                toast.error("Copy failed");
+                              });
+                          }}
+                          data-ocid={`admin.stores.secondary_button.${idx + 1}`}
+                        >
+                          🔗 Store Login Link Copy
+                        </button>
+                      </div>
+                    </div>
+                    <div className="flex gap-2">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="border-primary text-primary hover:bg-primary hover:text-white"
+                        onClick={() => handleEditStoreOpen(store)}
+                        data-ocid={`admin.stores.edit_button.${idx + 1}`}
+                      >
+                        <Edit className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="border-destructive text-destructive hover:bg-destructive hover:text-white"
+                        onClick={() => handleDeleteStore(idx)}
+                        data-ocid={`admin.stores.delete_button.${idx + 1}`}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
                   </div>
                 </div>
               ))}

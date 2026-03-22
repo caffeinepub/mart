@@ -198,6 +198,15 @@ export function Footer() {
                   🛡️ Admin Panel (New)
                 </Link>
               </li>
+              <li>
+                <Link
+                  to="/store-login"
+                  className="hover:text-accent transition-colors font-medium text-accent/80"
+                  data-ocid="footer.store_login.link"
+                >
+                  🏪 Store Login / स्टोर लॉगिन
+                </Link>
+              </li>
             </ul>
           </div>
 

@@ -16,7 +16,9 @@ import { MyAccountPage } from "@/pages/MyAccountPage";
 import { OrderTrackingPage } from "@/pages/OrderTrackingPage";
 import { ProductDetailPage } from "@/pages/ProductDetailPage";
 import { ProductsPage } from "@/pages/ProductsPage";
+import { StoreDashboardPage } from "@/pages/StoreDashboardPage";
 import { StoreLocatorPage } from "@/pages/StoreLocatorPage";
+import { StoreLoginPage } from "@/pages/StoreLoginPage";
 import { UpcomingProductsPage } from "@/pages/UpcomingProductsPage";
 import {
   RouterProvider,
@@ -123,6 +125,23 @@ const contactRoute = createRoute({
   component: ContactPage,
 });
 
+const storeLoginRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/store-login",
+  component: StoreLoginPage,
+});
+
+const storeDashboardRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/store-dashboard",
+  component: StoreDashboardPage,
+  validateSearch: (search: Record<string, unknown>) => {
+    const out: { storeId?: string } = {};
+    if (search.storeId) out.storeId = search.storeId as string;
+    return out;
+  },
+});
+
 const routeTree = rootRoute.addChildren([
   homeRoute,
   productsRoute,
@@ -137,6 +156,8 @@ const routeTree = rootRoute.addChildren([
   customerLoginRoute,
   myAccountRoute,
   contactRoute,
+  storeLoginRoute,
+  storeDashboardRoute,
 ]);
 
 const router = createRouter({ routeTree });

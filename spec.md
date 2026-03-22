@@ -1,37 +1,38 @@
-# धर्मा Mart - Customer Login Panel
+# धर्मा Mart - Store Seller Integration
 
 ## Current State
-- Admin panel with product/store management exists
-- Backend has basic UserProfile (name only), cart, and orders
-- No customer-facing login/registration UI
-- Admin panel has no way to see registered customers
-- No customer wishlist/addon feature
+- `/admin` page (AdminPage.tsx) has admin login (password: dharma@admin123)
+- Stores managed in StoresContext with city/address/phone/pincode/timings
+- SampleProduct has no `storeId` field
+- No store-owner login or product submission flow
 
 ## Requested Changes (Diff)
 
 ### Add
-- Customer Login/Register page at `/customer-login` with name, mobile number, and address fields
-- Customer Dashboard page at `/my-account` showing their profile, wishlist, and order history
-- Wishlist/Add-on feature: customers can save/wishlist products from product pages
-- Admin panel: new 'Customers' tab showing all registered customers (name, mobile, address, principal, wishlist)
-- Extended backend CustomerProfile type with name, mobile, address fields
-- Backend: admin-only getAllCustomers() to list all customer profiles
-- Backend: customer wishlist storage and management (addToWishlist, removeFromWishlist, getWishlist)
-- Header: 'My Account' button for customers to login/access dashboard
+- `storeName` and `password` fields to SampleStore interface
+- `/store-login` route: Store owner login page (login by city/storeName + password)
+- `/store-dashboard` route: Store owner dashboard to add/edit/delete their own products
+- Store-submitted products tagged with `storeId` + `storeName` in product data
+- In AdminPage.tsx (`/admin`) Products tab: show store-submitted products with "Store: <name>" badge; admin can approve/delete them
+- In AdminPage.tsx Stores tab: show each store's password (editable by admin); add 'Store Login' link
+- Default store passwords set to `store@dharma123` for all existing stores
 
 ### Modify
-- UserProfile type in backend: extend with mobile and address fields
-- AdminPage: add Customers tab with table of all registered customers and their wishlists
-- Header: add customer login button
-- ProductCard/ProductDetailPage: add Wishlist/Add-on heart button for logged-in customers
+- SampleStore interface: add `name: string`, `password: string`, `ownerName?: string`
+- SampleProduct interface: add optional `storeId?: number`, `storeName?: string`, `storeSubmitted?: boolean`
+- ProductsContext: store-submitted products persist separately; merge with all products for display
+- SAMPLE_STORES: add `name` and `password` fields
+- AdminPage.tsx: in Products tab, show storeSubmitted badge; add "Store Products" filter tab
 
 ### Remove
 - Nothing removed
 
 ## Implementation Plan
-1. Update backend: extend CustomerProfile with mobile/address, add wishlist storage, add getAllCustomers for admin, add wishlist CRUD for users
-2. Add CustomerLogin page with registration form (name, mobile, address) + Internet Identity login
-3. Add CustomerDashboard (/my-account) showing profile, wishlist items, order history
-4. Update Header to show My Account / customer login button
-5. Add wishlist heart button to ProductCard and ProductDetailPage
-6. Update AdminPage to add Customers tab with full customer list and wishlist view
+1. Update SampleProduct interface to include `storeId`, `storeName`, `storeSubmitted`
+2. Update SampleStore interface to include `name`, `password`, `ownerName`
+3. Update SAMPLE_STORES with name and default passwords
+4. Create StoreDashboardPage.tsx: login form + product management for store owners
+5. Create StoreLoginPage.tsx: simple login with storeName + password
+6. Update ProductsContext to support store-submitted products
+7. Update AdminPage.tsx: show store products with badge in Products tab, allow admin to manage store passwords in Stores tab
+8. Add routes in App.tsx

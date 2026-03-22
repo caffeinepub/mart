@@ -18,6 +18,9 @@ export interface SampleProduct {
   badge?: string;
   rating?: number;
   reviews?: number;
+  storeId?: number;
+  storeName?: string;
+  storeSubmitted?: boolean;
 }
 
 export interface SampleStore {
@@ -27,6 +30,9 @@ export interface SampleStore {
   phone: string;
   pincode: string;
   timings: string;
+  name?: string;
+  password?: string;
+  ownerName?: string;
 }
 
 export const CATEGORIES = [
@@ -4924,67 +4930,83 @@ export const SAMPLE_PRODUCTS: SampleProduct[] = [
 export const SAMPLE_STORES: SampleStore[] = [
   {
     id: 1,
+    name: "New Delhi Store",
     city: "New Delhi",
     address: "Palika Bazaar, Connaught Place",
     phone: "+91 11 2345 6789",
     pincode: "110001",
     timings: "9:00 AM – 9:00 PM",
+    password: "store@123",
   },
   {
     id: 2,
+    name: "Mumbai Store",
     city: "Mumbai",
     address: "Linking Road, Bandra West",
     phone: "+91 22 3456 7890",
     pincode: "400050",
     timings: "10:00 AM – 10:00 PM",
+    password: "store@123",
   },
   {
     id: 3,
+    name: "Bangalore Store",
     city: "Bangalore",
     address: "80 Feet Road, Koramangala",
     phone: "+91 80 4567 8901",
     pincode: "560034",
     timings: "9:30 AM – 9:30 PM",
+    password: "store@123",
   },
   {
     id: 4,
+    name: "Chennai Store",
     city: "Chennai",
     address: "Usman Road, T Nagar",
     phone: "+91 44 5678 9012",
     pincode: "600017",
     timings: "10:00 AM – 9:00 PM",
+    password: "store@123",
   },
   {
     id: 5,
+    name: "Hyderabad Store",
     city: "Hyderabad",
     address: "Road No. 12, Banjara Hills",
     phone: "+91 40 6789 0123",
     pincode: "500034",
     timings: "9:00 AM – 9:30 PM",
+    password: "store@123",
   },
   {
     id: 6,
+    name: "Kolkata Store",
     city: "Kolkata",
     address: "Shakespeare Sarani, Park Street",
     phone: "+91 33 7890 1234",
     pincode: "700017",
     timings: "10:00 AM – 9:00 PM",
+    password: "store@123",
   },
   {
     id: 7,
+    name: "Pune Store",
     city: "Pune",
     address: "FC Road, Deccan Gymkhana",
     phone: "+91 20 8901 2345",
     pincode: "411004",
     timings: "9:30 AM – 9:30 PM",
+    password: "store@123",
   },
   {
     id: 8,
+    name: "Ahmedabad Store",
     city: "Ahmedabad",
     address: "CG Road, Navrangpura",
     phone: "+91 79 9012 3456",
     pincode: "380009",
     timings: "9:00 AM – 9:00 PM",
+    password: "store@123",
   },
 ];
 
