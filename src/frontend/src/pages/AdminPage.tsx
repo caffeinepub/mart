@@ -29,6 +29,7 @@ import {
 import { useActor } from "@/hooks/useActor";
 import { useInternetIdentity } from "@/hooks/useInternetIdentity";
 import {
+  BarChart2,
   Edit,
   Eye,
   EyeOff,
@@ -39,10 +40,11 @@ import {
   Plus,
   Save,
   Trash2,
+  TrendingUp,
   Users,
 } from "lucide-react";
 import { motion } from "motion/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 const ADMIN_PASSWORD = "dharma@admin123";
@@ -133,7 +135,26 @@ export function AdminPage() {
   >(null);
   const [editStoreOpen, setEditStoreOpen] = useState(false);
 
+  const [orders, setOrders] = useState<any[]>([]);
+
   const isLoggedIn = identity || passwordUnlocked;
+
+  useEffect(() => {
+    if (!isLoggedIn) return;
+    const loadOrders = async () => {
+      try {
+        let raw: string | null = null;
+        if (actor) {
+          try {
+            raw = await (actor as any).getOrdersSnapshot();
+          } catch {}
+        }
+        if (!raw) raw = localStorage.getItem("dharma_orders");
+        if (raw) setOrders(JSON.parse(raw));
+      } catch {}
+    };
+    loadOrders();
+  }, [isLoggedIn, actor]);
 
   const handlePasswordLogin = () => {
     if (passwordInput === ADMIN_PASSWORD) {
@@ -936,6 +957,9 @@ export function AdminPage() {
             <Users className="h-4 w-4" /> Customers / ग्राहक (
             {allCustomers.length})
           </TabsTrigger>
+          <TabsTrigger value="analytics" className="gap-2">
+            <BarChart2 className="h-4 w-4" /> Analytics / विश्लेषण
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="products">
@@ -1293,6 +1317,164 @@ export function AdminPage() {
               })}
             </div>
           )}
+        </TabsContent>
+
+        <TabsContent value="analytics">
+          {(() => {
+            const totalOrders = orders.length;
+            const totalRevenue = orders.reduce(
+              (s: number, o: any) => s + (o.total || 0),
+              0,
+            );
+            const statusCounts: Record<string, number> = {};
+            for (const o of orders) {
+              const st = o.status || "Placed";
+              statusCounts[st] = (statusCounts[st] || 0) + 1;
+            }
+            const productFreq: Record<string, number> = {};
+            for (const o of orders) {
+              for (const item of o.items || []) {
+                productFreq[item.name] =
+                  (productFreq[item.name] || 0) + item.quantity;
+              }
+            }
+            const top5 = Object.entries(productFreq)
+              .sort((a, b) => b[1] - a[1])
+              .slice(0, 5);
+            const maxFreq = top5[0]?.[1] || 1;
+
+            return (
+              <div className="space-y-6">
+                {/* Stats Cards */}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  {[
+                    {
+                      label: "Total Orders",
+                      value: totalOrders,
+                      icon: "📦",
+                      color: "bg-blue-50 text-blue-700",
+                    },
+                    {
+                      label: "Total Revenue",
+                      value: `₹${totalRevenue.toLocaleString("en-IN")}`,
+                      icon: "💰",
+                      color: "bg-green-50 text-green-700",
+                    },
+                    {
+                      label: "Total Customers",
+                      value: allCustomers.length,
+                      icon: "👥",
+                      color: "bg-purple-50 text-purple-700",
+                    },
+                    {
+                      label: "Total Products",
+                      value: products.length,
+                      icon: "🛍️",
+                      color: "bg-orange-50 text-orange-700",
+                    },
+                  ].map((stat) => (
+                    <div
+                      key={stat.label}
+                      className={`rounded-xl p-4 ${stat.color} border border-current/10`}
+                      data-ocid={`admin.analytics.${stat.label.toLowerCase().replace(/ /g, "_")}.card`}
+                    >
+                      <div className="text-2xl mb-1">{stat.icon}</div>
+                      <div className="text-2xl font-bold">{stat.value}</div>
+                      <div className="text-xs font-medium mt-0.5 opacity-80">
+                        {stat.label}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {/* Top Products */}
+                  <div className="bg-card border border-border rounded-xl p-5">
+                    <h3 className="font-bold text-primary mb-4 flex items-center gap-2">
+                      <TrendingUp className="h-4 w-4" /> Top 5 Products by
+                      Orders
+                    </h3>
+                    {top5.length === 0 ? (
+                      <p
+                        className="text-muted-foreground text-sm text-center py-6"
+                        data-ocid="admin.analytics.products.empty_state"
+                      >
+                        No order data yet
+                      </p>
+                    ) : (
+                      <div className="space-y-3">
+                        {top5.map(([name, count], i) => (
+                          <div
+                            key={name}
+                            data-ocid={`admin.analytics.product.item.${i + 1}`}
+                          >
+                            <div className="flex justify-between text-sm mb-1">
+                              <span className="truncate font-medium">
+                                {name}
+                              </span>
+                              <span className="text-muted-foreground flex-shrink-0 ml-2">
+                                {count} sold
+                              </span>
+                            </div>
+                            <div className="h-2 bg-secondary rounded-full overflow-hidden">
+                              <div
+                                className="h-full bg-primary rounded-full transition-all"
+                                style={{ width: `${(count / maxFreq) * 100}%` }}
+                              />
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Orders by Status */}
+                  <div className="bg-card border border-border rounded-xl p-5">
+                    <h3 className="font-bold text-primary mb-4 flex items-center gap-2">
+                      <BarChart2 className="h-4 w-4" /> Orders by Status
+                    </h3>
+                    {totalOrders === 0 ? (
+                      <p
+                        className="text-muted-foreground text-sm text-center py-6"
+                        data-ocid="admin.analytics.orders.empty_state"
+                      >
+                        No orders yet
+                      </p>
+                    ) : (
+                      <div className="space-y-3">
+                        {[
+                          { label: "Placed", color: "bg-blue-500" },
+                          { label: "Processing", color: "bg-yellow-500" },
+                          { label: "Shipped", color: "bg-orange-500" },
+                          { label: "Delivered", color: "bg-green-500" },
+                        ].map((s) => {
+                          const count = statusCounts[s.label] || 0;
+                          const pct =
+                            totalOrders > 0 ? (count / totalOrders) * 100 : 0;
+                          return (
+                            <div key={s.label}>
+                              <div className="flex justify-between text-sm mb-1">
+                                <span className="font-medium">{s.label}</span>
+                                <span className="text-muted-foreground">
+                                  {count} ({Math.round(pct)}%)
+                                </span>
+                              </div>
+                              <div className="h-2 bg-secondary rounded-full overflow-hidden">
+                                <div
+                                  className={`h-full rounded-full ${s.color}`}
+                                  style={{ width: `${pct}%` }}
+                                />
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            );
+          })()}
         </TabsContent>
       </Tabs>
     </div>

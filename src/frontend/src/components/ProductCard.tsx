@@ -13,6 +13,25 @@ interface ProductCardProps {
   index?: number;
 }
 
+function getProductFallbackImage(name: string): string {
+  // Use product name as keyword for a relevant fallback image
+  const keyword = encodeURIComponent(
+    name
+      .replace(/[^a-zA-Z0-9 ]/g, "")
+      .trim()
+      .split(" ")
+      .slice(0, 3)
+      .join("+"),
+  );
+  // Generate a consistent hash-based seed
+  let hash = 5381;
+  for (let i = 0; i < name.length; i++) {
+    hash = ((hash << 5) + hash + name.charCodeAt(i)) & 0xffffffff;
+  }
+  const seed = Math.abs(hash) % 9999;
+  return `https://loremflickr.com/400/400/${keyword}?lock=${seed}`;
+}
+
 export function ProductCard({ product, index = 1 }: ProductCardProps) {
   const { addItem } = useCart();
   const { customer, toggleWishlist, isWishlisted } = useCustomer();
@@ -21,6 +40,7 @@ export function ProductCard({ product, index = 1 }: ProductCardProps) {
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    if (product.stock === 0) return;
     addItem(product);
     toast.success(`${product.name} added to cart! 🛒`);
   };
@@ -73,7 +93,11 @@ export function ProductCard({ product, index = 1 }: ProductCardProps) {
             alt={product.name}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
             onError={(e) => {
-              e.currentTarget.src = `https://picsum.photos/seed/${encodeURIComponent(product.name)}/400/400`;
+              // If image fails, use product name for a relevant fallback
+              const fallback = getProductFallbackImage(product.name);
+              if (e.currentTarget.src !== fallback) {
+                e.currentTarget.src = fallback;
+              }
             }}
           />
           {product.badge && (
@@ -123,13 +147,31 @@ export function ProductCard({ product, index = 1 }: ProductCardProps) {
               </span>
             )}
           </div>
+          {product.stock !== undefined && (
+            <span
+              className={`text-[10px] font-semibold px-1.5 py-0.5 rounded-full mt-1 inline-block ${
+                product.stock > 10
+                  ? "bg-green-100 text-green-700"
+                  : product.stock > 0
+                    ? "bg-yellow-100 text-yellow-700"
+                    : "bg-red-100 text-red-700"
+              }`}
+            >
+              {product.stock > 10
+                ? "In Stock"
+                : product.stock > 0
+                  ? `Only ${product.stock} left`
+                  : "Out of Stock"}
+            </span>
+          )}
           <Button
-            className="mt-2 w-full bg-primary hover:opacity-90 text-white text-xs h-8 gap-1.5"
+            className="mt-2 w-full bg-primary hover:opacity-90 text-white text-xs h-8 gap-1.5 disabled:opacity-50"
             onClick={handleAddToCart}
+            disabled={product.stock === 0}
             data-ocid={`product.add_to_cart.${index}`}
           >
             <ShoppingCart className="h-3.5 w-3.5" />
-            Add to Cart
+            {product.stock === 0 ? "Out of Stock" : "Add to Cart"}
           </Button>
         </div>
       </div>

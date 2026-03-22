@@ -2,7 +2,15 @@ import { Button } from "@/components/ui/button";
 import { useCustomer } from "@/context/CustomerContext";
 import { getProductImage } from "@/utils/productImages";
 import { Link, useNavigate } from "@tanstack/react-router";
-import { Heart, LogOut, MapPin, Phone, ShoppingCart, User } from "lucide-react";
+import {
+  Heart,
+  LogOut,
+  MapPin,
+  Package,
+  Phone,
+  ShoppingCart,
+  User,
+} from "lucide-react";
 import { motion } from "motion/react";
 import { useEffect } from "react";
 import { toast } from "sonner";
@@ -93,7 +101,7 @@ export function MyAccountPage() {
       </motion.div>
 
       {/* Quick Links */}
-      <div className="grid grid-cols-2 gap-3 mb-6">
+      <div className="grid grid-cols-3 gap-3 mb-6">
         <Link to="/cart">
           <Button
             variant="outline"
@@ -103,12 +111,21 @@ export function MyAccountPage() {
             <ShoppingCart className="h-5 w-5" /> My Cart
           </Button>
         </Link>
+        <Link to="/order-tracking">
+          <Button
+            variant="outline"
+            className="w-full h-14 border-primary text-primary hover:bg-primary hover:text-white gap-2 font-semibold"
+            data-ocid="customer.orders.button"
+          >
+            <Package className="h-5 w-5" /> My Orders
+          </Button>
+        </Link>
         <Link to="/products">
           <Button
             className="w-full h-14 bg-accent hover:opacity-90 text-white gap-2 font-semibold"
             data-ocid="customer.shop.button"
           >
-            🛍️ Shop Now
+            🛗 Shop Now
           </Button>
         </Link>
       </div>
@@ -174,7 +191,7 @@ export function MyAccountPage() {
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center text-2xl">
-                      🛍️
+                      🛗
                     </div>
                   )}
                 </div>

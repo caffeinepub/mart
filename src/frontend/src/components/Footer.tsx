@@ -190,6 +190,14 @@ export function Footer() {
                   Admin Panel
                 </Link>
               </li>
+              <li>
+                <Link
+                  to="/admin-panel"
+                  className="hover:text-white transition-colors text-accent font-medium"
+                >
+                  🛡️ Admin Panel (New)
+                </Link>
+              </li>
             </ul>
           </div>
 

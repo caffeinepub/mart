@@ -131,35 +131,35 @@ actor {
 
   /////////////////////////////
   // Snapshot Storage (Admin Panel Persistence)
-  // No auth required - admin panel is password protected on frontend
   /////////////////////////////
   var productSnapshot : Text = "";
   var storeSnapshot : Text = "";
   var customerSnapshot : Text = "";
+  var reviewsSnapshot : Text = "";
+  var ordersSnapshot : Text = "";
+  var couponsSnapshot : Text = "";
+  var analyticsSnapshot : Text = "";
 
-  public query func getProductSnapshot() : async Text {
-    productSnapshot;
-  };
+  public query func getProductSnapshot() : async Text { productSnapshot };
+  public func saveProductSnapshot(data : Text) : async () { productSnapshot := data };
 
-  public func saveProductSnapshot(data : Text) : async () {
-    productSnapshot := data;
-  };
+  public query func getStoreSnapshot() : async Text { storeSnapshot };
+  public func saveStoreSnapshot(data : Text) : async () { storeSnapshot := data };
 
-  public query func getStoreSnapshot() : async Text {
-    storeSnapshot;
-  };
+  public query func getCustomerSnapshot() : async Text { customerSnapshot };
+  public func saveCustomerSnapshot(data : Text) : async () { customerSnapshot := data };
 
-  public func saveStoreSnapshot(data : Text) : async () {
-    storeSnapshot := data;
-  };
+  public query func getReviewsSnapshot() : async Text { reviewsSnapshot };
+  public func saveReviewsSnapshot(data : Text) : async () { reviewsSnapshot := data };
 
-  public query func getCustomerSnapshot() : async Text {
-    customerSnapshot;
-  };
+  public query func getOrdersSnapshot() : async Text { ordersSnapshot };
+  public func saveOrdersSnapshot(data : Text) : async () { ordersSnapshot := data };
 
-  public func saveCustomerSnapshot(data : Text) : async () {
-    customerSnapshot := data;
-  };
+  public query func getCouponsSnapshot() : async Text { couponsSnapshot };
+  public func saveCouponsSnapshot(data : Text) : async () { couponsSnapshot := data };
+
+  public query func getAnalyticsSnapshot() : async Text { analyticsSnapshot };
+  public func saveAnalyticsSnapshot(data : Text) : async () { analyticsSnapshot := data };
 
   /////////////////////////////
   // Product Management ///////
@@ -320,7 +320,7 @@ actor {
       userId = caller;
       products = cartProducts;
       totalPrice = totalPrice;
-      timestamp = 0; // In production, use Time.now()
+      timestamp = 0;
     };
     orders.add(orderId, order);
     carts.remove(caller);

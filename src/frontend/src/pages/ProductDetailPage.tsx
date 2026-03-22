@@ -1,9 +1,12 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 import { useCart } from "@/context/CartContext";
 import { useCustomer } from "@/context/CustomerContext";
 import { useProducts } from "@/context/ProductsContext";
 import { slugify } from "@/data/sampleData";
+import { useActor } from "@/hooks/useActor";
+import { useMetaTags } from "@/hooks/useMetaTags";
 import { getProductImage } from "@/utils/productImages";
 import { Link, useNavigate, useParams } from "@tanstack/react-router";
 import {
@@ -16,7 +19,7 @@ import {
   Truck,
 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 const USP_ITEMS = [
@@ -25,15 +28,115 @@ const USP_ITEMS = [
   { icon: Package, label: "Easy Returns", sub: "7-day policy" },
 ];
 
+export interface Review {
+  id: string;
+  customerName: string;
+  rating: number;
+  text: string;
+  date: string;
+}
+
+function StarRating({
+  value,
+  onChange,
+  size = "sm",
+}: {
+  value: number;
+  onChange?: (v: number) => void;
+  size?: "sm" | "md";
+}) {
+  const [hovered, setHovered] = useState(0);
+  const s = size === "md" ? "h-6 w-6" : "h-4 w-4";
+  return (
+    <div className="flex items-center gap-0.5">
+      {[1, 2, 3, 4, 5].map((i) => (
+        <button
+          key={i}
+          type="button"
+          className={onChange ? "cursor-pointer" : "cursor-default"}
+          onMouseEnter={() => onChange && setHovered(i)}
+          onMouseLeave={() => {
+            onChange?.(0);
+            setHovered(0);
+          }}
+          onClick={() => onChange?.(i)}
+          aria-label={`Rate ${i} stars`}
+        >
+          <Star
+            className={`${s} ${
+              i <= (hovered || value)
+                ? "fill-accent text-accent"
+                : "text-muted-foreground"
+            } transition-colors`}
+          />
+        </button>
+      ))}
+    </div>
+  );
+}
+
+function StockBadge({ stock }: { stock: number }) {
+  if (stock > 10)
+    return (
+      <span className="inline-flex items-center gap-1 text-xs font-semibold text-green-700 bg-green-100 px-2 py-0.5 rounded-full">
+        ✅ In Stock
+      </span>
+    );
+  if (stock > 0)
+    return (
+      <span className="inline-flex items-center gap-1 text-xs font-semibold text-yellow-700 bg-yellow-100 px-2 py-0.5 rounded-full">
+        ⚠️ Only {stock} left!
+      </span>
+    );
+  return (
+    <span className="inline-flex items-center gap-1 text-xs font-semibold text-red-700 bg-red-100 px-2 py-0.5 rounded-full">
+      ❌ Out of Stock
+    </span>
+  );
+}
+
 export function ProductDetailPage() {
   const { slug } = useParams({ from: "/products/$slug" });
   const { addItem, items } = useCart();
   const { products } = useProducts();
   const { customer, toggleWishlist, isWishlisted } = useCustomer();
+  const { actor } = useActor();
   const navigate = useNavigate();
   const product = products.find((p) => slugify(p.name) === slug);
 
+  useMetaTags({
+    title: product?.name,
+    description: product?.description
+      ? `${product.description.slice(0, 120)} | धर्मा Mart`
+      : undefined,
+    ogType: "product",
+  });
+
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+  const [reviews, setReviews] = useState<Review[]>([]);
+  const [newRating, setNewRating] = useState(5);
+  const [newReviewText, setNewReviewText] = useState("");
+  const [submittingReview, setSubmittingReview] = useState(false);
+
+  useEffect(() => {
+    if (!product) return;
+    const loadReviews = async () => {
+      try {
+        let raw: string | null = null;
+        if (actor) {
+          try {
+            raw = await (actor as any).getReviewsSnapshot();
+          } catch {}
+        }
+        if (!raw) raw = localStorage.getItem("dharma_reviews");
+        if (raw) {
+          const allReviews = JSON.parse(raw);
+          setReviews(allReviews[slug] || []);
+        }
+      } catch {}
+    };
+    loadReviews();
+  }, [actor, product, slug]);
 
   if (!product) {
     return (
@@ -60,10 +163,14 @@ export function ProductDetailPage() {
         ((product.originalPrice - product.price) / product.originalPrice) * 100,
       )
     : null;
-
   const wishlisted = isWishlisted(product.id);
+  const avgRating =
+    reviews.length > 0
+      ? reviews.reduce((s, r) => s + r.rating, 0) / reviews.length
+      : 4;
 
   const handleAddToCart = () => {
+    if (product.stock === 0) return;
     addItem(product);
     toast.success(`${product.name} added to cart! 🛒`);
   };
@@ -89,11 +196,59 @@ export function ProductDetailPage() {
     );
   };
 
+  const handleSubmitReview = async () => {
+    if (!customer) {
+      toast.info("रिव्यू के लिए पहले login करें");
+      navigate({ to: "/customer-login" });
+      return;
+    }
+    if (!newReviewText.trim()) {
+      toast.error("कुछ लिखें रिव्यू में");
+      return;
+    }
+    setSubmittingReview(true);
+    try {
+      const review: Review = {
+        id: Date.now().toString(),
+        customerName: customer.name,
+        rating: newRating,
+        text: newReviewText.trim(),
+        date: new Date().toISOString(),
+      };
+      const updated = [...reviews, review];
+      setReviews(updated);
+      setNewReviewText("");
+      setNewRating(5);
+
+      let allReviews: Record<string, Review[]> = {};
+      try {
+        let raw: string | null = null;
+        if (actor) {
+          try {
+            raw = await (actor as any).getReviewsSnapshot();
+          } catch {}
+        }
+        if (!raw) raw = localStorage.getItem("dharma_reviews");
+        if (raw) allReviews = JSON.parse(raw);
+      } catch {}
+      allReviews[slug] = updated;
+      const serialized = JSON.stringify(allReviews);
+      if (actor) {
+        try {
+          await (actor as any).saveReviewsSnapshot(serialized);
+        } catch {}
+      }
+      localStorage.setItem("dharma_reviews", serialized);
+      toast.success("रिव्यू दे दिया! धन्यवाद 🙏");
+    } finally {
+      setSubmittingReview(false);
+    }
+  };
+
   const primaryImage = getProductImage(product);
   const encodedName = encodeURIComponent(product.name);
   const fallback2 = `https://picsum.photos/seed/${encodedName}-2/400/400`;
   const fallback3 = `https://picsum.photos/seed/${encodedName}-3/400/400`;
-
   const extraImages = product.images ?? [];
   const allImages = [primaryImage, ...extraImages];
   if (allImages.length < 2) allImages.push(fallback2);
@@ -101,8 +256,10 @@ export function ProductDetailPage() {
   const imageList = allImages.filter(
     (img, idx, arr) => arr.indexOf(img) === idx,
   );
-
   const currentImage = imageList[selectedImageIndex] ?? imageList[0];
+
+  const pageUrl = typeof window !== "undefined" ? window.location.href : "";
+  const shareText = `${product.name} - ₹${product.price} | धर्मा Mart`;
 
   return (
     <div
@@ -205,17 +362,18 @@ export function ProductDetailPage() {
             </p>
           </div>
 
-          <div className="flex items-center gap-1">
-            {["s1", "s2", "s3", "s4", "s5"].map((key, i) => (
-              <Star
-                key={key}
-                className={`h-4 w-4 ${
-                  i < 4 ? "fill-accent text-accent" : "text-muted-foreground"
-                }`}
-              />
-            ))}
-            <span className="text-sm text-muted-foreground ml-1">
-              (128 reviews)
+          {/* Rating Summary */}
+          <div className="flex items-center gap-2">
+            <StarRating value={Math.round(avgRating)} />
+            <span className="text-sm font-semibold text-foreground">
+              {avgRating.toFixed(1)}
+            </span>
+            <span className="text-sm text-muted-foreground">
+              (
+              {reviews.length > 0
+                ? `${reviews.length} reviews`
+                : "No reviews yet"}
+              )
             </span>
           </div>
 
@@ -239,28 +397,24 @@ export function ProductDetailPage() {
             {product.description}
           </p>
 
-          <div className="text-sm">
-            <span
-              className={`font-semibold ${
-                product.stock > 20 ? "text-green-600" : "text-destructive"
-              }`}
-            >
-              {product.stock > 20
-                ? `✅ In Stock (${product.stock} available)`
-                : `⚠️ Only ${product.stock} left!`}
-            </span>
+          {/* Stock Badge */}
+          <div>
+            <StockBadge stock={product.stock} />
           </div>
 
           <div className="flex gap-3">
             <Button
-              className="flex-1 bg-primary hover:opacity-90 text-white h-12 text-base gap-2"
+              className="flex-1 bg-primary hover:opacity-90 text-white h-12 text-base gap-2 disabled:opacity-50"
               onClick={handleAddToCart}
+              disabled={product.stock === 0}
               data-ocid="product.add_to_cart.primary_button"
             >
               <ShoppingCart className="h-5 w-5" />
-              {cartItem
-                ? `Add Again (${cartItem.quantity} in cart)`
-                : "Add to Cart"}
+              {product.stock === 0
+                ? "Out of Stock"
+                : cartItem
+                  ? `Add Again (${cartItem.quantity} in cart)`
+                  : "Add to Cart"}
             </Button>
             <Button
               variant="outline"
@@ -289,6 +443,40 @@ export function ProductDetailPage() {
             </Button>
           </Link>
 
+          {/* Social Share */}
+          <div className="flex items-center gap-2 pt-1">
+            <span className="text-xs text-muted-foreground font-medium">
+              Share:
+            </span>
+            <a
+              href={`https://wa.me/?text=${encodeURIComponent(`${shareText} ${pageUrl}`)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1 text-xs bg-green-500 hover:bg-green-600 text-white px-2.5 py-1 rounded-full font-semibold transition-colors"
+              data-ocid="product.share.whatsapp.button"
+            >
+              WA
+            </a>
+            <a
+              href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(pageUrl)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1 text-xs bg-blue-600 hover:bg-blue-700 text-white px-2.5 py-1 rounded-full font-semibold transition-colors"
+              data-ocid="product.share.facebook.button"
+            >
+              FB
+            </a>
+            <a
+              href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(pageUrl)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1 text-xs bg-foreground hover:opacity-80 text-white px-2.5 py-1 rounded-full font-semibold transition-colors"
+              data-ocid="product.share.twitter.button"
+            >
+              X
+            </a>
+          </div>
+
           {/* USP Row */}
           <div className="grid grid-cols-3 gap-3 border-t border-border pt-4">
             {USP_ITEMS.map((item) => (
@@ -307,6 +495,93 @@ export function ProductDetailPage() {
             ))}
           </div>
         </motion.div>
+      </div>
+
+      {/* Reviews Section */}
+      <div className="mt-10" data-ocid="product.reviews.section">
+        <h2 className="text-xl font-bold text-primary mb-6 flex items-center gap-2">
+          ⭐ Reviews / समीक्षा ({reviews.length})
+        </h2>
+
+        {/* Write Review */}
+        {customer ? (
+          <div className="bg-card border border-border rounded-xl p-5 mb-6">
+            <h3 className="font-semibold mb-3">अपनी समीक्षा लिखें</h3>
+            <div className="flex items-center gap-3 mb-3">
+              <span className="text-sm text-muted-foreground">Rating:</span>
+              <StarRating value={newRating} onChange={setNewRating} size="md" />
+            </div>
+            <Textarea
+              placeholder="आपका experience शेयर करें..."
+              value={newReviewText}
+              onChange={(e) => setNewReviewText(e.target.value)}
+              rows={3}
+              className="mb-3"
+              data-ocid="product.review.textarea"
+            />
+            <Button
+              onClick={handleSubmitReview}
+              disabled={submittingReview}
+              className="bg-primary text-white"
+              data-ocid="product.review.submit_button"
+            >
+              {submittingReview ? "Submitting..." : "Submit Review"}
+            </Button>
+          </div>
+        ) : (
+          <div className="bg-secondary/50 border border-border rounded-xl p-4 mb-6 text-center">
+            <p className="text-sm text-muted-foreground">
+              Review likhne ke liye{" "}
+              <Link
+                to="/customer-login"
+                className="text-primary font-semibold hover:underline"
+              >
+                login karein
+              </Link>
+            </p>
+          </div>
+        )}
+
+        {/* Reviews List */}
+        {reviews.length === 0 ? (
+          <div
+            className="text-center py-10 text-muted-foreground"
+            data-ocid="product.reviews.empty_state"
+          >
+            <p className="text-4xl mb-3">💬</p>
+            <p>Abhi koi review nahi hai. Pehle review likhne wale banein!</p>
+          </div>
+        ) : (
+          <div className="space-y-4">
+            {reviews.map((review, idx) => (
+              <motion.div
+                key={review.id}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: idx * 0.05 }}
+                className="bg-card border border-border rounded-xl p-4"
+                data-ocid={`product.reviews.item.${idx + 1}`}
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <p className="font-semibold text-sm">
+                      {review.customerName}
+                    </p>
+                    <div className="flex items-center gap-2 mt-0.5">
+                      <StarRating value={review.rating} />
+                      <span className="text-xs text-muted-foreground">
+                        {new Date(review.date).toLocaleDateString("en-IN")}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <p className="text-sm text-foreground/80 mt-2 leading-relaxed">
+                  {review.text}
+                </p>
+              </motion.div>
+            ))}
+          </div>
+        )}
       </div>
 
       <div className="mt-8">

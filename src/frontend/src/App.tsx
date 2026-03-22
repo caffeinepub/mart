@@ -1,14 +1,19 @@
 import { Layout } from "@/components/Layout";
 import { Toaster } from "@/components/ui/sonner";
 import { CartProvider } from "@/context/CartContext";
+import { CouponProvider } from "@/context/CouponContext";
 import { CustomerProvider } from "@/context/CustomerContext";
 import { ProductsProvider } from "@/context/ProductsContext";
 import { StoresProvider } from "@/context/StoresContext";
 import { AdminPage } from "@/pages/AdminPage";
+import { AdminPanelPage } from "@/pages/AdminPanelPage";
 import { CartPage } from "@/pages/CartPage";
+import { CheckoutPage } from "@/pages/CheckoutPage";
+import { ContactPage } from "@/pages/ContactPage";
 import { CustomerLoginPage } from "@/pages/CustomerLoginPage";
 import { HomePage } from "@/pages/HomePage";
 import { MyAccountPage } from "@/pages/MyAccountPage";
+import { OrderTrackingPage } from "@/pages/OrderTrackingPage";
 import { ProductDetailPage } from "@/pages/ProductDetailPage";
 import { ProductsPage } from "@/pages/ProductsPage";
 import { StoreLocatorPage } from "@/pages/StoreLocatorPage";
@@ -53,6 +58,24 @@ const cartRoute = createRoute({
   component: CartPage,
 });
 
+const checkoutRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/checkout",
+  component: CheckoutPage,
+});
+
+const orderTrackingRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/order-tracking",
+  component: OrderTrackingPage,
+  validateSearch: (search: Record<string, unknown>) => {
+    const out: { success?: string; orderId?: string } = {};
+    if (search.success) out.success = search.success as string;
+    if (search.orderId) out.orderId = search.orderId as string;
+    return out;
+  },
+});
+
 const storesRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/stores",
@@ -68,6 +91,12 @@ const upcomingRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/upcoming",
   component: UpcomingProductsPage,
+});
+
+const adminPanelRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/admin-panel",
+  component: AdminPanelPage,
 });
 
 const adminRoute = createRoute({
@@ -88,16 +117,26 @@ const myAccountRoute = createRoute({
   component: MyAccountPage,
 });
 
+const contactRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/contact",
+  component: ContactPage,
+});
+
 const routeTree = rootRoute.addChildren([
   homeRoute,
   productsRoute,
   productDetailRoute,
   cartRoute,
+  checkoutRoute,
+  orderTrackingRoute,
   storesRoute,
   upcomingRoute,
   adminRoute,
+  adminPanelRoute,
   customerLoginRoute,
   myAccountRoute,
+  contactRoute,
 ]);
 
 const router = createRouter({ routeTree });
@@ -114,8 +153,10 @@ export default function App() {
       <ProductsProvider>
         <StoresProvider>
           <CartProvider>
-            <RouterProvider router={router} />
-            <Toaster richColors position="top-right" />
+            <CouponProvider>
+              <RouterProvider router={router} />
+              <Toaster richColors position="top-right" />
+            </CouponProvider>
           </CartProvider>
         </StoresProvider>
       </ProductsProvider>

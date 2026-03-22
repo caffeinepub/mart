@@ -1,16 +1,27 @@
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { useCart } from "@/context/CartContext";
-import { Link } from "@tanstack/react-router";
+import { useCoupon } from "@/context/CouponContext";
+import { useActor } from "@/hooks/useActor";
+import { Link, useNavigate } from "@tanstack/react-router";
 import {
   ArrowLeft,
   ArrowRight,
   Minus,
   Plus,
   ShoppingCart,
+  Tag,
   Trash2,
 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
+import { useState } from "react";
 import { toast } from "sonner";
+
+const DEFAULT_COUPONS = [
+  { code: "DHARMA10", type: "percent" as const, value: 10, active: true },
+  { code: "DHARMA20", type: "percent" as const, value: 20, active: true },
+  { code: "WELCOME50", type: "flat" as const, value: 50, active: true },
+];
 
 export function CartPage() {
   const {
@@ -21,12 +32,32 @@ export function CartPage() {
     totalItems,
     totalPrice,
   } = useCart();
+  const { appliedCoupon, applyCoupon, clearCoupon, calcDiscount } = useCoupon();
+  const { actor } = useActor();
+  const navigate = useNavigate();
+  const [couponInput, setCouponInput] = useState("");
+  const [couponError, setCouponError] = useState("");
 
-  const handleCheckout = () => {
-    toast.success(
-      "🎉 Order placed successfully! You'll receive a confirmation shortly.",
-    );
-    clearCart();
+  const delivery = totalPrice >= 499 ? 0 : 49;
+  const discount = calcDiscount(totalPrice);
+  const finalTotal = totalPrice + delivery - discount;
+
+  const handleApplyCoupon = async () => {
+    setCouponError("");
+    let coupons = DEFAULT_COUPONS;
+    try {
+      if (actor) {
+        const raw = await (actor as any).getCouponsSnapshot();
+        const parsed = JSON.parse(raw);
+        if (Array.isArray(parsed) && parsed.length > 0) coupons = parsed;
+      }
+    } catch {}
+    const err = applyCoupon(couponInput, coupons);
+    if (err) {
+      setCouponError(err);
+    } else {
+      toast.success("Coupon applied! 🎉");
+    }
   };
 
   if (items.length === 0) {
@@ -128,6 +159,64 @@ export function CartPage() {
             ))}
           </AnimatePresence>
 
+          {/* Coupon Section */}
+          <div className="bg-card border border-border rounded-lg p-4">
+            <h3 className="font-semibold text-sm flex items-center gap-2 mb-3">
+              <Tag className="h-4 w-4 text-primary" /> Coupon Code
+            </h3>
+            <div className="flex gap-2">
+              <Input
+                placeholder="Enter coupon (e.g. DHARMA10)"
+                value={couponInput}
+                onChange={(e) => setCouponInput(e.target.value.toUpperCase())}
+                className="flex-1"
+                data-ocid="cart.coupon.input"
+              />
+              <Button
+                onClick={handleApplyCoupon}
+                className="bg-primary text-white"
+                data-ocid="cart.coupon.primary_button"
+              >
+                Apply
+              </Button>
+              {appliedCoupon && (
+                <Button
+                  variant="outline"
+                  className="text-destructive border-destructive"
+                  onClick={() => {
+                    clearCoupon();
+                    setCouponInput("");
+                  }}
+                  data-ocid="cart.coupon.cancel_button"
+                >
+                  Remove
+                </Button>
+              )}
+            </div>
+            {couponError && (
+              <p
+                className="text-sm text-destructive mt-2"
+                data-ocid="cart.coupon.error_state"
+              >
+                {couponError}
+              </p>
+            )}
+            {appliedCoupon && (
+              <p
+                className="text-sm text-green-600 font-semibold mt-2"
+                data-ocid="cart.coupon.success_state"
+              >
+                ✅ "{appliedCoupon.code}" applied &mdash;{" "}
+                {appliedCoupon.type === "percent"
+                  ? `${appliedCoupon.value}% off`
+                  : `₹${appliedCoupon.value} off`}
+              </p>
+            )}
+            <p className="text-xs text-muted-foreground mt-2">
+              Try: DHARMA10, DHARMA20, WELCOME50
+            </p>
+          </div>
+
           <div className="flex justify-between items-center pt-2">
             <Link to="/products">
               <Button
@@ -172,9 +261,15 @@ export function CartPage() {
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Delivery Charges</span>
                 <span className="font-semibold text-green-600">
-                  {totalPrice >= 499 ? "FREE" : "₹49"}
+                  {delivery === 0 ? "FREE" : `₹${delivery}`}
                 </span>
               </div>
+              {discount > 0 && (
+                <div className="flex justify-between text-green-600 font-semibold">
+                  <span>Coupon Discount</span>
+                  <span>-₹{discount.toLocaleString("en-IN")}</span>
+                </div>
+              )}
               {totalPrice < 499 && (
                 <p className="text-xs text-accent">
                   Add ₹{(499 - totalPrice).toLocaleString("en-IN")} more for
@@ -184,22 +279,19 @@ export function CartPage() {
               <div className="border-t border-border pt-2 flex justify-between font-bold text-base">
                 <span>Total</span>
                 <span className="text-primary">
-                  ₹
-                  {(totalPrice + (totalPrice >= 499 ? 0 : 49)).toLocaleString(
-                    "en-IN",
-                  )}
+                  ₹{finalTotal.toLocaleString("en-IN")}
                 </span>
               </div>
             </div>
             <Button
               className="w-full mt-4 bg-accent hover:opacity-90 text-white font-bold h-12 text-base gap-2"
-              onClick={handleCheckout}
+              onClick={() => navigate({ to: "/checkout" })}
               data-ocid="cart.checkout.primary_button"
             >
-              Place Order <ArrowRight className="h-4 w-4" />
+              Proceed to Checkout <ArrowRight className="h-4 w-4" />
             </Button>
             <p className="text-[11px] text-muted-foreground text-center mt-3">
-              🔒 Safe & Secure Checkout
+              🔒 Safe &amp; Secure Checkout
             </p>
           </div>
         </div>

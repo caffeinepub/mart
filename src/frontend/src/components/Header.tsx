@@ -3,9 +3,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useCart } from "@/context/CartContext";
 import { useCustomer } from "@/context/CustomerContext";
+import { useProducts } from "@/context/ProductsContext";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { MapPin, Menu, Search, ShoppingCart, User, X } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const CATEGORIES = [
   { id: "grocery", label: "GROCERY" },
@@ -21,18 +22,55 @@ const UPCOMING_LINK = { to: "/upcoming" as const, label: "🔜 UPCOMING" };
 export function Header() {
   const { totalItems } = useCart();
   const { customer } = useCustomer();
+  const { products } = useProducts();
   const [searchQuery, setSearchQuery] = useState("");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [suggestions, setSuggestions] = useState<string[]>([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const searchRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
-  const handleSearch = () => {
-    if (searchQuery.trim()) {
-      navigate({ to: "/products", search: { q: searchQuery.trim() } });
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (searchRef.current && !searchRef.current.contains(e.target as Node)) {
+        setShowSuggestions(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const handleSearchChange = (val: string) => {
+    setSearchQuery(val);
+    if (val.trim().length < 2) {
+      setSuggestions([]);
+      setShowSuggestions(false);
+      return;
+    }
+    const lower = val.toLowerCase();
+    const matched = products
+      .filter(
+        (p) =>
+          p.name.toLowerCase().includes(lower) || p.nameHindi?.includes(val),
+      )
+      .slice(0, 6)
+      .map((p) => p.name);
+    setSuggestions(matched);
+    setShowSuggestions(matched.length > 0);
+  };
+
+  const handleSearch = (q?: string) => {
+    const term = q || searchQuery;
+    if (term.trim()) {
+      navigate({ to: "/products", search: { q: term.trim() } });
+      setShowSuggestions(false);
+      setSearchQuery(term);
     }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") handleSearch();
+    if (e.key === "Escape") setShowSuggestions(false);
   };
 
   return (
@@ -53,11 +91,11 @@ export function Header() {
               Store Locator
             </Link>
             <Link
-              to="/cart"
+              to="/contact"
               className="hover:text-accent transition-colors"
-              data-ocid="utility.cart.link"
+              data-ocid="utility.contact.link"
             >
-              Cart
+              Contact
             </Link>
           </div>
         </div>
@@ -83,72 +121,87 @@ export function Header() {
             </div>
           </Link>
 
-          {/* Search Bar */}
-          <div className="flex-1 flex gap-0 max-w-2xl mx-auto">
+          {/* Search Bar with Suggestions */}
+          <div
+            className="flex-1 flex gap-0 max-w-2xl mx-auto relative"
+            ref={searchRef}
+          >
             <Input
               placeholder="चावल, कुर्ता, मोबाइल... खोजें"
               className="rounded-r-none border-0 bg-white text-foreground placeholder:text-muted-foreground h-10 flex-1"
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={(e) => handleSearchChange(e.target.value)}
               onKeyDown={handleKeyDown}
+              onFocus={() => suggestions.length > 0 && setShowSuggestions(true)}
               data-ocid="header.search_input"
             />
             <Button
-              onClick={handleSearch}
+              onClick={() => handleSearch()}
               className="rounded-l-none bg-accent hover:opacity-90 text-white border-0 h-10 px-4"
               data-ocid="header.search.button"
             >
               <Search className="h-4 w-4" />
             </Button>
+
+            {/* Suggestions Dropdown */}
+            {showSuggestions && suggestions.length > 0 && (
+              <div className="absolute top-full left-0 right-0 bg-white border border-gray-200 rounded-b-lg shadow-lg z-50 max-h-72 overflow-y-auto">
+                {suggestions.map((s, idx) => (
+                  <button
+                    key={s}
+                    type="button"
+                    className="w-full text-left px-4 py-2.5 text-sm text-foreground hover:bg-primary/5 flex items-center gap-2 border-b border-gray-100 last:border-0"
+                    onClick={() => handleSearch(s)}
+                    data-ocid={`header.suggestion.item.${idx + 1}`}
+                  >
+                    <Search className="h-3.5 w-3.5 text-muted-foreground flex-shrink-0" />
+                    {s}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Right Icons */}
           <div className="flex items-center gap-3 flex-shrink-0">
             <Link
               to="/stores"
-              className="hidden md:flex flex-col items-center text-white/80 hover:text-white transition-colors text-xs"
+              className="hidden md:flex flex-col items-center text-white/80 hover:text-white transition-colors"
               data-ocid="nav.stores.link"
             >
               <MapPin className="h-5 w-5" />
-              <span>Stores</span>
+              <span className="text-[10px]">Stores</span>
             </Link>
-
-            {/* My Account */}
             <Link
               to={customer ? "/my-account" : "/customer-login"}
-              className="hidden md:flex flex-col items-center text-white/80 hover:text-white transition-colors text-xs"
+              className="flex flex-col items-center text-white/80 hover:text-white transition-colors"
               data-ocid="nav.account.link"
             >
-              <div className="relative">
-                <User className="h-5 w-5" />
-                {customer && (
-                  <span className="absolute -top-1.5 -right-1.5 w-2.5 h-2.5 bg-accent rounded-full border border-primary" />
-                )}
-              </div>
-              <span className="max-w-[60px] truncate">
-                {customer ? customer.name.split(" ")[0] : "Account"}
+              <User className="h-5 w-5" />
+              <span className="text-[10px] hidden sm:block">
+                {customer ? customer.name.split(" ")[0] : "Login"}
               </span>
             </Link>
-
             <Link
               to="/cart"
-              className="flex flex-col items-center text-white/80 hover:text-white transition-colors text-xs relative"
+              className="flex flex-col items-center text-white/80 hover:text-white transition-colors relative"
               data-ocid="nav.cart.link"
             >
               <div className="relative">
                 <ShoppingCart className="h-5 w-5" />
                 {totalItems > 0 && (
-                  <Badge className="absolute -top-2 -right-2 h-4 w-4 p-0 text-[10px] bg-accent text-white border-0 flex items-center justify-center rounded-full">
-                    {totalItems}
+                  <Badge className="absolute -top-2 -right-2 bg-accent text-white text-[10px] w-4 h-4 p-0 flex items-center justify-center rounded-full border-0">
+                    {totalItems > 9 ? "9+" : totalItems}
                   </Badge>
                 )}
               </div>
-              <span>Cart</span>
+              <span className="text-[10px] hidden sm:block">Cart</span>
             </Link>
             <button
               type="button"
               className="md:hidden text-white"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              onClick={() => setMobileMenuOpen((p) => !p)}
+              aria-label="Toggle menu"
               data-ocid="nav.mobile_menu.toggle"
             >
               {mobileMenuOpen ? (
@@ -162,69 +215,57 @@ export function Header() {
       </div>
 
       {/* Category Nav */}
-      <nav className="bg-white border-b border-border shadow-sm hidden md:block">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="flex items-center gap-0">
-            {CATEGORIES.map((cat) => (
-              <Link
-                key={cat.id}
-                to="/products"
-                search={{ category: cat.id }}
-                className="px-4 py-3 text-xs font-bold text-primary/80 hover:text-primary hover:bg-primary/5 transition-colors uppercase tracking-wider border-r border-border last:border-r-0"
-                data-ocid="nav.category.tab"
-              >
-                {cat.label}
-              </Link>
-            ))}
-            <Link
-              to={UPCOMING_LINK.to}
-              className="px-4 py-3 text-xs font-bold text-accent hover:opacity-80 transition-colors uppercase tracking-wider border-l border-border ml-auto"
-              data-ocid="nav.upcoming.link"
-            >
-              {UPCOMING_LINK.label}
-            </Link>
-          </div>
-        </div>
-      </nav>
-
-      {/* Mobile Menu */}
-      {mobileMenuOpen && (
-        <div className="md:hidden bg-white border-b shadow-lg">
-          {/* Mobile Account Link */}
-          <Link
-            to={customer ? "/my-account" : "/customer-login"}
-            className="flex items-center gap-3 px-4 py-3 text-sm font-semibold text-primary border-b border-border bg-primary/5"
-            onClick={() => setMobileMenuOpen(false)}
-            data-ocid="nav.account.mobile.link"
-          >
-            <User className="h-4 w-4" />
-            {customer ? `${customer.name} का खाता` : "Login / मेरा खाता"}
-          </Link>
+      <div className="bg-primary/90 border-t border-white/10 py-1.5 px-4 hidden md:block">
+        <div className="max-w-7xl mx-auto flex items-center gap-1 overflow-x-auto scrollbar-hide">
           {CATEGORIES.map((cat) => (
             <Link
               key={cat.id}
               to="/products"
               search={{ category: cat.id }}
-              className="block px-4 py-3 text-sm font-semibold text-primary border-b border-border uppercase"
-              onClick={() => setMobileMenuOpen(false)}
+              className="flex-shrink-0 text-white/80 hover:text-white text-xs font-semibold px-3 py-1.5 rounded hover:bg-white/10 transition-colors uppercase tracking-wide"
+              data-ocid={`nav.category.${cat.id}.link`}
             >
               {cat.label}
             </Link>
           ))}
           <Link
-            to="/upcoming"
-            className="block px-4 py-3 text-sm font-bold text-accent border-b border-border uppercase"
-            onClick={() => setMobileMenuOpen(false)}
-            data-ocid="nav.upcoming.mobile.link"
+            to={UPCOMING_LINK.to}
+            className="flex-shrink-0 text-accent font-semibold text-xs px-3 py-1.5 rounded hover:bg-white/10 transition-colors"
+            data-ocid="nav.upcoming.link"
           >
-            🔜 Upcoming Products
+            {UPCOMING_LINK.label}
           </Link>
           <Link
-            to="/stores"
-            className="block px-4 py-3 text-sm font-semibold text-primary"
+            to="/contact"
+            className="flex-shrink-0 text-white/80 hover:text-white text-xs font-semibold px-3 py-1.5 rounded hover:bg-white/10 transition-colors ml-auto"
+            data-ocid="nav.contact.link"
+          >
+            Contact
+          </Link>
+        </div>
+      </div>
+
+      {/* Mobile Menu */}
+      {mobileMenuOpen && (
+        <div className="md:hidden bg-primary/95 border-t border-white/10 px-4 py-3 space-y-2">
+          {CATEGORIES.map((cat) => (
+            <Link
+              key={cat.id}
+              to="/products"
+              search={{ category: cat.id }}
+              className="block text-white/80 hover:text-white text-sm py-1.5 font-medium"
+              onClick={() => setMobileMenuOpen(false)}
+              data-ocid={`nav.mobile.${cat.id}.link`}
+            >
+              {cat.label}
+            </Link>
+          ))}
+          <Link
+            to="/contact"
+            className="block text-white/80 hover:text-white text-sm py-1.5 font-medium"
             onClick={() => setMobileMenuOpen(false)}
           >
-            Store Locator
+            Contact Us
           </Link>
         </div>
       )}
