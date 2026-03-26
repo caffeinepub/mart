@@ -8,6 +8,72 @@ import { ArrowLeft, Search, SlidersHorizontal } from "lucide-react";
 import { motion } from "motion/react";
 import { useEffect, useMemo, useState } from "react";
 
+const CATEGORY_GROUP_MAP: Record<string, string[]> = {
+  mobiles: [
+    "mobile",
+    "Mobiles",
+    "Mobile accessories",
+    "Cases covers & more",
+    "Camera",
+  ],
+  laptops: ["Laptops", "Computer accessories", "Computer peripheral"],
+  tv: [
+    "Televisions",
+    "Home appliances",
+    "Washing machines",
+    "Refrigerators",
+    "Air conditioners",
+    "Seasonal appliances",
+    "Microwave oven",
+    "appliances",
+  ],
+  "womens-fashion": [
+    "fashion",
+    "Woman's clothing",
+    "Women's Essentials",
+    "Woman footwear & accessories",
+    "Kid's Fashion",
+  ],
+  "mens-fashion": ["fashion", "Men's Essentials"],
+  footwear: [
+    "fashion",
+    "Woman footwear & accessories",
+    "Suitcase, Bags & backpacks",
+  ],
+  grocery: ["food-health"],
+  beauty: [
+    "beauty",
+    "Skin care",
+    "Hair care",
+    "Fragrance",
+    "Personal care appliances",
+  ],
+  sports: ["sports"],
+  furniture: ["furniture", "Tables", "Storage"],
+  gadgets: [
+    "smart-gadgets",
+    "Smart wearables",
+    "Smart home automation",
+    "Headphones & speakers",
+    "Gaming",
+    "Power banks",
+  ],
+  kitchen: [
+    "home",
+    "Kitchen appliances",
+    "Home improvement tools",
+    "Decor & lighting",
+  ],
+  electronics: [
+    "electronics",
+    "mobile",
+    "Mobiles",
+    "Laptops",
+    "Televisions",
+    "appliances",
+  ],
+};
+
 export function ProductsPage() {
   const { products } = useProducts();
   const navigate = useNavigate();
@@ -32,6 +98,21 @@ export function ProductsPage() {
     }
   }, [search.category, search.q, search.deals]);
 
+  // Scroll position save/restore for back navigation
+  useEffect(() => {
+    const saved = sessionStorage.getItem("dharma_products_scroll");
+    if (saved) {
+      const y = Number.parseInt(saved, 10);
+      sessionStorage.removeItem("dharma_products_scroll");
+      setTimeout(() => window.scrollTo({ top: y, behavior: "instant" }), 100);
+    }
+    const handleScroll = () => {
+      sessionStorage.setItem("dharma_products_scroll", String(window.scrollY));
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   const filtered = useMemo(() => {
     let list = products;
 
@@ -40,7 +121,18 @@ export function ProductsPage() {
     }
 
     if (activeCategory && activeCategory !== "all") {
-      list = list.filter((p) => p.category === activeCategory);
+      const groupCategories = CATEGORY_GROUP_MAP[activeCategory];
+      if (groupCategories) {
+        list = list.filter((p) =>
+          groupCategories.some(
+            (gc) => p.category.toLowerCase() === gc.toLowerCase(),
+          ),
+        );
+      } else {
+        list = list.filter(
+          (p) => p.category.toLowerCase() === activeCategory.toLowerCase(),
+        );
+      }
     }
 
     if (activeSearch) {
@@ -69,6 +161,14 @@ export function ProductsPage() {
       });
     }
 
+    if (sortBy === "ratings-desc")
+      list = [...list].sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0));
+    if (sortBy === "new-arrivals")
+      list = [...list]
+        .filter((p) => p.badge === "New" || p.badge === "नया")
+        .concat(
+          [...list].filter((p) => p.badge !== "New" && p.badge !== "नया"),
+        );
     return list;
   }, [products, activeCategory, activeSearch, sortBy, search.deals]);
 
@@ -145,6 +245,8 @@ export function ProductsPage() {
             <option value="price-asc">Price: Low to High</option>
             <option value="price-desc">Price: High to Low</option>
             <option value="discount">Highest Discount</option>
+            <option value="ratings-desc">Ratings: High to Low</option>
+            <option value="new-arrivals">New Arrivals</option>
           </select>
         </div>
       </div>

@@ -68,6 +68,11 @@ interface NewProductForm {
   badge: string;
   description: string;
   details: string;
+  showcase: string;
+  specifications: string;
+  warranty: string;
+  manufacturerInfo: string;
+  colors: string;
   image: string;
   image2: string;
   image3: string;
@@ -86,6 +91,11 @@ const EMPTY_PRODUCT_FORM: NewProductForm = {
   badge: "",
   description: "",
   details: "",
+  showcase: "",
+  specifications: "",
+  warranty: "",
+  manufacturerInfo: "",
+  colors: "",
   image: "",
   image2: "",
   image3: "",
@@ -322,6 +332,11 @@ export function AdminPage() {
       nameHindi: newProduct.nameHindi || newProduct.name,
       description: newProduct.description,
       details: newProduct.details || undefined,
+      showcase: newProduct.showcase || undefined,
+      specifications: newProduct.specifications || undefined,
+      warranty: newProduct.warranty || undefined,
+      manufacturerInfo: newProduct.manufacturerInfo || undefined,
+      colors: newProduct.colors || undefined,
       price: Number(newProduct.price),
       originalPrice: newProduct.originalPrice
         ? Number(newProduct.originalPrice)
@@ -599,6 +614,95 @@ export function AdminPage() {
                     rows={4}
                   />
                 </div>
+                <div>
+                  <Label htmlFor="edit-showcase">🖼️ Showcase / विशेषताएँ</Label>
+                  <Textarea
+                    id="edit-showcase"
+                    value={editProduct.showcase ?? ""}
+                    onChange={(e) =>
+                      setEditProduct((p) =>
+                        p ? { ...p, showcase: e.target.value || undefined } : p,
+                      )
+                    }
+                    placeholder={"हर लाइन में एक highlight लिखें"}
+                    className="mt-1 resize-none"
+                    rows={3}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="edit-specifications">
+                    ⚙️ Specifications / विशिष्टताएँ
+                  </Label>
+                  <Textarea
+                    id="edit-specifications"
+                    value={editProduct.specifications ?? ""}
+                    onChange={(e) =>
+                      setEditProduct((p) =>
+                        p
+                          ? {
+                              ...p,
+                              specifications: e.target.value || undefined,
+                            }
+                          : p,
+                      )
+                    }
+                    placeholder={"Key: Value format में लिखें"}
+                    className="mt-1 resize-none"
+                    rows={3}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="edit-warranty">🛡️ Warranty / वारंटी</Label>
+                  <Input
+                    id="edit-warranty"
+                    value={editProduct.warranty ?? ""}
+                    onChange={(e) =>
+                      setEditProduct((p) =>
+                        p ? { ...p, warranty: e.target.value || undefined } : p,
+                      )
+                    }
+                    placeholder="जैसे: 1 साल की manufacturer warranty"
+                    className="mt-1"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="edit-manufacturer">
+                    🏭 Manufacturer Info / निर्माता जानकारी
+                  </Label>
+                  <Textarea
+                    id="edit-manufacturer"
+                    value={editProduct.manufacturerInfo ?? ""}
+                    onChange={(e) =>
+                      setEditProduct((p) =>
+                        p
+                          ? {
+                              ...p,
+                              manufacturerInfo: e.target.value || undefined,
+                            }
+                          : p,
+                      )
+                    }
+                    placeholder="Brand name, address, contact"
+                    className="mt-1 resize-none"
+                    rows={2}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="edit-colors">
+                    🎨 Color Options / रंग विकल्प
+                  </Label>
+                  <Input
+                    id="edit-colors"
+                    value={editProduct.colors ?? ""}
+                    onChange={(e) =>
+                      setEditProduct((p) =>
+                        p ? { ...p, colors: e.target.value || undefined } : p,
+                      )
+                    }
+                    placeholder="जैसे: Red, Blue, Black, White"
+                    className="mt-1"
+                  />
+                </div>
                 <Label htmlFor="edit-image">Image URL</Label>
                 <Input
                   id="edit-image"
@@ -856,6 +960,83 @@ export function AdminPage() {
               />
             </div>
             <div>
+              <Label htmlFor="add-showcase">🖼️ Showcase / विशेषताएँ</Label>
+              <Textarea
+                id="add-showcase"
+                value={newProduct.showcase}
+                onChange={(e) =>
+                  setNewProduct((p) => ({ ...p, showcase: e.target.value }))
+                }
+                placeholder={
+                  "हर लाइन में एक highlight लिखें\nजैसे: 5000mAh Battery\n6GB RAM"
+                }
+                className="mt-1 resize-none"
+                rows={3}
+              />
+            </div>
+            <div>
+              <Label htmlFor="add-specifications">
+                ⚙️ Specifications / विशिष्टताएँ
+              </Label>
+              <Textarea
+                id="add-specifications"
+                value={newProduct.specifications}
+                onChange={(e) =>
+                  setNewProduct((p) => ({
+                    ...p,
+                    specifications: e.target.value,
+                  }))
+                }
+                placeholder={
+                  "Key: Value format में लिखें\nजैसे: Battery: 5000mAh\nRAM: 6GB"
+                }
+                className="mt-1 resize-none"
+                rows={3}
+              />
+            </div>
+            <div>
+              <Label htmlFor="add-warranty">🛡️ Warranty / वारंटी</Label>
+              <Input
+                id="add-warranty"
+                value={newProduct.warranty}
+                onChange={(e) =>
+                  setNewProduct((p) => ({ ...p, warranty: e.target.value }))
+                }
+                placeholder="जैसे: 1 साल की manufacturer warranty"
+                className="mt-1"
+              />
+            </div>
+            <div>
+              <Label htmlFor="add-manufacturer">
+                🏭 Manufacturer Info / निर्माता जानकारी
+              </Label>
+              <Textarea
+                id="add-manufacturer"
+                value={newProduct.manufacturerInfo}
+                onChange={(e) =>
+                  setNewProduct((p) => ({
+                    ...p,
+                    manufacturerInfo: e.target.value,
+                  }))
+                }
+                placeholder="Brand name, address, contact, country of origin"
+                className="mt-1 resize-none"
+                rows={2}
+              />
+            </div>
+            <div>
+              <Label htmlFor="add-colors">🎨 Color Options / रंग विकल्प</Label>
+              <Input
+                id="add-colors"
+                value={newProduct.colors}
+                onChange={(e) =>
+                  setNewProduct((p) => ({ ...p, colors: e.target.value }))
+                }
+                placeholder="जैसे: Red, Blue, Black, White"
+                className="mt-1"
+              />
+            </div>
+            <div>
               <Label htmlFor="add-image">Image URL (optional)</Label>
               <Input
                 id="add-image"
@@ -1052,6 +1233,9 @@ export function AdminPage() {
           </TabsTrigger>
           <TabsTrigger value="analytics" className="gap-2">
             <BarChart2 className="h-4 w-4" /> Analytics / विश्लेषण
+          </TabsTrigger>
+          <TabsTrigger value="reviews" className="gap-2">
+            ⭐ Reviews / समीक्षाएं
           </TabsTrigger>
         </TabsList>
 
@@ -1301,6 +1485,15 @@ export function AdminPage() {
                               {product.badge}
                             </span>
                           )}
+                          {product.stock === 0 ? (
+                            <span className="text-[10px] bg-red-100 text-red-700 px-1.5 py-0.5 rounded font-semibold">
+                              🔴 Out of Stock
+                            </span>
+                          ) : product.stock < 5 ? (
+                            <span className="text-[10px] bg-orange-100 text-orange-700 px-1.5 py-0.5 rounded font-semibold">
+                              ⚠️ Low Stock ({product.stock})
+                            </span>
+                          ) : null}
                         </div>
                       </div>
                       <div className="flex gap-2">
@@ -1795,7 +1988,143 @@ export function AdminPage() {
             );
           })()}
         </TabsContent>
+
+        <TabsContent value="reviews">
+          <ReviewsManagement />
+        </TabsContent>
       </Tabs>
+    </div>
+  );
+}
+
+function ReviewsManagement() {
+  const [reviews, setReviews] = useState<
+    Record<
+      string,
+      Array<{
+        id: string;
+        productId?: string;
+        productName?: string;
+        customerName: string;
+        rating: number;
+        text: string;
+        approved?: boolean;
+        date: string;
+      }>
+    >
+  >({});
+
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem("dharma_reviews");
+      if (raw) setReviews(JSON.parse(raw));
+    } catch {}
+  }, []);
+
+  const allReviews = Object.entries(reviews).flatMap(([slug, arr]) =>
+    arr.map((r) => ({ ...r, slug })),
+  );
+
+  const approveReview = (slug: string, id: string) => {
+    const updated = { ...reviews };
+    updated[slug] = (updated[slug] || []).map((r) =>
+      r.id === id ? { ...r, approved: true } : r,
+    );
+    setReviews(updated);
+    localStorage.setItem("dharma_reviews", JSON.stringify(updated));
+  };
+
+  const deleteReview = (slug: string, id: string) => {
+    const updated = { ...reviews };
+    updated[slug] = (updated[slug] || []).filter((r) => r.id !== id);
+    setReviews(updated);
+    localStorage.setItem("dharma_reviews", JSON.stringify(updated));
+  };
+
+  if (allReviews.length === 0) {
+    return (
+      <div
+        className="text-center py-12 text-muted-foreground"
+        data-ocid="admin.reviews.empty_state"
+      >
+        <div className="text-4xl mb-3">⭐</div>
+        <p>अभी कोई review नहीं है।</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-3" data-ocid="admin.reviews.table">
+      <p className="text-sm text-muted-foreground">
+        {allReviews.length} total reviews
+      </p>
+      {allReviews.map((review, idx) => (
+        <div
+          key={review.id}
+          className="bg-card border border-border rounded-lg p-4 flex items-start gap-4"
+          data-ocid={`admin.reviews.item.${idx + 1}`}
+        >
+          <div className="flex-1 min-w-0">
+            <div className="flex flex-wrap items-center gap-2 mb-1">
+              <span className="font-semibold text-sm">
+                {review.customerName}
+              </span>
+              <span className="text-xs text-muted-foreground">
+                on{" "}
+                <span className="text-primary font-medium">{review.slug}</span>
+              </span>
+              <span className="flex gap-0.5">
+                {[1, 2, 3, 4, 5].map((s) => (
+                  <span
+                    key={s}
+                    className={
+                      s <= review.rating
+                        ? "text-yellow-400"
+                        : "text-muted-foreground"
+                    }
+                  >
+                    ★
+                  </span>
+                ))}
+              </span>
+              {review.approved ? (
+                <span className="text-[10px] bg-green-100 text-green-700 px-1.5 py-0.5 rounded font-semibold">
+                  ✅ Approved
+                </span>
+              ) : (
+                <span className="text-[10px] bg-yellow-100 text-yellow-700 px-1.5 py-0.5 rounded font-semibold">
+                  ⏳ Pending
+                </span>
+              )}
+            </div>
+            <p className="text-sm text-foreground/80">{review.text}</p>
+            <p className="text-xs text-muted-foreground mt-1">
+              {new Date(review.date).toLocaleDateString("en-IN")}
+            </p>
+          </div>
+          <div className="flex gap-2 flex-shrink-0">
+            {!review.approved && (
+              <Button
+                size="sm"
+                className="bg-green-600 hover:bg-green-700 text-white h-8 text-xs"
+                onClick={() => approveReview(review.slug, review.id)}
+                data-ocid={`admin.reviews.approve_button.${idx + 1}`}
+              >
+                ✅ Approve
+              </Button>
+            )}
+            <Button
+              size="sm"
+              variant="outline"
+              className="border-destructive text-destructive hover:bg-destructive hover:text-white h-8 text-xs"
+              onClick={() => deleteReview(review.slug, review.id)}
+              data-ocid={`admin.reviews.delete_button.${idx + 1}`}
+            >
+              🗑️ Delete
+            </Button>
+          </div>
+        </div>
+      ))}
     </div>
   );
 }

@@ -160,7 +160,11 @@ const routeTree = rootRoute.addChildren([
   storeDashboardRoute,
 ]);
 
-const router = createRouter({ routeTree });
+const router = createRouter({
+  routeTree,
+  scrollRestoration: true,
+  defaultPreloadStaleTime: 0,
+});
 
 declare module "@tanstack/react-router" {
   interface Register {

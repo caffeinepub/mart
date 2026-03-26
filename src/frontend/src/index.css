@@ -6,49 +6,50 @@
 
 @layer base {
   :root {
-    /* Primary dark teal: #0F3F45 */
-    --primary: 0.28 0.055 196;
+    /* Primary: deep saffron-orange — Indian flag saffron */
+    --primary: 0.55 0.18 40;
     --primary-foreground: 1 0 0;
 
-    /* Accent orange/gold: #E3A14A */
-    --accent: 0.72 0.13 61;
-    --accent-foreground: 0.15 0.01 250;
+    /* Accent: rich golden yellow */
+    --accent: 0.78 0.16 75;
+    --accent-foreground: 0.15 0.02 50;
 
-    /* Background light gray: #F2F4F5 */
-    --background: 0.96 0.006 214;
-    --foreground: 0.18 0.02 250;
+    /* Background: warm cream/off-white */
+    --background: 0.97 0.008 80;
+    --foreground: 0.18 0.02 50;
 
-    /* Card white */
+    /* Card: soft warm white */
     --card: 1 0 0;
-    --card-foreground: 0.18 0.02 250;
+    --card-foreground: 0.18 0.02 50;
 
     --popover: 1 0 0;
-    --popover-foreground: 0.18 0.02 250;
+    --popover-foreground: 0.18 0.02 50;
 
-    --secondary: 0.93 0.01 214;
-    --secondary-foreground: 0.3 0.03 214;
+    /* Secondary: warm light sand */
+    --secondary: 0.93 0.015 75;
+    --secondary-foreground: 0.35 0.04 50;
 
-    --muted: 0.93 0.008 214;
-    --muted-foreground: 0.55 0.02 214;
+    --muted: 0.93 0.01 75;
+    --muted-foreground: 0.55 0.025 60;
 
     --destructive: 0.55 0.22 25;
     --destructive-foreground: 1 0 0;
 
-    --border: 0.88 0.01 214;
-    --input: 0.88 0.01 214;
-    --ring: 0.28 0.055 196;
+    --border: 0.88 0.015 70;
+    --input: 0.88 0.015 70;
+    --ring: 0.55 0.18 40;
 
     --radius: 0.5rem;
 
     /* Sidebar */
     --sidebar-background: 1 0 0;
-    --sidebar-foreground: 0.18 0.02 250;
-    --sidebar-primary: 0.28 0.055 196;
+    --sidebar-foreground: 0.18 0.02 50;
+    --sidebar-primary: 0.55 0.18 40;
     --sidebar-primary-foreground: 1 0 0;
-    --sidebar-accent: 0.93 0.01 214;
-    --sidebar-accent-foreground: 0.18 0.02 250;
-    --sidebar-border: 0.88 0.01 214;
-    --sidebar-ring: 0.28 0.055 196;
+    --sidebar-accent: 0.93 0.015 75;
+    --sidebar-accent-foreground: 0.18 0.02 50;
+    --sidebar-border: 0.88 0.015 70;
+    --sidebar-ring: 0.55 0.18 40;
   }
 }
 

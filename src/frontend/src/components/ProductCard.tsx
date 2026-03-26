@@ -13,23 +13,73 @@ interface ProductCardProps {
   index?: number;
 }
 
-function getProductFallbackImage(name: string): string {
-  // Use product name as keyword for a relevant fallback image
-  const keyword = encodeURIComponent(
-    name
-      .replace(/[^a-zA-Z0-9 ]/g, "")
-      .trim()
-      .split(" ")
-      .slice(0, 3)
-      .join("+"),
-  );
-  // Generate a consistent hash-based seed
-  let hash = 5381;
-  for (let i = 0; i < name.length; i++) {
-    hash = ((hash << 5) + hash + name.charCodeAt(i)) & 0xffffffff;
-  }
-  const seed = Math.abs(hash) % 9999;
-  return `https://loremflickr.com/400/400/${keyword}?lock=${seed}`;
+// Safe local fallback by category -- NO external URLs
+function getSafeLocalFallback(category: string): string {
+  const cat = (category || "").toLowerCase();
+  if (cat.includes("mobile") || cat.includes("phone"))
+    return "/assets/generated/mobile-smartphone.dim_400x400.jpg";
+  if (cat.includes("laptop") || cat.includes("computer"))
+    return "/assets/generated/electronics-laptop.dim_400x400.jpg";
+  if (cat.includes("tv") || cat.includes("television"))
+    return "/assets/generated/electronics-tv.dim_400x400.jpg";
+  if (cat.includes("fridge") || cat.includes("refrigerator"))
+    return "/assets/generated/appliance-refrigerator.dim_400x400.jpg";
+  if (cat.includes("washing"))
+    return "/assets/generated/appliance-washing-machine.dim_400x400.jpg";
+  if (
+    cat.includes("appliance") ||
+    cat.includes("kitchen") ||
+    cat.includes("microwave")
+  )
+    return "/assets/generated/appliance-mixer-grinder.dim_400x400.jpg";
+  if (
+    cat.includes("fashion") ||
+    cat.includes("cloth") ||
+    cat.includes("men") ||
+    cat.includes("women")
+  )
+    return "/assets/generated/fashion-denim-jeans.dim_400x400.jpg";
+  if (
+    cat.includes("footwear") ||
+    cat.includes("shoe") ||
+    cat.includes("sandal")
+  )
+    return "/assets/generated/footwear-formal-shoes.dim_400x400.jpg";
+  if (cat.includes("beauty") || cat.includes("skin") || cat.includes("hair"))
+    return "/assets/generated/beauty-care-products.dim_400x400.jpg";
+  if (
+    cat.includes("grocery") ||
+    cat.includes("rice") ||
+    cat.includes("dal") ||
+    cat.includes("spice") ||
+    cat.includes("masala")
+  )
+    return "/assets/generated/grocery-ghee.dim_400x400.jpg";
+  if (
+    cat.includes("sport") ||
+    cat.includes("fitness") ||
+    cat.includes("cricket") ||
+    cat.includes("cycle")
+  )
+    return "/assets/generated/sports-fitness-products.dim_400x400.jpg";
+  if (cat.includes("furniture") || cat.includes("sofa") || cat.includes("bed"))
+    return "/assets/generated/furniture-sofa.dim_400x400.jpg";
+  if (
+    cat.includes("smart") ||
+    cat.includes("watch") ||
+    cat.includes("wearable")
+  )
+    return "/assets/generated/smart-watch-noise.dim_400x400.jpg";
+  if (
+    cat.includes("headphone") ||
+    cat.includes("speaker") ||
+    cat.includes("earphone")
+  )
+    return "/assets/generated/smart-earbuds-boat.dim_400x400.jpg";
+  if (cat.includes("car") || cat.includes("bike") || cat.includes("auto"))
+    return "/assets/generated/auto-accessories.dim_400x400.jpg";
+  // Ultimate safe fallback
+  return "/assets/generated/grocery-ghee.dim_400x400.jpg";
 }
 
 export function ProductCard({ product, index = 1 }: ProductCardProps) {
@@ -93,8 +143,8 @@ export function ProductCard({ product, index = 1 }: ProductCardProps) {
             alt={product.name}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
             onError={(e) => {
-              // If image fails, use product name for a relevant fallback
-              const fallback = getProductFallbackImage(product.name);
+              // ONLY use safe local fallback -- never external URLs
+              const fallback = getSafeLocalFallback(product.category);
               if (e.currentTarget.src !== fallback) {
                 e.currentTarget.src = fallback;
               }

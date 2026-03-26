@@ -76,7 +76,8 @@ type AdminSection =
   | "marketing"
   | "reports"
   | "security"
-  | "stores";
+  | "stores"
+  | "notifications";
 
 interface Order {
   id: string;
@@ -279,6 +280,16 @@ const NAV_ITEMS: {
     icon: <Store className="h-5 w-5" />,
     label: "Store Inventory",
     labelHindi: "स्टोर इन्वेंट्री",
+  },
+  {
+    id: "notifications",
+    icon: (
+      <span className="h-5 w-5 flex items-center justify-center text-base">
+        🔔
+      </span>
+    ),
+    label: "Notifications",
+    labelHindi: "सूचना केंद्र",
   },
 ];
 
@@ -502,6 +513,7 @@ export function AdminPanelPage() {
             {activeSection === "reports" && <ReportsSection />}
             {activeSection === "security" && <SecuritySection />}
             {activeSection === "stores" && <StoreInventorySection />}
+            {activeSection === "notifications" && <NotificationCenterSection />}
           </div>
         </div>
       </main>
@@ -933,6 +945,11 @@ function ProductsSection() {
     category: "",
     description: "",
     details: "",
+    showcase: "",
+    specifications: "",
+    warranty: "",
+    manufacturerInfo: "",
+    colors: "",
     image: "",
     stock: 0,
     isDeal: false,
@@ -1578,6 +1595,78 @@ function ProductsSection() {
                 rows={4}
                 placeholder="Product की विशेषताएँ, specifications, size, material, brand info, warranty आदि..."
                 data-ocid="products.details.textarea"
+              />
+            </div>
+            <div className="col-span-2">
+              <Label>🖼️ Showcase / विशेषताएँ</Label>
+              <Textarea
+                value={form.showcase ?? ""}
+                onChange={(e) =>
+                  setForm((f) => ({
+                    ...f,
+                    showcase: e.target.value || undefined,
+                  }))
+                }
+                rows={3}
+                placeholder={
+                  "हर लाइन में एक highlight लिखें\nजैसे: 5000mAh Battery\n6GB RAM"
+                }
+              />
+            </div>
+            <div className="col-span-2">
+              <Label>⚙️ Specifications / विशिष्टताएँ</Label>
+              <Textarea
+                value={form.specifications ?? ""}
+                onChange={(e) =>
+                  setForm((f) => ({
+                    ...f,
+                    specifications: e.target.value || undefined,
+                  }))
+                }
+                rows={3}
+                placeholder={
+                  "Key: Value format में लिखें\nजैसे: Battery: 5000mAh\nRAM: 6GB"
+                }
+              />
+            </div>
+            <div className="col-span-2">
+              <Label>🛡️ Warranty / वारंटी</Label>
+              <Input
+                value={form.warranty ?? ""}
+                onChange={(e) =>
+                  setForm((f) => ({
+                    ...f,
+                    warranty: e.target.value || undefined,
+                  }))
+                }
+                placeholder="जैसे: 1 साल की manufacturer warranty"
+              />
+            </div>
+            <div className="col-span-2">
+              <Label>🏭 Manufacturer Info / निर्माता जानकारी</Label>
+              <Textarea
+                value={form.manufacturerInfo ?? ""}
+                onChange={(e) =>
+                  setForm((f) => ({
+                    ...f,
+                    manufacturerInfo: e.target.value || undefined,
+                  }))
+                }
+                rows={2}
+                placeholder="Brand name, address, contact, country of origin"
+              />
+            </div>
+            <div className="col-span-2">
+              <Label>🎨 Color Options / रंग विकल्प</Label>
+              <Input
+                value={form.colors ?? ""}
+                onChange={(e) =>
+                  setForm((f) => ({
+                    ...f,
+                    colors: e.target.value || undefined,
+                  }))
+                }
+                placeholder="जैसे: Red, Blue, Black, White"
               />
             </div>
             <div className="col-span-2">
@@ -2873,6 +2962,172 @@ function MarketingSection() {
 }
 
 // ─── 7. Reports ───────────────────────────────────────────────────────────────
+function NotificationCenterSection() {
+  const [title, setTitle] = useState("");
+  const [body, setBody] = useState("");
+  const [type, setType] = useState<"order" | "promo">("promo");
+  const [target, setTarget] = useState<"all" | "specific">("all");
+  const [specificTarget, setSpecificTarget] = useState("");
+  const [notifications, setNotifications] = useState<
+    Array<{
+      id: string;
+      title: string;
+      body: string;
+      type: string;
+      target: string;
+      sentAt: string;
+    }>
+  >(() => loadLS("dharma_notifications", []));
+
+  const sendNotification = () => {
+    if (!title.trim() || !body.trim()) return;
+    const notif = {
+      id: Date.now().toString(),
+      title: title.trim(),
+      body: body.trim(),
+      type,
+      target: target === "specific" ? specificTarget : "All Customers",
+      sentAt: new Date().toISOString(),
+    };
+    const updated = [notif, ...notifications].slice(0, 50);
+    setNotifications(updated);
+    saveLS("dharma_notifications", updated);
+    setTitle("");
+    setBody("");
+    setSpecificTarget("");
+  };
+
+  return (
+    <div className="space-y-6">
+      <Card data-ocid="notifications.panel">
+        <CardHeader>
+          <CardTitle className="text-lg">
+            🔔 नई सूचना भेजें / Send Notification
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div>
+            <Label>Message Title / शीर्षक</Label>
+            <Input
+              placeholder="जैसे: आपका ऑर्डर भेज दिया गया"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              className="mt-1"
+              data-ocid="notifications.title.input"
+            />
+          </div>
+          <div>
+            <Label>Message Body / संदेश</Label>
+            <Textarea
+              placeholder="सूचना का विवरण लिखें..."
+              value={body}
+              onChange={(e) => setBody(e.target.value)}
+              rows={3}
+              className="mt-1"
+              data-ocid="notifications.body.textarea"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <Label>Type / प्रकार</Label>
+              <select
+                className="w-full mt-1 border border-border rounded px-3 py-2 text-sm bg-card"
+                value={type}
+                onChange={(e) => setType(e.target.value as "order" | "promo")}
+                data-ocid="notifications.type.select"
+              >
+                <option value="order">Order Update / ऑर्डर अपडेट</option>
+                <option value="promo">Promotional Offer / प्रमोशन</option>
+              </select>
+            </div>
+            <div>
+              <Label>Target / लक्ष्य</Label>
+              <select
+                className="w-full mt-1 border border-border rounded px-3 py-2 text-sm bg-card"
+                value={target}
+                onChange={(e) =>
+                  setTarget(e.target.value as "all" | "specific")
+                }
+                data-ocid="notifications.target.select"
+              >
+                <option value="all">All Customers / सभी ग्राहक</option>
+                <option value="specific">Specific / विशिष्ट</option>
+              </select>
+            </div>
+          </div>
+          {target === "specific" && (
+            <div>
+              <Label>Customer Phone / ग्राहक नंबर</Label>
+              <Input
+                placeholder="Mobile number"
+                value={specificTarget}
+                onChange={(e) => setSpecificTarget(e.target.value)}
+                className="mt-1"
+                data-ocid="notifications.specific_target.input"
+              />
+            </div>
+          )}
+          <Button
+            className="bg-primary text-white w-full"
+            onClick={sendNotification}
+            disabled={!title.trim() || !body.trim()}
+            data-ocid="notifications.send.primary_button"
+          >
+            🔔 Send Notification / सूचना भेजें
+          </Button>
+        </CardContent>
+      </Card>
+
+      <div>
+        <h3 className="font-semibold text-foreground mb-3">
+          📋 Sent Notifications (Last 10)
+        </h3>
+        {notifications.length === 0 ? (
+          <div
+            className="text-center py-8 text-muted-foreground"
+            data-ocid="notifications.empty_state"
+          >
+            <p className="text-3xl mb-2">📭</p>
+            <p>कोई सूचना नहीं भेजी गई।</p>
+          </div>
+        ) : (
+          <div className="space-y-2">
+            {notifications.slice(0, 10).map((n, idx) => (
+              <div
+                key={n.id}
+                className="bg-card border border-border rounded-lg p-4"
+                data-ocid={`notifications.item.${idx + 1}`}
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <p className="font-semibold text-sm">{n.title}</p>
+                    <p className="text-sm text-muted-foreground mt-0.5">
+                      {n.body}
+                    </p>
+                  </div>
+                  <div className="text-right flex-shrink-0">
+                    <span
+                      className={`text-[10px] px-1.5 py-0.5 rounded font-semibold ${n.type === "order" ? "bg-blue-100 text-blue-700" : "bg-purple-100 text-purple-700"}`}
+                    >
+                      {n.type === "order" ? "Order Update" : "Promotional"}
+                    </span>
+                    <p className="text-[10px] text-muted-foreground mt-1">
+                      → {n.target}
+                    </p>
+                    <p className="text-[10px] text-muted-foreground">
+                      {new Date(n.sentAt).toLocaleDateString("en-IN")}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 function ReportsSection() {
   const { products } = useProducts();
   const orders: Order[] = loadLS<Order[]>("dharma_orders", []);
@@ -2954,6 +3209,36 @@ function ReportsSection() {
           data-ocid="reports.export_button"
         >
           <Download className="h-4 w-4 mr-1" /> Export
+        </Button>
+        <Button
+          variant="outline"
+          className="h-8 bg-green-50 border-green-300 text-green-700 hover:bg-green-100"
+          onClick={() => {
+            const rows = [
+              ["Date", "Orders", "Revenue", "Top Product"],
+              ...filteredOrders
+                .slice(0, 20)
+                .map((o) => [
+                  new Date(o.date).toLocaleDateString("en-IN"),
+                  "1",
+                  String(o.total),
+                  o.items?.[0]?.name ?? "N/A",
+                ]),
+            ];
+            const csv = rows
+              .map((r) => r.map((c) => `"${c}"`).join(","))
+              .join("\n");
+            const blob = new Blob([csv], { type: "text/csv" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "dharma-mart-report.csv";
+            a.click();
+            URL.revokeObjectURL(url);
+          }}
+          data-ocid="reports.csv_download.button"
+        >
+          <Download className="h-4 w-4 mr-1" /> 📥 Download CSV
         </Button>
       </div>
 

@@ -113,10 +113,12 @@ export function ProductDetailPage() {
   });
 
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+  const [zoomOpen, setZoomOpen] = useState(false);
   const [reviews, setReviews] = useState<Review[]>([]);
   const [newRating, setNewRating] = useState(5);
   const [newReviewText, setNewReviewText] = useState("");
   const [submittingReview, setSubmittingReview] = useState(false);
+  const [selectedColor, setSelectedColor] = useState<string | null>(null);
 
   useEffect(() => {
     if (!product) return;
@@ -272,9 +274,14 @@ export function ProductDetailPage() {
           Home
         </Link>
         <span>/</span>
-        <Link to="/products" className="hover:text-primary">
+        <button
+          type="button"
+          className="hover:text-primary cursor-pointer bg-transparent border-0 p-0"
+          onClick={() => window.history.back()}
+          onKeyDown={(e) => e.key === "Enter" && window.history.back()}
+        >
           Products
-        </Link>
+        </button>
         <span>/</span>
         <span className="text-primary font-medium">{product.name}</span>
       </div>
@@ -287,6 +294,12 @@ export function ProductDetailPage() {
           className="flex flex-col gap-3"
         >
           <div className="bg-gradient-to-br from-secondary to-muted rounded-xl flex items-center justify-center min-h-[320px] border border-border relative overflow-hidden">
+            <button
+              type="button"
+              className="absolute inset-0 z-10 w-full h-full cursor-zoom-in focus:outline-none"
+              onClick={() => setZoomOpen(true)}
+              aria-label="Zoom image"
+            />
             <AnimatePresence mode="wait">
               <motion.img
                 key={currentImage}
@@ -314,6 +327,9 @@ export function ProductDetailPage() {
               </Badge>
             )}
           </div>
+          <p className="text-xs text-muted-foreground text-center -mt-1">
+            🔍 Tap image to zoom
+          </p>
 
           {imageList.length > 1 && (
             <div className="flex gap-2">
@@ -497,21 +513,167 @@ export function ProductDetailPage() {
         </motion.div>
       </div>
 
-      {/* Reviews Section */}
-      {/* Product Details Section */}
+      {/* Product Detail Sections */}
+      {product.showcase && (
+        <div
+          className="mt-6 bg-card border border-border rounded-xl p-5"
+          data-ocid="product.showcase.section"
+        >
+          <h2 className="text-lg font-bold text-primary mb-3">
+            🖼️ Showcase / विशेषताएँ
+          </h2>
+          <ul className="space-y-2">
+            {product.showcase
+              .split("\n")
+              .filter(Boolean)
+              .map((line) => (
+                <li
+                  key={line}
+                  className="flex items-start gap-2 text-sm text-foreground/80"
+                >
+                  <span className="text-green-500 mt-0.5">✅</span>
+                  <span>{line}</span>
+                </li>
+              ))}
+          </ul>
+        </div>
+      )}
+      {product.specifications && (
+        <div
+          className="mt-6 bg-card border border-border rounded-xl p-5"
+          data-ocid="product.specifications.section"
+        >
+          <h2 className="text-lg font-bold text-primary mb-3">
+            ⚙️ Specifications / विशिष्टताएँ
+          </h2>
+          <table className="w-full text-sm">
+            <tbody>
+              {product.specifications
+                .split("\n")
+                .filter(Boolean)
+                .map((line, specIdx) => {
+                  const colonIdx = line.indexOf(":");
+                  if (colonIdx > 0) {
+                    const key = line.slice(0, colonIdx).trim();
+                    const val = line.slice(colonIdx + 1).trim();
+                    return (
+                      <tr
+                        key={`spec-${key}`}
+                        className={specIdx % 2 === 0 ? "bg-muted/40" : ""}
+                      >
+                        <td className="py-2 px-3 font-medium text-foreground/70 w-2/5">
+                          {key}
+                        </td>
+                        <td className="py-2 px-3 text-foreground/90">{val}</td>
+                      </tr>
+                    );
+                  }
+                  return (
+                    <tr key={`plain-${line}`}>
+                      <td colSpan={2} className="py-2 px-3 text-foreground/80">
+                        {line}
+                      </td>
+                    </tr>
+                  );
+                })}
+            </tbody>
+          </table>
+        </div>
+      )}
       {product.details && (
         <div
-          className="mt-8 bg-card border border-border rounded-xl p-6"
+          className="mt-6 bg-card border border-border rounded-xl p-5"
           data-ocid="product.details.section"
         >
-          <h2 className="text-xl font-bold text-primary mb-4 flex items-center gap-2">
-            📋 Product Details / उत्पाद विवरण
+          <h2 className="text-lg font-bold text-primary mb-3">
+            📝 Description / विवरण
           </h2>
           <div className="text-foreground/80 text-sm leading-relaxed whitespace-pre-line">
             {product.details}
           </div>
         </div>
       )}
+      {product.warranty && (
+        <div
+          className="mt-6 bg-card border border-border rounded-xl p-5"
+          data-ocid="product.warranty.section"
+        >
+          <h2 className="text-lg font-bold text-primary mb-3">
+            🛡️ Warranty / वारंटी
+          </h2>
+          <p className="text-foreground/80 text-sm leading-relaxed">
+            {product.warranty}
+          </p>
+        </div>
+      )}
+      {product.manufacturerInfo && (
+        <div
+          className="mt-6 bg-card border border-border rounded-xl p-5"
+          data-ocid="product.manufacturer.section"
+        >
+          <h2 className="text-lg font-bold text-primary mb-3">
+            🏭 Manufacturer Info / निर्माता जानकारी
+          </h2>
+          <p className="text-foreground/80 text-sm leading-relaxed whitespace-pre-line">
+            {product.manufacturerInfo}
+          </p>
+        </div>
+      )}
+      {product.colors && (
+        <div
+          className="mt-6 bg-card border border-border rounded-xl p-5"
+          data-ocid="product.colors.section"
+        >
+          <h2 className="text-lg font-bold text-primary mb-3">
+            🎨 Color Options / रंग विकल्प
+          </h2>
+          <div className="flex flex-wrap gap-3">
+            {product.colors
+              .split(",")
+              .map((c) => c.trim())
+              .filter(Boolean)
+              .map((colorName) => {
+                const colorMap: Record<string, string> = {
+                  Red: "bg-red-500",
+                  Blue: "bg-blue-500",
+                  Black: "bg-gray-900",
+                  White: "bg-white border border-gray-300",
+                  Green: "bg-green-500",
+                  Yellow: "bg-yellow-400",
+                  Pink: "bg-pink-400",
+                  Purple: "bg-purple-500",
+                  Orange: "bg-orange-400",
+                  Grey: "bg-gray-400",
+                  Gray: "bg-gray-400",
+                };
+                const bgClass = colorMap[colorName] || "bg-gray-300";
+                const isSelected = selectedColor === colorName;
+                return (
+                  <button
+                    type="button"
+                    key={colorName}
+                    onClick={() =>
+                      setSelectedColor(isSelected ? null : colorName)
+                    }
+                    className={`flex items-center gap-2 px-3 py-1.5 rounded-full border text-sm font-medium transition-all ${isSelected ? "ring-2 ring-primary ring-offset-2" : "hover:ring-1 hover:ring-primary/50"}`}
+                    data-ocid="product.colors.toggle"
+                  >
+                    <span
+                      className={`w-4 h-4 rounded-full ${bgClass} inline-block`}
+                    />
+                    {colorName}
+                  </button>
+                );
+              })}
+          </div>
+          {selectedColor && (
+            <p className="mt-3 text-sm text-primary font-medium">
+              Selected: {selectedColor}
+            </p>
+          )}
+        </div>
+      )}
+      {/* Reviews Section */}
       <div className="mt-10" data-ocid="product.reviews.section">
         <h2 className="text-xl font-bold text-primary mb-6 flex items-center gap-2">
           ⭐ Reviews / समीक्षा ({reviews.length})
@@ -599,14 +761,37 @@ export function ProductDetailPage() {
       </div>
 
       <div className="mt-8">
-        <Link to="/products">
-          <Button
-            variant="outline"
-            className="gap-2 border-primary text-primary hover:bg-primary hover:text-white"
+        <Button
+          variant="outline"
+          className="gap-2 border-primary text-primary hover:bg-primary hover:text-white"
+          onClick={() => window.history.back()}
+          data-ocid="product.back.button"
+        >
+          <ArrowLeft className="h-4 w-4" /> Continue Shopping
+        </Button>
+        {/* Zoom Modal */}
+        {zoomOpen && (
+          <div
+            className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4"
+            onClick={() => setZoomOpen(false)}
+            data-ocid="product.zoom.modal"
+            onKeyDown={(e) => e.key === "Escape" && setZoomOpen(false)}
           >
-            <ArrowLeft className="h-4 w-4" /> Continue Shopping
-          </Button>
-        </Link>
+            <button
+              type="button"
+              className="absolute top-4 right-4 text-white bg-black/50 rounded-full w-10 h-10 flex items-center justify-center text-xl hover:bg-black/80 transition-colors"
+              onClick={() => setZoomOpen(false)}
+              data-ocid="product.zoom.close_button"
+            >
+              ✕
+            </button>
+            <img
+              src={currentImage}
+              alt={product.name}
+              className="max-w-full max-h-[90vh] object-contain rounded-lg shadow-2xl"
+            />
+          </div>
+        )}
       </div>
     </div>
   );
