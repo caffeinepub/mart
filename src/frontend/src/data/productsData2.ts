@@ -8,7 +8,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "सैमसंग गैलेक्सी S23",
     price: 54999,
     originalPrice: 64999,
-    category: "Mobiles",
+    category: "mobile",
     emoji: "📱",
     image:
       "https://images.unsplash.com/photo-1610945265064-0e34e5519bbc?w=400&h=400&fit=crop",
@@ -25,7 +25,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "आईफोन 15",
     price: 79999,
     originalPrice: 89999,
-    category: "Mobiles",
+    category: "mobile",
     emoji: "📱",
     image:
       "https://images.unsplash.com/photo-1592750475338-74b7b4d3e86a?w=400&h=400&fit=crop",
@@ -42,7 +42,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "वनप्लस 12",
     price: 64999,
     originalPrice: 69999,
-    category: "Mobiles",
+    category: "mobile",
     emoji: "📱",
     image:
       "https://images.unsplash.com/photo-1511707171634-5f897ff02aab?w=400&h=400&fit=crop",
@@ -58,7 +58,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "विवो V29 प्रो",
     price: 35999,
     originalPrice: 39999,
-    category: "Mobiles",
+    category: "mobile",
     emoji: "📱",
     image:
       "https://images.unsplash.com/photo-1610945265064-0e34e5519bbd?w=400&h=400&fit=crop",
@@ -74,7 +74,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "ओप्पो रेनो 11",
     price: 29999,
     originalPrice: 33999,
-    category: "Mobiles",
+    category: "mobile",
     emoji: "📱",
     image:
       "https://images.unsplash.com/photo-1592750475338-74b7b4d3e86b?w=400&h=400&fit=crop",
@@ -90,7 +90,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "मोटोरोला एज 40",
     price: 22999,
     originalPrice: 27999,
-    category: "Mobiles",
+    category: "mobile",
     emoji: "📱",
     image:
       "https://images.unsplash.com/photo-1511707171634-5f897ff02aac?w=400&h=400&fit=crop",
@@ -106,7 +106,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "रियलमी GT 5",
     price: 18999,
     originalPrice: 21999,
-    category: "Mobiles",
+    category: "mobile",
     emoji: "📱",
     image:
       "https://images.unsplash.com/photo-1610945265064-0e34e5519bbe?w=400&h=400&fit=crop",
@@ -123,7 +123,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "डेल इंस्पायरॉन 15",
     price: 52999,
     originalPrice: 59999,
-    category: "Laptops",
+    category: "electronics",
     emoji: "💻",
     image:
       "https://images.unsplash.com/photo-1525547719571-a2d4ac8945e3?w=400&h=400&fit=crop",
@@ -140,7 +140,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "HP पवेलियन 14",
     price: 48999,
     originalPrice: 55999,
-    category: "Laptops",
+    category: "electronics",
     emoji: "💻",
     image:
       "https://images.unsplash.com/photo-1496181133206-80ce9b88a854?w=400&h=400&fit=crop",
@@ -156,7 +156,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "लेनोवो आईडियापैड",
     price: 44999,
     originalPrice: 49999,
-    category: "Laptops",
+    category: "electronics",
     emoji: "💻",
     image:
       "https://images.unsplash.com/photo-1517336714731-489689fd1ca9?w=400&h=400&fit=crop",
@@ -172,7 +172,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "आसुस विवोबुक",
     price: 41999,
     originalPrice: 47999,
-    category: "Laptops",
+    category: "electronics",
     emoji: "💻",
     image:
       "https://images.unsplash.com/photo-1525547719571-a2d4ac8945e4?w=400&h=400&fit=crop",
@@ -188,7 +188,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "एसर एस्पायर 7",
     price: 56999,
     originalPrice: 64999,
-    category: "Laptops",
+    category: "electronics",
     emoji: "💻",
     image:
       "https://images.unsplash.com/photo-1496181133206-80ce9b88a855?w=400&h=400&fit=crop",
@@ -205,7 +205,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "मैकबुक एयर M2",
     price: 114999,
     originalPrice: 124999,
-    category: "Laptops",
+    category: "electronics",
     emoji: "💻",
     image:
       "https://images.unsplash.com/photo-1517336714731-489689fd1caa?w=400&h=400&fit=crop",
@@ -222,7 +222,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "MSI गेमिंग लैपटॉप",
     price: 67999,
     originalPrice: 74999,
-    category: "Laptops",
+    category: "electronics",
     emoji: "💻",
     image:
       "https://images.unsplash.com/photo-1525547719571-a2d4ac8945e5?w=400&h=400&fit=crop",
@@ -239,7 +239,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "रेडमीबुक प्रो",
     price: 54999,
     originalPrice: 61999,
-    category: "Laptops",
+    category: "electronics",
     emoji: "💻",
     image:
       "https://images.unsplash.com/photo-1496181133206-80ce9b88a856?w=400&h=400&fit=crop",
@@ -255,7 +255,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "सैमसंग गैलेक्सी बुक",
     price: 72999,
     originalPrice: 82999,
-    category: "Laptops",
+    category: "electronics",
     emoji: "💻",
     image:
       "https://images.unsplash.com/photo-1517336714731-489689fd1cab?w=400&h=400&fit=crop",
@@ -271,7 +271,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "टेक्नो मेगाबुक",
     price: 34999,
     originalPrice: 39999,
-    category: "Laptops",
+    category: "electronics",
     emoji: "💻",
     image:
       "https://images.unsplash.com/photo-1525547719571-a2d4ac8945e6?w=400&h=400&fit=crop",
@@ -288,7 +288,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "फिलिप्स हेयर ड्रायर",
     price: 1299,
     originalPrice: 1799,
-    category: "Personal care appliances",
+    category: "appliances",
     emoji: "💨",
     image:
       "https://images.unsplash.com/photo-1522337360801-e00a8a9e7b85?w=400&h=400&fit=crop",
@@ -304,7 +304,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "ब्रॉन इलेक्ट्रिक शेवर",
     price: 4999,
     originalPrice: 6499,
-    category: "Personal care appliances",
+    category: "appliances",
     emoji: "🪒",
     image:
       "https://images.unsplash.com/photo-1580618672-520-49c5e06560c1?w=400&h=400&fit=crop",
@@ -320,7 +320,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "रेमिंगटन हेयर स्ट्रेटनर",
     price: 1899,
     originalPrice: 2499,
-    category: "Personal care appliances",
+    category: "appliances",
     emoji: "💇",
     image:
       "https://images.unsplash.com/photo-1522337360801-e00a8a9e7b87?w=400&h=400&fit=crop",
@@ -336,7 +336,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "ओरल-बी इलेक्ट्रिक ब्रश",
     price: 2299,
     originalPrice: 2999,
-    category: "Personal care appliances",
+    category: "appliances",
     emoji: "🦷",
     image:
       "https://images.unsplash.com/photo-1556228720-194ebc63cf55?w=400&h=400&fit=crop",
@@ -352,7 +352,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "वेगा हेयर कर्लर",
     price: 999,
     originalPrice: 1399,
-    category: "Personal care appliances",
+    category: "appliances",
     emoji: "💇",
     image:
       "https://images.unsplash.com/photo-1522337360801-e00a8a9e7b89?w=400&h=400&fit=crop",
@@ -368,7 +368,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "नोवा हेयर ट्रिमर",
     price: 799,
     originalPrice: 999,
-    category: "Personal care appliances",
+    category: "appliances",
     emoji: "✂️",
     image:
       "https://images.unsplash.com/photo-1580618672-520-49c5e06560c2?w=400&h=400&fit=crop",
@@ -384,7 +384,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "पैनासोनिक फेस मसाजर",
     price: 1499,
     originalPrice: 1999,
-    category: "Personal care appliances",
+    category: "appliances",
     emoji: "🧖",
     image:
       "https://images.unsplash.com/photo-1522337360801-e00a8a9e7b8b?w=400&h=400&fit=crop",
@@ -400,7 +400,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "Mi बॉडी फैट स्केल",
     price: 1299,
     originalPrice: 1599,
-    category: "Personal care appliances",
+    category: "appliances",
     emoji: "⚖️",
     image:
       "https://images.unsplash.com/photo-1598300042738-78c33e3a6df5?w=400&h=400&fit=crop",
@@ -416,7 +416,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "वाल बियर्ड ट्रिमर",
     price: 2199,
     originalPrice: 2799,
-    category: "Personal care appliances",
+    category: "appliances",
     emoji: "🪒",
     image:
       "https://images.unsplash.com/photo-1580618672-520-49c5e06560c3?w=400&h=400&fit=crop",
@@ -432,7 +432,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "हैवेल्स फुट मसाजर",
     price: 1999,
     originalPrice: 2499,
-    category: "Personal care appliances",
+    category: "appliances",
     emoji: "🦶",
     image:
       "https://images.unsplash.com/photo-1571019586211-e049d1e8bd14?w=400&h=400&fit=crop",
@@ -449,7 +449,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "लकड़ी की स्टडी टेबल",
     price: 4999,
     originalPrice: 6499,
-    category: "Tables",
+    category: "furniture",
     emoji: "🪑",
     image:
       "https://images.unsplash.com/photo-1549187774-b4e9b0445b42?w=400&h=400&fit=crop",
@@ -465,7 +465,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "ऑफिस कंप्यूटर टेबल",
     price: 6999,
     originalPrice: 8999,
-    category: "Tables",
+    category: "furniture",
     emoji: "🖥️",
     image:
       "https://images.unsplash.com/photo-1497366216019-c9d1c7af662a?w=400&h=400&fit=crop",
@@ -481,7 +481,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "ग्लास कॉफी टेबल",
     price: 8999,
     originalPrice: 11999,
-    category: "Tables",
+    category: "furniture",
     emoji: "☕",
     image:
       "https://images.unsplash.com/photo-1549187774-b4e9b0445b44?w=400&h=400&fit=crop",
@@ -497,7 +497,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "फोल्डिंग डाइनिंग टेबल",
     price: 3499,
     originalPrice: 4499,
-    category: "Tables",
+    category: "furniture",
     emoji: "🍽️",
     image:
       "https://images.unsplash.com/photo-1549187774-b4e9b0445b45?w=400&h=400&fit=crop",
@@ -513,7 +513,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "साइड टेबल",
     price: 2499,
     originalPrice: 3299,
-    category: "Tables",
+    category: "furniture",
     emoji: "🪴",
     image:
       "https://images.unsplash.com/photo-1549187774-b4e9b0445b46?w=400&h=400&fit=crop",
@@ -529,7 +529,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "एडजस्टेबल टेबल",
     price: 12999,
     originalPrice: 16999,
-    category: "Tables",
+    category: "furniture",
     emoji: "📏",
     image:
       "https://images.unsplash.com/photo-1520012721742-cb6c0ff4cde4?w=400&h=400&fit=crop",
@@ -546,7 +546,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "बच्चों की स्टडी टेबल",
     price: 3999,
     originalPrice: 4999,
-    category: "Tables",
+    category: "furniture",
     emoji: "📚",
     image:
       "https://images.unsplash.com/photo-1549187774-b4e9b0445b48?w=400&h=400&fit=crop",
@@ -562,7 +562,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "ड्रेसिंग टेबल",
     price: 7499,
     originalPrice: 9499,
-    category: "Tables",
+    category: "furniture",
     emoji: "🪞",
     image:
       "https://images.unsplash.com/photo-1617197347-97e8e17baee4?w=400&h=400&fit=crop",
@@ -578,7 +578,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "गार्डन टेबल",
     price: 5499,
     originalPrice: 6999,
-    category: "Tables",
+    category: "furniture",
     emoji: "🌿",
     image:
       "https://images.unsplash.com/photo-1506439773-dc6b66d3f52a?w=400&h=400&fit=crop",
@@ -594,7 +594,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "मार्बल सेंटर टेबल",
     price: 14999,
     originalPrice: 18999,
-    category: "Tables",
+    category: "furniture",
     emoji: "🏛️",
     image:
       "https://images.unsplash.com/photo-1549187774-b4e9b0445b4b?w=400&h=400&fit=crop",
@@ -612,7 +612,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "लॉजिटेक MX कीबोर्ड",
     price: 8999,
     originalPrice: 10999,
-    category: "Computer peripheral",
+    category: "electronics",
     emoji: "⌨️",
     image:
       "https://images.unsplash.com/photo-1587829741301-dc98b83d2af5?w=400&h=400&fit=crop",
@@ -629,7 +629,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "डेल 27 इंच मॉनिटर",
     price: 19999,
     originalPrice: 24999,
-    category: "Computer peripheral",
+    category: "electronics",
     emoji: "🖥️",
     image:
       "https://images.unsplash.com/photo-1527443195-bfc847e0a7b9?w=400&h=400&fit=crop",
@@ -645,7 +645,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "लॉजिटेक G प्रो माउस",
     price: 5999,
     originalPrice: 7499,
-    category: "Computer peripheral",
+    category: "electronics",
     emoji: "🖱️",
     image:
       "https://images.unsplash.com/photo-1527443195-bfc847e0a7ba?w=400&h=400&fit=crop",
@@ -661,7 +661,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "HP वेबकैम",
     price: 2499,
     originalPrice: 3299,
-    category: "Computer peripheral",
+    category: "electronics",
     emoji: "📷",
     image:
       "https://images.unsplash.com/photo-1587829741301-dc98b83d2af7?w=400&h=400&fit=crop",
@@ -677,7 +677,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "जेब्रोनिक्स स्पीकर",
     price: 1999,
     originalPrice: 2699,
-    category: "Computer peripheral",
+    category: "electronics",
     emoji: "🔊",
     image:
       "https://images.unsplash.com/photo-1545454675-3531b543be5e?w=400&h=400&fit=crop",
@@ -693,7 +693,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "न्यूमेरिक कीपैड",
     price: 799,
     originalPrice: 999,
-    category: "Computer peripheral",
+    category: "electronics",
     emoji: "⌨️",
     image:
       "https://images.unsplash.com/photo-1587829741301-dc98b83d2af8?w=400&h=400&fit=crop",
@@ -709,7 +709,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "USB हब 7 पोर्ट",
     price: 1299,
     originalPrice: 1699,
-    category: "Computer peripheral",
+    category: "electronics",
     emoji: "🔌",
     image:
       "https://images.unsplash.com/photo-1605557021-57af66c6f6ae?w=400&h=400&fit=crop",
@@ -725,7 +725,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "ग्राफिक टैबलेट",
     price: 4499,
     originalPrice: 5999,
-    category: "Computer peripheral",
+    category: "electronics",
     emoji: "🎨",
     image:
       "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=400&h=400&fit=crop",
@@ -741,7 +741,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "कैनन प्रिंटर",
     price: 5999,
     originalPrice: 7499,
-    category: "Computer peripheral",
+    category: "electronics",
     emoji: "🖨️",
     image:
       "https://images.unsplash.com/photo-1587829741301-dc98b83d2afa?w=400&h=400&fit=crop",
@@ -757,7 +757,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "UPS 600VA",
     price: 2999,
     originalPrice: 3799,
-    category: "Computer peripheral",
+    category: "electronics",
     emoji: "⚡",
     image:
       "https://images.unsplash.com/photo-1614624532983-4ce71b67d62c?w=400&h=400&fit=crop",
@@ -774,7 +774,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "लैपटॉप स्टैंड",
     price: 1499,
     originalPrice: 1999,
-    category: "Computer accessories",
+    category: "electronics",
     emoji: "💻",
     image:
       "https://images.unsplash.com/photo-1527443195-bfc847e0a7bc?w=400&h=400&fit=crop",
@@ -790,7 +790,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "माउस पैड XL",
     price: 599,
     originalPrice: 799,
-    category: "Computer accessories",
+    category: "electronics",
     emoji: "🖱️",
     image:
       "https://images.unsplash.com/photo-1593305841991-05c297ba457b?w=400&h=400&fit=crop",
@@ -806,7 +806,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "HDMI केबल 3m",
     price: 399,
     originalPrice: 599,
-    category: "Computer accessories",
+    category: "electronics",
     emoji: "🔌",
     image:
       "https://images.unsplash.com/photo-1605557021-57af66c6f6af?w=400&h=400&fit=crop",
@@ -822,7 +822,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "USB-C हब",
     price: 1799,
     originalPrice: 2299,
-    category: "Computer accessories",
+    category: "electronics",
     emoji: "🔌",
     image:
       "https://images.unsplash.com/photo-1605557021-57af66c6f6b0?w=400&h=400&fit=crop",
@@ -838,7 +838,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "लैपटॉप स्लीव",
     price: 699,
     originalPrice: 999,
-    category: "Computer accessories",
+    category: "electronics",
     emoji: "💼",
     image:
       "https://images.unsplash.com/photo-1553062407-98eeb64c6a70?w=400&h=400&fit=crop",
@@ -854,7 +854,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "लैपटॉप कूलिंग पैड",
     price: 999,
     originalPrice: 1299,
-    category: "Computer accessories",
+    category: "electronics",
     emoji: "❄️",
     image:
       "https://images.unsplash.com/photo-1527443195-bfc847e0a7c2?w=400&h=400&fit=crop",
@@ -870,7 +870,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "स्क्रीन प्रोटेक्टर",
     price: 499,
     originalPrice: 699,
-    category: "Computer accessories",
+    category: "electronics",
     emoji: "🖥️",
     image:
       "https://images.unsplash.com/photo-1601784551446-da09f64c8f7e?w=400&h=400&fit=crop",
@@ -886,7 +886,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "एंटी-ग्लेयर चश्मा",
     price: 899,
     originalPrice: 1199,
-    category: "Computer accessories",
+    category: "electronics",
     emoji: "👓",
     image:
       "https://images.unsplash.com/photo-1569396116180-210c182bedb8?w=400&h=400&fit=crop",
@@ -902,7 +902,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "केबल मैनेजमेंट किट",
     price: 349,
     originalPrice: 499,
-    category: "Computer accessories",
+    category: "electronics",
     emoji: "🔌",
     image:
       "https://images.unsplash.com/photo-1542744173-8e7e53415bb1?w=400&h=400&fit=crop",
@@ -918,7 +918,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "कीबोर्ड रिस्ट रेस्ट",
     price: 499,
     originalPrice: 699,
-    category: "Computer accessories",
+    category: "electronics",
     emoji: "⌨️",
     image:
       "https://images.unsplash.com/photo-1587829741301-dc98b83d2afb?w=400&h=400&fit=crop",
@@ -935,7 +935,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "1TB पोर्टेबल HDD",
     price: 3499,
     originalPrice: 4299,
-    category: "Storage",
+    category: "electronics",
     emoji: "💾",
     image:
       "https://images.unsplash.com/photo-1597328701012-b2e9f5d4c1a0?w=400&h=400&fit=crop",
@@ -952,7 +952,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "128GB पेन ड्राइव",
     price: 799,
     originalPrice: 999,
-    category: "Storage",
+    category: "electronics",
     emoji: "🔌",
     image:
       "https://images.unsplash.com/photo-1597328701012-b2e9f5d4c1a1?w=400&h=400&fit=crop",
@@ -968,7 +968,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "256GB SSD ड्राइव",
     price: 2999,
     originalPrice: 3799,
-    category: "Storage",
+    category: "electronics",
     emoji: "💿",
     image:
       "https://images.unsplash.com/photo-1597328701012-b2e9f5d4c1a2?w=400&h=400&fit=crop",
@@ -984,7 +984,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "WD 2TB डेस्कटॉप HDD",
     price: 4999,
     originalPrice: 5999,
-    category: "Storage",
+    category: "electronics",
     emoji: "💾",
     image:
       "https://images.unsplash.com/photo-1597328701012-b2e9f5d4c1a3?w=400&h=400&fit=crop",
@@ -1000,7 +1000,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "माइक्रोSD 64GB",
     price: 599,
     originalPrice: 799,
-    category: "Storage",
+    category: "electronics",
     emoji: "📱",
     image:
       "https://images.unsplash.com/photo-1597328701012-b2e9f5d4c1a4?w=400&h=400&fit=crop",
@@ -1016,7 +1016,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "512GB M.2 SSD",
     price: 5499,
     originalPrice: 6999,
-    category: "Storage",
+    category: "electronics",
     emoji: "💿",
     image:
       "https://images.unsplash.com/photo-1597328701012-b2e9f5d4c1a5?w=400&h=400&fit=crop",
@@ -1032,7 +1032,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "16GB DDR4 RAM",
     price: 3299,
     originalPrice: 3999,
-    category: "Storage",
+    category: "electronics",
     emoji: "🖥️",
     image:
       "https://images.unsplash.com/photo-1597328701012-b2e9f5d4c1a6?w=400&h=400&fit=crop",
@@ -1049,7 +1049,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "कार्ड रीडर",
     price: 399,
     originalPrice: 599,
-    category: "Storage",
+    category: "electronics",
     emoji: "📂",
     image:
       "https://images.unsplash.com/photo-1605557021-57af66c6f6b1?w=400&h=400&fit=crop",
@@ -1065,7 +1065,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "नेटवर्क स्टोरेज",
     price: 12999,
     originalPrice: 15999,
-    category: "Storage",
+    category: "electronics",
     emoji: "🌐",
     image:
       "https://images.unsplash.com/photo-1597328701012-b2e9f5d4c1a8?w=400&h=400&fit=crop",
@@ -1082,7 +1082,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "OTG फ्लैश ड्राइव",
     price: 699,
     originalPrice: 999,
-    category: "Storage",
+    category: "electronics",
     emoji: "🔌",
     image:
       "https://images.unsplash.com/photo-1597328701012-b2e9f5d4c1a9?w=400&h=400&fit=crop",
@@ -1099,7 +1099,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "कैनन EOS DSLR",
     price: 34999,
     originalPrice: 42999,
-    category: "Camera",
+    category: "electronics",
     emoji: "📷",
     image:
       "https://images.unsplash.com/photo-1516035069371-29a1b244cc33?w=400&h=400&fit=crop",
@@ -1116,7 +1116,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "सोनी अल्फा",
     price: 59999,
     originalPrice: 69999,
-    category: "Camera",
+    category: "electronics",
     emoji: "📷",
     image:
       "https://images.unsplash.com/photo-1502920917128-a42c4ce11d7b?w=400&h=400&fit=crop",
@@ -1133,7 +1133,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "निकॉन D3500",
     price: 29999,
     originalPrice: 36999,
-    category: "Camera",
+    category: "electronics",
     emoji: "📷",
     image:
       "https://images.unsplash.com/photo-1452780212412-b5e23df36174?w=400&h=400&fit=crop",
@@ -1149,7 +1149,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "गोप्रो हीरो 11",
     price: 32999,
     originalPrice: 38999,
-    category: "Camera",
+    category: "electronics",
     emoji: "🎬",
     image:
       "https://images.unsplash.com/photo-1493815793585-d94ccb65f52e?w=400&h=400&fit=crop",
@@ -1166,7 +1166,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "फुजीफिल्म इंस्टाक्स",
     price: 7999,
     originalPrice: 9999,
-    category: "Camera",
+    category: "electronics",
     emoji: "📸",
     image:
       "https://images.unsplash.com/photo-1516035069371-29a1b244cc35?w=400&h=400&fit=crop",
@@ -1183,7 +1183,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "DJI पॉकेट 2",
     price: 24999,
     originalPrice: 29999,
-    category: "Camera",
+    category: "electronics",
     emoji: "🎥",
     image:
       "https://images.unsplash.com/photo-1616533512174-cfbc083d1a65?w=400&h=400&fit=crop",
@@ -1200,7 +1200,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "प्रोफेशनल ट्राइपॉड",
     price: 1499,
     originalPrice: 1999,
-    category: "Camera",
+    category: "electronics",
     emoji: "📷",
     image:
       "https://images.unsplash.com/photo-1516035069371-29a1b244cc36?w=400&h=400&fit=crop",
@@ -1216,7 +1216,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "कैमरा बैग DSLR",
     price: 1299,
     originalPrice: 1799,
-    category: "Camera",
+    category: "electronics",
     emoji: "🎒",
     image:
       "https://images.unsplash.com/photo-1553062407-98eeb64c6a73?w=400&h=400&fit=crop",
@@ -1232,7 +1232,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "64GB मेमोरी कार्ड",
     price: 499,
     originalPrice: 699,
-    category: "Camera",
+    category: "electronics",
     emoji: "💾",
     image:
       "https://images.unsplash.com/photo-1597328701012-b2e9f5d4c1aa?w=400&h=400&fit=crop",
@@ -1248,7 +1248,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "रिंग लाइट 18 इंच",
     price: 1999,
     originalPrice: 2699,
-    category: "Camera",
+    category: "electronics",
     emoji: "💡",
     image:
       "https://images.unsplash.com/photo-1527443195-bfc847e0a7c1?w=400&h=400&fit=crop",
@@ -1265,7 +1265,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "ओमरॉन BP मॉनिटर",
     price: 2499,
     originalPrice: 3199,
-    category: "Health care device",
+    category: "food-health",
     emoji: "💊",
     image:
       "https://images.unsplash.com/photo-1584308666744-34a6ce775f23?w=400&h=400&fit=crop",
@@ -1282,7 +1282,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "पल्स ऑक्सीमीटर",
     price: 699,
     originalPrice: 999,
-    category: "Health care device",
+    category: "food-health",
     emoji: "❤️",
     image:
       "https://images.unsplash.com/photo-1584308666744-34a6ce775f24?w=400&h=400&fit=crop",
@@ -1298,7 +1298,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "ग्लूकोमीटर",
     price: 1499,
     originalPrice: 1999,
-    category: "Health care device",
+    category: "food-health",
     emoji: "🩺",
     image:
       "https://images.unsplash.com/photo-1584308666744-34a6ce775f25?w=400&h=400&fit=crop",
@@ -1314,7 +1314,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "डिजिटल थर्मामीटर",
     price: 299,
     originalPrice: 499,
-    category: "Health care device",
+    category: "food-health",
     emoji: "🌡️",
     image:
       "https://images.unsplash.com/photo-1584308666744-34a6ce775f26?w=400&h=400&fit=crop",
@@ -1330,7 +1330,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "नेब्युलाइज़र",
     price: 1999,
     originalPrice: 2699,
-    category: "Health care device",
+    category: "food-health",
     emoji: "💨",
     image:
       "https://images.unsplash.com/photo-1584308666744-34a6ce775f27?w=400&h=400&fit=crop",
@@ -1346,7 +1346,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "सर्वाइकल पिलो",
     price: 1299,
     originalPrice: 1799,
-    category: "Health care device",
+    category: "food-health",
     emoji: "🛏️",
     image:
       "https://images.unsplash.com/photo-1584308666744-34a6ce775f28?w=400&h=400&fit=crop",
@@ -1362,7 +1362,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "TENS फिजियोथेरेपी",
     price: 2999,
     originalPrice: 3999,
-    category: "Health care device",
+    category: "food-health",
     emoji: "⚡",
     image:
       "https://images.unsplash.com/photo-1584308666744-34a6ce775f29?w=400&h=400&fit=crop",
@@ -1378,7 +1378,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "हीटिंग पैड",
     price: 799,
     originalPrice: 1099,
-    category: "Health care device",
+    category: "food-health",
     emoji: "🔥",
     image:
       "https://images.unsplash.com/photo-1584308666744-34a6ce775f2a?w=400&h=400&fit=crop",
@@ -1394,7 +1394,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "घुटना सपोर्ट",
     price: 599,
     originalPrice: 799,
-    category: "Health care device",
+    category: "food-health",
     emoji: "🦵",
     image:
       "https://images.unsplash.com/photo-1584308666744-34a6ce775f2b?w=400&h=400&fit=crop",
@@ -1410,7 +1410,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "फुट मसाजर मशीन",
     price: 2499,
     originalPrice: 3199,
-    category: "Health care device",
+    category: "food-health",
     emoji: "🦶",
     image:
       "https://images.unsplash.com/photo-1571019586211-e049d1e8bd15?w=400&h=400&fit=crop",
@@ -1427,7 +1427,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "सोनी WH-1000XM5",
     price: 24999,
     originalPrice: 29999,
-    category: "Headphones & speakers",
+    category: "electronics",
     emoji: "🎧",
     image:
       "https://images.unsplash.com/photo-1505740420928-5e560c06d30f?w=400&h=400&fit=crop",
@@ -1444,7 +1444,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "JBL चार्ज 5",
     price: 14999,
     originalPrice: 17999,
-    category: "Headphones & speakers",
+    category: "electronics",
     emoji: "🔊",
     image:
       "https://images.unsplash.com/photo-1484704849700-f032a568e945?w=400&h=400&fit=crop",
@@ -1461,7 +1461,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "बोट रॉकर्ज़ 450",
     price: 1999,
     originalPrice: 2999,
-    category: "Headphones & speakers",
+    category: "electronics",
     emoji: "🎧",
     image:
       "https://images.unsplash.com/photo-1545454675-3531b543be60?w=400&h=400&fit=crop",
@@ -1478,7 +1478,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "बोस साउंडलिंक",
     price: 9999,
     originalPrice: 12999,
-    category: "Headphones & speakers",
+    category: "electronics",
     emoji: "🔊",
     image:
       "https://images.unsplash.com/photo-1505740420928-5e560c06d310?w=400&h=400&fit=crop",
@@ -1494,7 +1494,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "सेनहाइज़र इयरफोन",
     price: 2499,
     originalPrice: 2999,
-    category: "Headphones & speakers",
+    category: "electronics",
     emoji: "🎧",
     image:
       "https://images.unsplash.com/photo-1484704849700-f032a568e946?w=400&h=400&fit=crop",
@@ -1510,7 +1510,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "मिवी DuoPods",
     price: 999,
     originalPrice: 1499,
-    category: "Headphones & speakers",
+    category: "electronics",
     emoji: "🎧",
     image:
       "https://images.unsplash.com/photo-1545454675-3531b543be61?w=400&h=400&fit=crop",
@@ -1526,7 +1526,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "मार्शल स्पीकर",
     price: 11999,
     originalPrice: 14999,
-    category: "Headphones & speakers",
+    category: "electronics",
     emoji: "🔊",
     image:
       "https://images.unsplash.com/photo-1484704849700-f032a568e947?w=400&h=400&fit=crop",
@@ -1543,7 +1543,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "नॉइज़ कैंसलिंग ईयरबड्स",
     price: 3499,
     originalPrice: 4499,
-    category: "Headphones & speakers",
+    category: "electronics",
     emoji: "🎧",
     image:
       "https://images.unsplash.com/photo-1545454675-3531b543be62?w=400&h=400&fit=crop",
@@ -1559,7 +1559,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "होम थिएटर 5.1",
     price: 8999,
     originalPrice: 11999,
-    category: "Headphones & speakers",
+    category: "electronics",
     emoji: "🔊",
     image:
       "https://images.unsplash.com/photo-1545454675-3531b543be63?w=400&h=400&fit=crop",
@@ -1575,7 +1575,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "सोनी साउंडबार",
     price: 7499,
     originalPrice: 9999,
-    category: "Headphones & speakers",
+    category: "electronics",
     emoji: "🔊",
     image:
       "https://images.unsplash.com/photo-1505740420928-5e560c06d311?w=400&h=400&fit=crop",
@@ -1592,7 +1592,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "Apple वॉच Series 9",
     price: 41999,
     originalPrice: 48999,
-    category: "Smart wearables",
+    category: "smart-gadgets",
     emoji: "⌚",
     image:
       "https://images.unsplash.com/photo-1434494434-80e5a6f57e2a?w=400&h=400&fit=crop",
@@ -1609,7 +1609,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "सैमसंग वॉच 6",
     price: 27999,
     originalPrice: 32999,
-    category: "Smart wearables",
+    category: "smart-gadgets",
     emoji: "⌚",
     image:
       "https://images.unsplash.com/photo-1434494434-80e5a6f57e2b?w=400&h=400&fit=crop",
@@ -1625,7 +1625,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "बोट वेव प्राइम",
     price: 1799,
     originalPrice: 2499,
-    category: "Smart wearables",
+    category: "smart-gadgets",
     emoji: "⌚",
     image:
       "https://images.unsplash.com/photo-1434494434-80e5a6f57e2c?w=400&h=400&fit=crop",
@@ -1642,7 +1642,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "फिटबिट चार्ज 6",
     price: 14999,
     originalPrice: 17999,
-    category: "Smart wearables",
+    category: "smart-gadgets",
     emoji: "⌚",
     image:
       "https://images.unsplash.com/photo-1434494434-80e5a6f57e2d?w=400&h=400&fit=crop",
@@ -1659,7 +1659,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "नॉइज़ कलरफिट अल्ट्रा",
     price: 2999,
     originalPrice: 3999,
-    category: "Smart wearables",
+    category: "smart-gadgets",
     emoji: "⌚",
     image:
       "https://images.unsplash.com/photo-1434494434-80e5a6f57e2e?w=400&h=400&fit=crop",
@@ -1675,7 +1675,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "Mi स्मार्ट बैंड 8",
     price: 3499,
     originalPrice: 4499,
-    category: "Smart wearables",
+    category: "smart-gadgets",
     emoji: "⌚",
     image:
       "https://images.unsplash.com/photo-1434494434-80e5a6f57e2f?w=400&h=400&fit=crop",
@@ -1691,7 +1691,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "गार्मिन विवोस्मार्ट",
     price: 12999,
     originalPrice: 15999,
-    category: "Smart wearables",
+    category: "smart-gadgets",
     emoji: "⌚",
     image:
       "https://images.unsplash.com/photo-1434494434-80e5a6f57e30?w=400&h=400&fit=crop",
@@ -1707,7 +1707,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "अमेजफिट GTS 4",
     price: 7999,
     originalPrice: 9999,
-    category: "Smart wearables",
+    category: "smart-gadgets",
     emoji: "⌚",
     image:
       "https://images.unsplash.com/photo-1434494434-80e5a6f57e31?w=400&h=400&fit=crop",
@@ -1723,7 +1723,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "स्मार्ट रिंग हेल्थ",
     price: 5999,
     originalPrice: 7999,
-    category: "Smart wearables",
+    category: "smart-gadgets",
     emoji: "💍",
     image:
       "https://images.unsplash.com/photo-1434494434-80e5a6f57e32?w=400&h=400&fit=crop",
@@ -1740,7 +1740,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "टिकवॉच प्रो 5",
     price: 19999,
     originalPrice: 24999,
-    category: "Smart wearables",
+    category: "smart-gadgets",
     emoji: "⌚",
     image:
       "https://images.unsplash.com/photo-1434494434-80e5a6f57e33?w=400&h=400&fit=crop",
@@ -1757,7 +1757,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "आईफोन 15 बैक कवर",
     price: 299,
     originalPrice: 499,
-    category: "Cases covers & more",
+    category: "smart-gadgets",
     emoji: "📱",
     image:
       "https://images.unsplash.com/photo-1601784551446-da09f64c8f73?w=400&h=400&fit=crop",
@@ -1773,7 +1773,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "सैमसंग S23 केस",
     price: 349,
     originalPrice: 599,
-    category: "Cases covers & more",
+    category: "smart-gadgets",
     emoji: "📱",
     image:
       "https://images.unsplash.com/photo-1601784551446-da09f64c8f74?w=400&h=400&fit=crop",
@@ -1789,7 +1789,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "टेम्पर्ड ग्लास 5D",
     price: 199,
     originalPrice: 399,
-    category: "Cases covers & more",
+    category: "smart-gadgets",
     emoji: "📱",
     image:
       "https://images.unsplash.com/photo-1601784551446-da09f64c8f75?w=400&h=400&fit=crop",
@@ -1805,7 +1805,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "वॉलेट केस",
     price: 799,
     originalPrice: 1199,
-    category: "Cases covers & more",
+    category: "smart-gadgets",
     emoji: "👜",
     image:
       "https://images.unsplash.com/photo-1601784551446-da09f64c8f76?w=400&h=400&fit=crop",
@@ -1821,7 +1821,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "मैग्नेटिक पॉप सॉकेट",
     price: 299,
     originalPrice: 499,
-    category: "Cases covers & more",
+    category: "smart-gadgets",
     emoji: "🧲",
     image:
       "https://images.unsplash.com/photo-1601784551446-da09f64c8f77?w=400&h=400&fit=crop",
@@ -1837,7 +1837,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "वॉटरप्रूफ फोन पाउच",
     price: 399,
     originalPrice: 599,
-    category: "Cases covers & more",
+    category: "smart-gadgets",
     emoji: "💧",
     image:
       "https://images.unsplash.com/photo-1601784551446-da09f64c8f78?w=400&h=400&fit=crop",
@@ -1853,7 +1853,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "रग्ड आर्मर केस",
     price: 599,
     originalPrice: 899,
-    category: "Cases covers & more",
+    category: "smart-gadgets",
     emoji: "🛡️",
     image:
       "https://images.unsplash.com/photo-1601784551446-da09f64c8f79?w=400&h=400&fit=crop",
@@ -1869,7 +1869,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "रिंग होल्डर कवर",
     price: 449,
     originalPrice: 699,
-    category: "Cases covers & more",
+    category: "smart-gadgets",
     emoji: "💍",
     image:
       "https://images.unsplash.com/photo-1601784551446-da09f64c8f7a?w=400&h=400&fit=crop",
@@ -1885,7 +1885,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "फ्लिप कवर मैग्नेटिक",
     price: 549,
     originalPrice: 799,
-    category: "Cases covers & more",
+    category: "smart-gadgets",
     emoji: "📱",
     image:
       "https://images.unsplash.com/photo-1601784551446-da09f64c8f7b?w=400&h=400&fit=crop",
@@ -1901,7 +1901,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "प्राइवेसी स्क्रीन गार्ड",
     price: 299,
     originalPrice: 499,
-    category: "Cases covers & more",
+    category: "smart-gadgets",
     emoji: "🔏",
     image:
       "https://images.unsplash.com/photo-1601784551446-da09f64c8f7c?w=400&h=400&fit=crop",
@@ -1918,7 +1918,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "65W फास्ट चार्जर",
     price: 999,
     originalPrice: 1499,
-    category: "Mobile accessories",
+    category: "smart-gadgets",
     emoji: "⚡",
     image:
       "https://images.unsplash.com/photo-1605557021-57af66c6f6b2?w=400&h=400&fit=crop",
@@ -1935,7 +1935,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "वायरलेस चार्जिंग पैड",
     price: 1499,
     originalPrice: 1999,
-    category: "Mobile accessories",
+    category: "smart-gadgets",
     emoji: "🔋",
     image:
       "https://images.unsplash.com/photo-1605557021-57af66c6f6b3?w=400&h=400&fit=crop",
@@ -1951,7 +1951,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "USB-C केबल 2m",
     price: 399,
     originalPrice: 599,
-    category: "Mobile accessories",
+    category: "smart-gadgets",
     emoji: "🔌",
     image:
       "https://images.unsplash.com/photo-1605557021-57af66c6f6b4?w=400&h=400&fit=crop",
@@ -1967,7 +1967,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "कार फोन होल्डर",
     price: 599,
     originalPrice: 899,
-    category: "Mobile accessories",
+    category: "smart-gadgets",
     emoji: "🚗",
     image:
       "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=400&h=400&fit=crop",
@@ -1983,7 +1983,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "ब्लूटूथ सेल्फी स्टिक",
     price: 499,
     originalPrice: 799,
-    category: "Mobile accessories",
+    category: "smart-gadgets",
     emoji: "🤳",
     image:
       "https://images.unsplash.com/photo-1574144611937-0df059b5ef3e?w=400&h=400&fit=crop",
@@ -1999,7 +1999,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "फोन स्टैंड",
     price: 349,
     originalPrice: 549,
-    category: "Mobile accessories",
+    category: "smart-gadgets",
     emoji: "📱",
     image:
       "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400&h=400&fit=crop",
@@ -2015,7 +2015,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "फोन लेंस किट",
     price: 799,
     originalPrice: 1099,
-    category: "Mobile accessories",
+    category: "smart-gadgets",
     emoji: "📷",
     image:
       "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=400&h=400&fit=crop",
@@ -2031,7 +2031,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "OTG USB एडाप्टर",
     price: 199,
     originalPrice: 349,
-    category: "Mobile accessories",
+    category: "smart-gadgets",
     emoji: "🔌",
     image:
       "https://images.unsplash.com/photo-1605557021-57af66c6f6b8?w=400&h=400&fit=crop",
@@ -2047,7 +2047,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "ब्लूटूथ AUX रिसीवर",
     price: 699,
     originalPrice: 999,
-    category: "Mobile accessories",
+    category: "smart-gadgets",
     emoji: "🎵",
     image:
       "https://images.unsplash.com/photo-1558618047-3c8c76ca7d48?w=400&h=400&fit=crop",
@@ -2063,7 +2063,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "UV फोन सैनिटाइज़र",
     price: 1199,
     originalPrice: 1599,
-    category: "Mobile accessories",
+    category: "smart-gadgets",
     emoji: "🧼",
     image:
       "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=400&h=400&fit=crop",
@@ -2080,7 +2080,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "PS5 कंट्रोलर",
     price: 5999,
     originalPrice: 7499,
-    category: "Gaming",
+    category: "electronics",
     emoji: "🎮",
     image:
       "https://images.unsplash.com/photo-1593305841991-05c297ba4576?w=400&h=400&fit=crop",
@@ -2097,7 +2097,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "Xbox वायरलेस कंट्रोलर",
     price: 5499,
     originalPrice: 6999,
-    category: "Gaming",
+    category: "electronics",
     emoji: "🎮",
     image:
       "https://images.unsplash.com/photo-1593305841991-05c297ba4577?w=400&h=400&fit=crop",
@@ -2113,7 +2113,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "गेमिंग चेयर",
     price: 8999,
     originalPrice: 12999,
-    category: "Gaming",
+    category: "electronics",
     emoji: "🪑",
     image:
       "https://images.unsplash.com/photo-1598550476439-6847785fcea6?w=400&h=400&fit=crop",
@@ -2130,7 +2130,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "गेमिंग हेडसेट RGB",
     price: 2499,
     originalPrice: 3499,
-    category: "Gaming",
+    category: "electronics",
     emoji: "🎧",
     image:
       "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=400&fit=crop",
@@ -2146,7 +2146,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "निंटेंडो स्विच",
     price: 19999,
     originalPrice: 22999,
-    category: "Gaming",
+    category: "electronics",
     emoji: "🎮",
     image:
       "https://images.unsplash.com/photo-1578303512597-81e6cc155b3e?w=400&h=400&fit=crop",
@@ -2163,7 +2163,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "RGB गेमिंग माउस",
     price: 1999,
     originalPrice: 2699,
-    category: "Gaming",
+    category: "electronics",
     emoji: "🖱️",
     image:
       "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=400&h=400&fit=crop",
@@ -2179,7 +2179,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "मेकेनिकल गेमिंग कीबोर्ड",
     price: 3499,
     originalPrice: 4499,
-    category: "Gaming",
+    category: "electronics",
     emoji: "⌨️",
     image:
       "https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=400&h=400&fit=crop",
@@ -2196,7 +2196,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "VR हेडसेट",
     price: 1499,
     originalPrice: 1999,
-    category: "Gaming",
+    category: "electronics",
     emoji: "🥽",
     image:
       "https://images.unsplash.com/photo-1478827387698-1527781a4887?w=400&h=400&fit=crop",
@@ -2212,7 +2212,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "गेमिंग स्टीयरिंग व्हील",
     price: 4999,
     originalPrice: 6499,
-    category: "Gaming",
+    category: "electronics",
     emoji: "🎡",
     image:
       "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=400&h=400&fit=crop",
@@ -2228,7 +2228,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "XXL गेमिंग माउसपैड",
     price: 799,
     originalPrice: 999,
-    category: "Gaming",
+    category: "electronics",
     emoji: "🖱️",
     image:
       "https://images.unsplash.com/photo-1593305841991-05c297ba457f?w=400&h=400&fit=crop",
@@ -2245,7 +2245,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "MI पावर बैंक 20000mAh",
     price: 1499,
     originalPrice: 1999,
-    category: "Power banks",
+    category: "smart-gadgets",
     emoji: "🔋",
     image:
       "https://images.unsplash.com/photo-1605464285906-3de7f014f7b9?w=400&h=400&fit=crop",
@@ -2262,7 +2262,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "एंकर 26800mAh",
     price: 3499,
     originalPrice: 4499,
-    category: "Power banks",
+    category: "smart-gadgets",
     emoji: "🔋",
     image:
       "https://images.unsplash.com/photo-1605464285906-3de7f014f7ba?w=400&h=400&fit=crop",
@@ -2279,7 +2279,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "बोट 10000mAh",
     price: 999,
     originalPrice: 1299,
-    category: "Power banks",
+    category: "smart-gadgets",
     emoji: "🔋",
     image:
       "https://images.unsplash.com/photo-1605464285906-3de7f014f7bb?w=400&h=400&fit=crop",
@@ -2295,7 +2295,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "अंब्रेन 15000mAh",
     price: 1299,
     originalPrice: 1699,
-    category: "Power banks",
+    category: "smart-gadgets",
     emoji: "🔋",
     image:
       "https://images.unsplash.com/photo-1605464285906-3de7f014f7bc?w=400&h=400&fit=crop",
@@ -2311,7 +2311,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "रियलमी 30W पावर बैंक",
     price: 1199,
     originalPrice: 1599,
-    category: "Power banks",
+    category: "smart-gadgets",
     emoji: "🔋",
     image:
       "https://images.unsplash.com/photo-1605464285906-3de7f014f7bd?w=400&h=400&fit=crop",
@@ -2327,7 +2327,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "सोलर पावर बैंक",
     price: 2499,
     originalPrice: 3299,
-    category: "Power banks",
+    category: "smart-gadgets",
     emoji: "☀️",
     image:
       "https://images.unsplash.com/photo-1509391366360-2e959784a276?w=400&h=400&fit=crop",
@@ -2344,7 +2344,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "Urbn 45W पावर बैंक",
     price: 1799,
     originalPrice: 2299,
-    category: "Power banks",
+    category: "smart-gadgets",
     emoji: "🔋",
     image:
       "https://images.unsplash.com/photo-1605464285906-3de7f014f7be?w=400&h=400&fit=crop",
@@ -2361,7 +2361,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "पोर्ट्रोनिक्स पावर बैंक",
     price: 1099,
     originalPrice: 1499,
-    category: "Power banks",
+    category: "smart-gadgets",
     emoji: "🔋",
     image:
       "https://images.unsplash.com/photo-1605464285906-3de7f014f7bf?w=400&h=400&fit=crop",
@@ -2377,7 +2377,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "मैगसेफ पावर बैंक",
     price: 2999,
     originalPrice: 3999,
-    category: "Power banks",
+    category: "smart-gadgets",
     emoji: "🔋",
     image:
       "https://images.unsplash.com/photo-1605464285906-3de7f014f7c0?w=400&h=400&fit=crop",
@@ -2394,7 +2394,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "जेब्रोनिक्स पावर बैंक",
     price: 899,
     originalPrice: 1199,
-    category: "Power banks",
+    category: "smart-gadgets",
     emoji: "🔋",
     image:
       "https://images.unsplash.com/photo-1605464285906-3de7f014f7c1?w=400&h=400&fit=crop",
@@ -2411,7 +2411,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "स्मार्ट LED बल्ब",
     price: 499,
     originalPrice: 799,
-    category: "Smart home automation",
+    category: "smart-gadgets",
     emoji: "💡",
     image:
       "https://images.unsplash.com/photo-1558618047-3c8c76ca7d49?w=400&h=400&fit=crop",
@@ -2427,7 +2427,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "स्मार्ट स्विच",
     price: 799,
     originalPrice: 1099,
-    category: "Smart home automation",
+    category: "smart-gadgets",
     emoji: "🔌",
     image:
       "https://images.unsplash.com/photo-1558618047-3c8c76ca7d4a?w=400&h=400&fit=crop",
@@ -2443,7 +2443,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "Amazon Echo Dot",
     price: 4499,
     originalPrice: 5499,
-    category: "Smart home automation",
+    category: "smart-gadgets",
     emoji: "🔊",
     image:
       "https://images.unsplash.com/photo-1558618047-3c8c76ca7d1e?w=400&h=400&fit=crop",
@@ -2460,7 +2460,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "गूगल नेस्ट मिनी",
     price: 3999,
     originalPrice: 4999,
-    category: "Smart home automation",
+    category: "smart-gadgets",
     emoji: "🏠",
     image:
       "https://images.unsplash.com/photo-1558618047-3c8c76ca7d4b?w=400&h=400&fit=crop",
@@ -2476,7 +2476,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "स्मार्ट डोर लॉक",
     price: 7999,
     originalPrice: 10999,
-    category: "Smart home automation",
+    category: "smart-gadgets",
     emoji: "🔐",
     image:
       "https://images.unsplash.com/photo-1558618047-3c8c76ca7d4c?w=400&h=400&fit=crop",
@@ -2493,7 +2493,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "स्मार्ट सिक्योरिटी कैमरा",
     price: 1999,
     originalPrice: 2699,
-    category: "Smart home automation",
+    category: "smart-gadgets",
     emoji: "📹",
     image:
       "https://images.unsplash.com/photo-1558618047-3c8c76ca7d50?w=400&h=400&fit=crop",
@@ -2509,7 +2509,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "स्मार्ट TV स्टिक 4K",
     price: 3999,
     originalPrice: 5499,
-    category: "Smart home automation",
+    category: "smart-gadgets",
     emoji: "📺",
     image:
       "https://images.unsplash.com/photo-1593359677879-a4bb92f829d8?w=400&h=400&fit=crop",
@@ -2526,7 +2526,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "मोशन सेंसर",
     price: 899,
     originalPrice: 1299,
-    category: "Smart home automation",
+    category: "smart-gadgets",
     emoji: "🏠",
     image:
       "https://images.unsplash.com/photo-1558618047-3c8c76ca7d4d?w=400&h=400&fit=crop",
@@ -2542,7 +2542,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "स्मार्ट थर्मोस्टैट",
     price: 4999,
     originalPrice: 6499,
-    category: "Smart home automation",
+    category: "smart-gadgets",
     emoji: "🌡️",
     image:
       "https://images.unsplash.com/photo-1558618047-3c8c76ca7d4e?w=400&h=400&fit=crop",
@@ -2559,7 +2559,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "स्मार्ट वाटर प्यूरीफायर",
     price: 14999,
     originalPrice: 18999,
-    category: "Smart home automation",
+    category: "smart-gadgets",
     emoji: "💧",
     image:
       "https://images.unsplash.com/photo-1558618047-3c8c76ca7d4f?w=400&h=400&fit=crop",
@@ -2577,7 +2577,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "बॉश ड्रिल मशीन",
     price: 3499,
     originalPrice: 4499,
-    category: "Home improvement tools",
+    category: "home",
     emoji: "🔧",
     image:
       "https://images.unsplash.com/photo-1581244682-48ebee6f32ce?w=400&h=400&fit=crop",
@@ -2594,7 +2594,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "स्टेनली टूल किट",
     price: 1999,
     originalPrice: 2699,
-    category: "Home improvement tools",
+    category: "home",
     emoji: "🛠️",
     image:
       "https://images.unsplash.com/photo-1581244682-48ebee6f32cf?w=400&h=400&fit=crop",
@@ -2610,7 +2610,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "टेप मेज़र 10m",
     price: 299,
     originalPrice: 499,
-    category: "Home improvement tools",
+    category: "home",
     emoji: "📏",
     image:
       "https://images.unsplash.com/photo-1581244682-48ebee6f32ca?w=400&h=400&fit=crop",
@@ -2626,7 +2626,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "पेंट रोलर सेट",
     price: 599,
     originalPrice: 799,
-    category: "Home improvement tools",
+    category: "home",
     emoji: "🎨",
     image:
       "https://images.unsplash.com/photo-1581244682-48ebee6f32cb?w=400&h=400&fit=crop",
@@ -2642,7 +2642,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "वॉल एंकर और स्क्रू",
     price: 199,
     originalPrice: 349,
-    category: "Home improvement tools",
+    category: "home",
     emoji: "🔩",
     image:
       "https://images.unsplash.com/photo-1581244682-48ebee6f32d0?w=400&h=400&fit=crop",
@@ -2658,7 +2658,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "एल्युमिनियम सीढ़ी 6ft",
     price: 2499,
     originalPrice: 3299,
-    category: "Home improvement tools",
+    category: "home",
     emoji: "🪜",
     image:
       "https://images.unsplash.com/photo-1581244682-48ebee6f32cc?w=400&h=400&fit=crop",
@@ -2674,7 +2674,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "कॉल्किंग गन",
     price: 499,
     originalPrice: 699,
-    category: "Home improvement tools",
+    category: "home",
     emoji: "🔧",
     image:
       "https://images.unsplash.com/photo-1581244682-48ebee6f32d1?w=400&h=400&fit=crop",
@@ -2690,7 +2690,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "स्पिरिट लेवल",
     price: 399,
     originalPrice: 599,
-    category: "Home improvement tools",
+    category: "home",
     emoji: "📏",
     image:
       "https://images.unsplash.com/photo-1581244682-48ebee6f32d2?w=400&h=400&fit=crop",
@@ -2706,7 +2706,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "सेफ्टी ग्लव्स",
     price: 349,
     originalPrice: 499,
-    category: "Home improvement tools",
+    category: "home",
     emoji: "🧤",
     image:
       "https://images.unsplash.com/photo-1581244682-48ebee6f32cd?w=400&h=400&fit=crop",
@@ -2722,7 +2722,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "इलेक्ट्रिकल टेस्टर किट",
     price: 799,
     originalPrice: 1099,
-    category: "Home improvement tools",
+    category: "home",
     emoji: "⚡",
     image:
       "https://images.unsplash.com/photo-1581244682-48ebee6f32d3?w=400&h=400&fit=crop",
@@ -2739,7 +2739,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "LED लड़ी रोशनी 10m",
     price: 299,
     originalPrice: 499,
-    category: "Decor & lighting",
+    category: "home",
     emoji: "✨",
     image:
       "https://images.unsplash.com/photo-1547036967-23d11aacaee0?w=400&h=400&fit=crop",
@@ -2755,7 +2755,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "LED कैंडल सेट",
     price: 499,
     originalPrice: 699,
-    category: "Decor & lighting",
+    category: "home",
     emoji: "🕯️",
     image:
       "https://images.unsplash.com/photo-1513519297-76c9e83a16d3?w=400&h=400&fit=crop",
@@ -2771,7 +2771,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "फोटो फ्रेम कोलाज",
     price: 799,
     originalPrice: 1199,
-    category: "Decor & lighting",
+    category: "home",
     emoji: "🖼️",
     image:
       "https://images.unsplash.com/photo-1513519297-76c9e83a16d0?w=400&h=400&fit=crop",
@@ -2787,7 +2787,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "लकड़ी की दीवार घड़ी",
     price: 999,
     originalPrice: 1499,
-    category: "Decor & lighting",
+    category: "home",
     emoji: "🕐",
     image:
       "https://images.unsplash.com/photo-1563861826100-9cb868fdbe1c?w=400&h=400&fit=crop",
@@ -2803,7 +2803,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "सिरेमिक वेज़ सेट",
     price: 699,
     originalPrice: 999,
-    category: "Decor & lighting",
+    category: "home",
     emoji: "🌸",
     image:
       "https://images.unsplash.com/photo-1586892477838-42eb29e91e2c?w=400&h=400&fit=crop",
@@ -2819,7 +2819,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "फ्लोर लैंप",
     price: 2499,
     originalPrice: 3299,
-    category: "Decor & lighting",
+    category: "home",
     emoji: "💡",
     image:
       "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop",
@@ -2835,7 +2835,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "आर्टिफिशियल प्लांट्स",
     price: 599,
     originalPrice: 899,
-    category: "Decor & lighting",
+    category: "home",
     emoji: "🪴",
     image:
       "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=400&h=400&fit=crop",
@@ -2851,7 +2851,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "गोल डेकोरेटिव मिरर",
     price: 1299,
     originalPrice: 1799,
-    category: "Decor & lighting",
+    category: "home",
     emoji: "🪞",
     image:
       "https://images.unsplash.com/photo-1513519297-76c9e83a16d1?w=400&h=400&fit=crop",
@@ -2867,7 +2867,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "मून लैंप नाइट लाइट",
     price: 799,
     originalPrice: 1199,
-    category: "Decor & lighting",
+    category: "home",
     emoji: "🌙",
     image:
       "https://images.unsplash.com/photo-1513519297-76c9e83a16d4?w=400&h=400&fit=crop",
@@ -2883,7 +2883,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "हैंडमेड ड्रीमकैचर",
     price: 399,
     originalPrice: 599,
-    category: "Decor & lighting",
+    category: "home",
     emoji: "🕸️",
     image:
       "https://images.unsplash.com/photo-1513519297-76c9e83a16d2?w=400&h=400&fit=crop",
@@ -2900,7 +2900,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "लक्मे विटामिन C सीरम",
     price: 899,
     originalPrice: 1199,
-    category: "Skin care",
+    category: "beauty",
     emoji: "🧴",
     image:
       "https://images.unsplash.com/photo-1598440947619-2f7c04e29e1a?w=400&h=400&fit=crop",
@@ -2917,7 +2917,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "पॉन्ड्स एज मिरेकल",
     price: 649,
     originalPrice: 899,
-    category: "Skin care",
+    category: "beauty",
     emoji: "🧴",
     image:
       "https://images.unsplash.com/photo-1556228578-8c89e6adf88a?w=400&h=400&fit=crop",
@@ -2933,7 +2933,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "न्यूट्रोजेना सनस्क्रीन",
     price: 499,
     originalPrice: 699,
-    category: "Skin care",
+    category: "beauty",
     emoji: "☀️",
     image:
       "https://images.unsplash.com/photo-1598440947619-2f7c04e29e1b?w=400&h=400&fit=crop",
@@ -2949,7 +2949,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "सेटाफिल मॉइश्चराइज़र",
     price: 549,
     originalPrice: 749,
-    category: "Skin care",
+    category: "beauty",
     emoji: "🧴",
     image:
       "https://images.unsplash.com/photo-1556228578-8c89e6adf88b?w=400&h=400&fit=crop",
@@ -2965,7 +2965,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "मामाअर्थ नीम फेसवॉश",
     price: 299,
     originalPrice: 399,
-    category: "Skin care",
+    category: "beauty",
     emoji: "🌿",
     image:
       "https://images.unsplash.com/photo-1598440947619-2f7c04e29e1c?w=400&h=400&fit=crop",
@@ -2981,7 +2981,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "बायोटिक हनी जेल",
     price: 199,
     originalPrice: 299,
-    category: "Skin care",
+    category: "beauty",
     emoji: "🍯",
     image:
       "https://images.unsplash.com/photo-1556228578-8c89e6adf88c?w=400&h=400&fit=crop",
@@ -2997,7 +2997,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "हिमालया नीम",
     price: 149,
     originalPrice: 199,
-    category: "Skin care",
+    category: "beauty",
     emoji: "🌿",
     image:
       "https://images.unsplash.com/photo-1598440947619-2f7c04e29e1d?w=400&h=400&fit=crop",
@@ -3013,7 +3013,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "विटामिन C टोनर",
     price: 599,
     originalPrice: 799,
-    category: "Skin care",
+    category: "beauty",
     emoji: "🧴",
     image:
       "https://images.unsplash.com/photo-1556228578-8c89e6adf88d?w=400&h=400&fit=crop",
@@ -3029,7 +3029,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "द ऑर्डिनरी नियासिनामाइड",
     price: 699,
     originalPrice: 899,
-    category: "Skin care",
+    category: "beauty",
     emoji: "🧴",
     image:
       "https://images.unsplash.com/photo-1598440947619-2f7c04e29e1e?w=400&h=400&fit=crop",
@@ -3046,7 +3046,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "ग्रीन टी स्क्रब",
     price: 449,
     originalPrice: 599,
-    category: "Skin care",
+    category: "beauty",
     emoji: "🍵",
     image:
       "https://images.unsplash.com/photo-1556228578-8c89e6adf88e?w=400&h=400&fit=crop",
@@ -3063,7 +3063,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "पैंटीन शैम्पू 1L",
     price: 399,
     originalPrice: 549,
-    category: "Hair care",
+    category: "beauty",
     emoji: "🧴",
     image:
       "https://images.unsplash.com/photo-1522337360801-e00a8a9e7b99?w=400&h=400&fit=crop",
@@ -3080,7 +3080,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "ट्रेसेमे कंडीशनर",
     price: 349,
     originalPrice: 499,
-    category: "Hair care",
+    category: "beauty",
     emoji: "🧴",
     image:
       "https://images.unsplash.com/photo-1522337360801-e00a8a9e7b9a?w=400&h=400&fit=crop",
@@ -3096,7 +3096,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "मामाअर्थ प्याज हेयर ऑयल",
     price: 399,
     originalPrice: 549,
-    category: "Hair care",
+    category: "beauty",
     emoji: "🧅",
     image:
       "https://images.unsplash.com/photo-1522337360801-e00a8a9e7b9b?w=400&h=400&fit=crop",
@@ -3113,7 +3113,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "पैराशूट नारियल तेल",
     price: 199,
     originalPrice: 249,
-    category: "Hair care",
+    category: "beauty",
     emoji: "🥥",
     image:
       "https://images.unsplash.com/photo-1522337360801-e00a8a9e7b9c?w=400&h=400&fit=crop",
@@ -3129,7 +3129,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "हेड एंड शोल्डर्स",
     price: 349,
     originalPrice: 449,
-    category: "Hair care",
+    category: "beauty",
     emoji: "🧴",
     image:
       "https://images.unsplash.com/photo-1522337360801-e00a8a9e7b9d?w=400&h=400&fit=crop",
@@ -3146,7 +3146,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "डव हेयर मास्क",
     price: 299,
     originalPrice: 399,
-    category: "Hair care",
+    category: "beauty",
     emoji: "🧴",
     image:
       "https://images.unsplash.com/photo-1522337360801-e00a8a9e7b9e?w=400&h=400&fit=crop",
@@ -3162,7 +3162,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "WOW एपल साइडर शैम्पू",
     price: 499,
     originalPrice: 649,
-    category: "Hair care",
+    category: "beauty",
     emoji: "🍎",
     image:
       "https://images.unsplash.com/photo-1522337360801-e00a8a9e7b9f?w=400&h=400&fit=crop",
@@ -3178,7 +3178,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "बायोटिक प्रोटीन पैक",
     price: 249,
     originalPrice: 349,
-    category: "Hair care",
+    category: "beauty",
     emoji: "💪",
     image:
       "https://images.unsplash.com/photo-1522337360801-e00a8a9e7ba0?w=400&h=400&fit=crop",
@@ -3194,7 +3194,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "श्वार्जकोफ हेयर कलर",
     price: 349,
     originalPrice: 499,
-    category: "Hair care",
+    category: "beauty",
     emoji: "🎨",
     image:
       "https://images.unsplash.com/photo-1522337360801-e00a8a9e7ba1?w=400&h=400&fit=crop",
@@ -3210,7 +3210,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "सनसिल्क शैम्पू",
     price: 259,
     originalPrice: 329,
-    category: "Hair care",
+    category: "beauty",
     emoji: "🧴",
     image:
       "https://images.unsplash.com/photo-1522337360801-e00a8a9e7ba2?w=400&h=400&fit=crop",
@@ -3227,7 +3227,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "फॉग ब्लैक",
     price: 349,
     originalPrice: 499,
-    category: "Fragrance",
+    category: "beauty",
     emoji: "🌸",
     image:
       "https://images.unsplash.com/photo-1541804793-8ebb20ec7bc0?w=400&h=400&fit=crop",
@@ -3244,7 +3244,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "वाइल्ड स्टोन टाइटेनियम",
     price: 449,
     originalPrice: 599,
-    category: "Fragrance",
+    category: "beauty",
     emoji: "🔵",
     image:
       "https://images.unsplash.com/photo-1541804793-8ebb20ec7bc1?w=400&h=400&fit=crop",
@@ -3260,7 +3260,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "पार्क एवेन्यू सिग्नेचर",
     price: 299,
     originalPrice: 399,
-    category: "Fragrance",
+    category: "beauty",
     emoji: "🌿",
     image:
       "https://images.unsplash.com/photo-1541804793-8ebb20ec7bc2?w=400&h=400&fit=crop",
@@ -3276,7 +3276,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "यार्डले लैवेंडर",
     price: 199,
     originalPrice: 279,
-    category: "Fragrance",
+    category: "beauty",
     emoji: "💜",
     image:
       "https://images.unsplash.com/photo-1541804793-8ebb20ec7bc3?w=400&h=400&fit=crop",
@@ -3292,7 +3292,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "एंगेज ON सिट्रस",
     price: 179,
     originalPrice: 249,
-    category: "Fragrance",
+    category: "beauty",
     emoji: "🍋",
     image:
       "https://images.unsplash.com/photo-1541804793-8ebb20ec7bc4?w=400&h=400&fit=crop",
@@ -3308,7 +3308,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "AXE डार्क टेम्पटेशन",
     price: 199,
     originalPrice: 289,
-    category: "Fragrance",
+    category: "beauty",
     emoji: "🍫",
     image:
       "https://images.unsplash.com/photo-1541804793-8ebb20ec7bc5?w=400&h=400&fit=crop",
@@ -3324,7 +3324,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "टाइटन स्किन सेलेस्टे",
     price: 1599,
     originalPrice: 2199,
-    category: "Fragrance",
+    category: "beauty",
     emoji: "⭐",
     image:
       "https://images.unsplash.com/photo-1541804793-8ebb20ec7bc6?w=400&h=400&fit=crop",
@@ -3341,7 +3341,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "डेविडॉफ कूल वाटर",
     price: 2499,
     originalPrice: 3199,
-    category: "Fragrance",
+    category: "beauty",
     emoji: "💧",
     image:
       "https://images.unsplash.com/photo-1541804793-8ebb20ec7bc7?w=400&h=400&fit=crop",
@@ -3358,7 +3358,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "कार एयर फ्रेशनर",
     price: 299,
     originalPrice: 399,
-    category: "Fragrance",
+    category: "beauty",
     emoji: "🚗",
     image:
       "https://images.unsplash.com/photo-1502877338535-5ad9e42d2c4e?w=400&h=400&fit=crop",
@@ -3374,7 +3374,7 @@ export const PRODUCTS_BATCH2: SampleProduct[] = [
     nameHindi: "ओडोनिल रूम फ्रेशनर",
     price: 149,
     originalPrice: 199,
-    category: "Fragrance",
+    category: "beauty",
     emoji: "🏠",
     image:
       "https://images.unsplash.com/photo-1541804793-8ebb20ec7bc8?w=400&h=400&fit=crop",

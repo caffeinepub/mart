@@ -1,4 +1,8 @@
-import { SAMPLE_PRODUCTS, type SampleProduct } from "@/data/sampleData";
+import {
+  SAMPLE_PRODUCTS,
+  type SampleProduct,
+  normalizeCategoryId,
+} from "@/data/sampleData";
 import { useActor } from "@/hooks/useActor";
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 
@@ -60,8 +64,12 @@ export function ProductsProvider({ children }: { children: React.ReactNode }) {
             try {
               const parsed = JSON.parse(snapshot) as unknown;
               if (Array.isArray(parsed) && parsed.length > 0) {
-                setProducts(parsed as SampleProduct[]);
-                saveToLocalStorage(parsed as SampleProduct[]);
+                const normalized = (parsed as SampleProduct[]).map((p) => ({
+                  ...p,
+                  category: normalizeCategoryId(p.category),
+                }));
+                setProducts(normalized);
+                saveToLocalStorage(normalized);
               }
             } catch {
               // ignore

@@ -41,11 +41,73 @@ export interface SampleStore {
   ownerName?: string;
 }
 
+export function normalizeCategoryId(catId: string): string {
+  const map: Record<string, string> = {
+    "Men's Essentials": "fashion",
+    "Woman's clothing": "fashion",
+    "Woman footwear & accessories": "fashion",
+    "Women's Essentials": "fashion",
+    "Kid's Fashion": "fashion",
+    "Suitcase, Bags & backpacks": "fashion",
+    "Air conditioners": "appliances",
+    Refrigerators: "appliances",
+    "Washing machines": "appliances",
+    "Seasonal appliances": "appliances",
+    "Kitchen appliances": "appliances",
+    "Home appliances": "appliances",
+    "Microwave oven": "appliances",
+    "Personal care appliances": "appliances",
+    Televisions: "electronics",
+    Mobiles: "mobile",
+    Laptops: "electronics",
+    Camera: "electronics",
+    "Computer peripheral": "electronics",
+    "Computer accessories": "electronics",
+    Storage: "electronics",
+    "Headphones & speakers": "electronics",
+    Gaming: "electronics",
+    "Smart wearables": "smart-gadgets",
+    "Cases covers & more": "smart-gadgets",
+    "Mobile accessories": "smart-gadgets",
+    "Power banks": "smart-gadgets",
+    "Smart home automation": "smart-gadgets",
+    "Home improvement tools": "home",
+    "Decor & lighting": "home",
+    "Household supplies": "home",
+    "Skin care": "beauty",
+    "Hair care": "beauty",
+    Fragrance: "beauty",
+    Beauty: "beauty",
+    "Daily essentials": "beauty",
+    "Baby care": "toys",
+    "Stationery & school supplies": "toys",
+    "Kids' room furniture": "toys",
+    "Nutrition & healthcare": "food-health",
+    "Health care device": "food-health",
+    "Bike accessories": "auto",
+    "Car accessories": "auto",
+    "Bedroom furniture": "furniture",
+    "Living room furniture": "furniture",
+    "Study & office furniture": "furniture",
+    "Dining & kitchen": "furniture",
+    "Outdoor furniture": "furniture",
+    "Storage furniture": "furniture",
+    Tables: "furniture",
+    SportsCycles: "sports",
+    "Exercise bikes": "sports",
+    "Premium Treadmills": "sports",
+    "Fitness accessories": "sports",
+    Cricket: "sports",
+    Badminton: "sports",
+  };
+  return map[catId] ?? catId;
+}
+
 export const CATEGORIES = [
   { id: "all", label: "ALL", labelHindi: "सभी", emoji: "🛒" },
   { id: "fashion", label: "FASHION", labelHindi: "फैशन", emoji: "👗" },
   { id: "appliances", label: "APPLIANCES", labelHindi: "उपकरण", emoji: "🧺" },
-  { id: "mobile", label: "MOBILE", labelHindi: "मोबाइल", emoji: "📱" },
+  { id: "mobile", label: "MOBILES", labelHindi: "मोबाइल", emoji: "📱" },
   {
     id: "electronics",
     label: "ELECTRONICS",
@@ -58,301 +120,31 @@ export const CATEGORIES = [
     labelHindi: "स्मार्ट गैजेट",
     emoji: "⌚",
   },
-  { id: "home", label: "HOME & KITCHEN", labelHindi: "घर & रसोई", emoji: "🏠" },
-  { id: "beauty", label: "BEAUTY & CARE", labelHindi: "सौंदर्य", emoji: "💄" },
-  { id: "toys", label: "TOYS & BABY", labelHindi: "खिलौने", emoji: "🧸" },
+  { id: "home", label: "HOME & DECOR", labelHindi: "घर सजावट", emoji: "🏠" },
+  {
+    id: "beauty",
+    label: "BEAUTY & PERSONAL CARE",
+    labelHindi: "सौंदर्य",
+    emoji: "💄",
+  },
+  { id: "toys", label: "TOYS & BABY CARE", labelHindi: "खिलौने", emoji: "🧸" },
   {
     id: "food-health",
-    label: "FOOD & HEALTH",
+    label: "FOOD & HEALTH CARE",
     labelHindi: "खाना & स्वास्थ्य",
     emoji: "🌿",
   },
-  { id: "sports", label: "SPORTS & FITNESS", labelHindi: "खेलकूद", emoji: "⚽" },
   { id: "auto", label: "AUTO ACCESSORIES", labelHindi: "ऑटो", emoji: "🚗" },
   { id: "furniture", label: "FURNITURE", labelHindi: "फर्नीचर", emoji: "🛋️" },
   { id: "books", label: "BOOKS & MEDIA", labelHindi: "किताबें", emoji: "📚" },
   {
     id: "home-service",
-    label: "HOME SERVICE",
+    label: "HOME SERVICES",
     labelHindi: "घरेलू सेवा",
     emoji: "🔧",
   },
-  {
-    id: "Men's Essentials",
-    label: "MEN'S ESSENTIALS",
-    labelHindi: "पुरुष आवश्यकताएं",
-    emoji: "👔",
-  },
-  {
-    id: "Woman's clothing",
-    label: "WOMEN'S CLOTHING",
-    labelHindi: "महिला वस्त्र",
-    emoji: "👗",
-  },
-  {
-    id: "Woman footwear & accessories",
-    label: "WOMEN'S FOOTWEAR",
-    labelHindi: "महिला जूते",
-    emoji: "👠",
-  },
-  {
-    id: "Women's Essentials",
-    label: "WOMEN'S ESSENTIALS",
-    labelHindi: "महिला आवश्यकताएं",
-    emoji: "👜",
-  },
-  {
-    id: "Kid's Fashion",
-    label: "KID'S FASHION",
-    labelHindi: "बच्चों के कपड़े",
-    emoji: "🧒",
-  },
-  {
-    id: "Air conditioners",
-    label: "AIR CONDITIONERS",
-    labelHindi: "एयर कंडीशनर",
-    emoji: "❄️",
-  },
-  {
-    id: "Refrigerators",
-    label: "REFRIGERATORS",
-    labelHindi: "फ्रिज",
-    emoji: "🧊",
-  },
-  {
-    id: "Televisions",
-    label: "TELEVISIONS",
-    labelHindi: "टेलीविजन",
-    emoji: "📺",
-  },
-  {
-    id: "Suitcase, Bags & backpacks",
-    label: "BAGS & BACKPACKS",
-    labelHindi: "बैग",
-    emoji: "🎒",
-  },
-  {
-    id: "Washing machines",
-    label: "WASHING MACHINES",
-    labelHindi: "वॉशिंग मशीन",
-    emoji: "🫧",
-  },
-  {
-    id: "Seasonal appliances",
-    label: "SEASONAL APPLIANCES",
-    labelHindi: "मौसमी उपकरण",
-    emoji: "🌬️",
-  },
-  {
-    id: "Kitchen appliances",
-    label: "KITCHEN APPLIANCES",
-    labelHindi: "रसोई उपकरण",
-    emoji: "🍳",
-  },
-  {
-    id: "Home appliances",
-    label: "HOME APPLIANCES",
-    labelHindi: "घरेलू उपकरण",
-    emoji: "🔌",
-  },
-  {
-    id: "Microwave oven",
-    label: "MICROWAVE OVEN",
-    labelHindi: "माइक्रोवेव",
-    emoji: "📦",
-  },
-  { id: "Mobiles", label: "MOBILES", labelHindi: "मोबाइल फोन", emoji: "📱" },
-  { id: "Laptops", label: "LAPTOPS", labelHindi: "लैपटॉप", emoji: "💻" },
-  {
-    id: "Personal care appliances",
-    label: "PERSONAL CARE",
-    labelHindi: "व्यक्तिगत देखभाल",
-    emoji: "💆",
-  },
-  { id: "Tables", label: "TABLES", labelHindi: "टेबल", emoji: "🪑" },
-  {
-    id: "Computer peripheral",
-    label: "COMPUTER PERIPHERALS",
-    labelHindi: "कंप्यूटर",
-    emoji: "🖥️",
-  },
-  {
-    id: "Computer accessories",
-    label: "COMPUTER ACCESSORIES",
-    labelHindi: "कंप्यूटर सहायक",
-    emoji: "⌨️",
-  },
-  { id: "Storage", label: "STORAGE", labelHindi: "स्टोरेज", emoji: "💾" },
-  { id: "Camera", label: "CAMERAS", labelHindi: "कैमरा", emoji: "📷" },
-  {
-    id: "Health care device",
-    label: "HEALTH CARE",
-    labelHindi: "स्वास्थ्य उपकरण",
-    emoji: "🏥",
-  },
-  {
-    id: "Headphones & speakers",
-    label: "HEADPHONES & SPEAKERS",
-    labelHindi: "हेडफोन",
-    emoji: "🎧",
-  },
-  {
-    id: "Smart wearables",
-    label: "SMART WEARABLES",
-    labelHindi: "स्मार्ट वियरेबल",
-    emoji: "⌚",
-  },
-  {
-    id: "Cases covers & more",
-    label: "CASES & COVERS",
-    labelHindi: "केस कवर",
-    emoji: "📱",
-  },
-  {
-    id: "Mobile accessories",
-    label: "MOBILE ACCESSORIES",
-    labelHindi: "मोबाइल सहायक",
-    emoji: "🔌",
-  },
-  { id: "Gaming", label: "GAMING", labelHindi: "गेमिंग", emoji: "🎮" },
-  {
-    id: "Power banks",
-    label: "POWER BANKS",
-    labelHindi: "पावर बैंक",
-    emoji: "🔋",
-  },
-  {
-    id: "Smart home automation",
-    label: "SMART HOME",
-    labelHindi: "स्मार्ट होम",
-    emoji: "🏠",
-  },
-  {
-    id: "Home improvement tools",
-    label: "HOME TOOLS",
-    labelHindi: "होम टूल्स",
-    emoji: "🔨",
-  },
-  {
-    id: "Decor & lighting",
-    label: "DECOR & LIGHTING",
-    labelHindi: "सजावट",
-    emoji: "💡",
-  },
-  {
-    id: "Skin care",
-    label: "SKIN CARE",
-    labelHindi: "त्वचा देखभाल",
-    emoji: "🧴",
-  },
-  { id: "Hair care", label: "HAIR CARE", labelHindi: "बाल देखभाल", emoji: "💇" },
-  { id: "Fragrance", label: "FRAGRANCE", labelHindi: "इत्र", emoji: "🌸" },
-  { id: "Beauty", label: "BEAUTY", labelHindi: "सौंदर्य", emoji: "💄" },
-  {
-    id: "Daily essentials",
-    label: "DAILY ESSENTIALS",
-    labelHindi: "दैनिक जरूरतें",
-    emoji: "🧹",
-  },
-  { id: "Baby care", label: "BABY CARE", labelHindi: "शिशु देखभाल", emoji: "👶" },
-  {
-    id: "Stationery & school supplies",
-    label: "STATIONERY",
-    labelHindi: "स्टेशनरी",
-    emoji: "✏️",
-  },
-  {
-    id: "Nutrition & healthcare",
-    label: "NUTRITION & HEALTH",
-    labelHindi: "पोषण",
-    emoji: "💊",
-  },
-  {
-    id: "Household supplies",
-    label: "HOUSEHOLD SUPPLIES",
-    labelHindi: "घरेलू सामान",
-    emoji: "🧽",
-  },
-  {
-    id: "SportsCycles",
-    label: "SPORTS CYCLES",
-    labelHindi: "साइकिल",
-    emoji: "🚴",
-  },
-  {
-    id: "Exercise bikes",
-    label: "EXERCISE BIKES",
-    labelHindi: "एक्सरसाइज बाइक",
-    emoji: "🚵",
-  },
-  {
-    id: "Premium Treadmills",
-    label: "TREADMILLS",
-    labelHindi: "ट्रेडमिल",
-    emoji: "🏃",
-  },
-  {
-    id: "Fitness accessories",
-    label: "FITNESS ACCESSORIES",
-    labelHindi: "फिटनेस",
-    emoji: "🏋️",
-  },
-  { id: "Cricket", label: "CRICKET", labelHindi: "क्रिकेट", emoji: "🏏" },
-  { id: "Badminton", label: "BADMINTON", labelHindi: "बैडमिंटन", emoji: "🏸" },
-  {
-    id: "Bike accessories",
-    label: "BIKE ACCESSORIES",
-    labelHindi: "बाइक सहायक",
-    emoji: "🏍️",
-  },
-  {
-    id: "Car accessories",
-    label: "CAR ACCESSORIES",
-    labelHindi: "कार सहायक",
-    emoji: "🚗",
-  },
-  {
-    id: "Bedroom furniture",
-    label: "BEDROOM FURNITURE",
-    labelHindi: "बेडरूम",
-    emoji: "🛏️",
-  },
-  {
-    id: "Living room furniture",
-    label: "LIVING ROOM",
-    labelHindi: "लिविंग रूम",
-    emoji: "🛋️",
-  },
-  {
-    id: "Study & office furniture",
-    label: "OFFICE FURNITURE",
-    labelHindi: "ऑफिस फर्नीचर",
-    emoji: "🪑",
-  },
-  {
-    id: "Dining & kitchen",
-    label: "DINING & KITCHEN",
-    labelHindi: "डाइनिंग",
-    emoji: "🍽️",
-  },
-  {
-    id: "Outdoor furniture",
-    label: "OUTDOOR FURNITURE",
-    labelHindi: "बाहरी फर्नीचर",
-    emoji: "⛱️",
-  },
-  {
-    id: "Kids' room furniture",
-    label: "KIDS' FURNITURE",
-    labelHindi: "बच्चों का फर्नीचर",
-    emoji: "🧸",
-  },
-  {
-    id: "Storage furniture",
-    label: "STORAGE FURNITURE",
-    labelHindi: "स्टोरेज फर्नीचर",
-    emoji: "🗄️",
-  },
+  { id: "grocery", label: "GROCERY", labelHindi: "किराना", emoji: "🛒" },
+  { id: "sports", label: "SPORT & FITNESS", labelHindi: "खेल", emoji: "🏃" },
 ];
 
 const BASE_PRODUCTS: SampleProduct[] = [
@@ -3174,7 +2966,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 420,
     name: "Jockey Cotton Briefs Pack of 3",
-    category: "Men's Essentials",
+    category: "fashion",
     price: 399,
     originalPrice: 599,
     image: "/assets/generated/fashion-mens-innerwear.dim_400x400.jpg",
@@ -3187,7 +2979,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 421,
     name: "Dollar Bigboss Vest Pack of 5",
-    category: "Men's Essentials",
+    category: "fashion",
     price: 349,
     originalPrice: 499,
     image: "/assets/generated/toys-doll.dim_400x400.jpg",
@@ -3200,7 +2992,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 422,
     name: "VIP Frenchie Trunks Pack of 3",
-    category: "Men's Essentials",
+    category: "fashion",
     price: 449,
     originalPrice: 650,
     image: "/assets/generated/fashion-mens-innerwear.dim_400x400.jpg",
@@ -3213,7 +3005,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 423,
     name: "Hanes Crew Neck T-Shirt Pack of 3",
-    category: "Men's Essentials",
+    category: "fashion",
     price: 599,
     originalPrice: 899,
     image: "/assets/generated/fashion-mens-tshirt-pack.dim_400x400.jpg",
@@ -3226,7 +3018,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 424,
     name: "Lux Cozi Thermal Set",
-    category: "Men's Essentials",
+    category: "fashion",
     price: 799,
     originalPrice: 1199,
     image: "/assets/generated/fashion-denim-jeans.dim_400x400.jpg",
@@ -3239,7 +3031,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 425,
     name: "Rupa Frontline Boxer Pack of 2",
-    category: "Men's Essentials",
+    category: "fashion",
     price: 299,
     originalPrice: 450,
     image: "/assets/generated/grocery-ghee.dim_400x400.jpg",
@@ -3252,7 +3044,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 426,
     name: "Puma Men's Sports Socks Pack of 3",
-    category: "Men's Essentials",
+    category: "fashion",
     price: 499,
     originalPrice: 699,
     image: "/assets/generated/product-sports-shoes.dim_400x400.jpg",
@@ -3265,7 +3057,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 427,
     name: "Calvin Klein Cotton Handkerchief Set",
-    category: "Men's Essentials",
+    category: "fashion",
     price: 349,
     originalPrice: 499,
     image: "/assets/generated/grocery-ghee.dim_400x400.jpg",
@@ -3278,7 +3070,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 428,
     name: "Peter England Men's Formal Belt",
-    category: "Men's Essentials",
+    category: "fashion",
     price: 799,
     originalPrice: 1299,
     image: "/assets/generated/grocery-ghee.dim_400x400.jpg",
@@ -3291,7 +3083,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 429,
     name: "Van Heusen Men's Wallet",
-    category: "Men's Essentials",
+    category: "fashion",
     price: 999,
     originalPrice: 1799,
     image: "/assets/generated/product-mens-shirt.dim_400x400.jpg",
@@ -3306,7 +3098,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 430,
     name: "Biba Anarkali Kurta",
-    category: "Woman's clothing",
+    category: "fashion",
     price: 1299,
     originalPrice: 2199,
     image: "/assets/generated/garment-kurta.dim_400x400.jpg",
@@ -3319,7 +3111,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 431,
     name: "W for Woman Straight Kurta",
-    category: "Woman's clothing",
+    category: "fashion",
     price: 999,
     originalPrice: 1599,
     image: "/assets/generated/garment-kurta.dim_400x400.jpg",
@@ -3332,7 +3124,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 432,
     name: "AND Women's Wrap Dress",
-    category: "Woman's clothing",
+    category: "fashion",
     price: 1799,
     originalPrice: 2999,
     image: "/assets/generated/grocery-ghee.dim_400x400.jpg",
@@ -3345,7 +3137,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 433,
     name: "Fabindia Cotton Salwar Suit",
-    category: "Woman's clothing",
+    category: "fashion",
     price: 1599,
     originalPrice: 2500,
     image: "/assets/generated/garment-kurta.dim_400x400.jpg",
@@ -3358,7 +3150,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 434,
     name: "Global Desi Printed Maxi Dress",
-    category: "Woman's clothing",
+    category: "fashion",
     price: 1499,
     originalPrice: 2399,
     image: "/assets/generated/home-tiffin-box.dim_400x400.jpg",
@@ -3371,7 +3163,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 435,
     name: "Aurelia Women's Palazzos",
-    category: "Woman's clothing",
+    category: "fashion",
     price: 799,
     originalPrice: 1299,
     image: "/assets/generated/grocery-ghee.dim_400x400.jpg",
@@ -3384,7 +3176,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 436,
     name: "Zara Women's Blazer",
-    category: "Woman's clothing",
+    category: "fashion",
     price: 3999,
     originalPrice: 5999,
     image: "/assets/generated/fashion-denim-jeans.dim_400x400.jpg",
@@ -3397,7 +3189,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 437,
     name: "Levi's Women's Skinny Jeans",
-    category: "Woman's clothing",
+    category: "fashion",
     price: 2499,
     originalPrice: 3999,
     image: "/assets/generated/fashion-denim-jeans.dim_400x400.jpg",
@@ -3410,7 +3202,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 438,
     name: "H&M Floral Midi Skirt",
-    category: "Woman's clothing",
+    category: "fashion",
     price: 1199,
     originalPrice: 1899,
     image: "/assets/generated/grocery-ghee.dim_400x400.jpg",
@@ -3423,7 +3215,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 439,
     name: "Manyavar Women's Lehenga Choli",
-    category: "Woman's clothing",
+    category: "fashion",
     price: 4999,
     originalPrice: 8999,
     image: "/assets/generated/garment-kurta.dim_400x400.jpg",
@@ -3438,7 +3230,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 440,
     name: "Metro Heeled Sandals",
-    category: "Woman footwear & accessories",
+    category: "fashion",
     price: 1299,
     originalPrice: 2199,
     image: "/assets/generated/grocery-toor-dal.dim_400x400.jpg",
@@ -3451,7 +3243,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 441,
     name: "Inc.5 Wedge Heels",
-    category: "Woman footwear & accessories",
+    category: "fashion",
     price: 1499,
     originalPrice: 2499,
     image: "/assets/generated/grocery-ghee.dim_400x400.jpg",
@@ -3464,7 +3256,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 442,
     name: "Bata Comfort Ballet Flats",
-    category: "Woman footwear & accessories",
+    category: "fashion",
     price: 799,
     originalPrice: 1299,
     image: "/assets/generated/grocery-ghee.dim_400x400.jpg",
@@ -3477,7 +3269,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 443,
     name: "Catwalk Block Heel Pumps",
-    category: "Woman footwear & accessories",
+    category: "fashion",
     price: 1799,
     originalPrice: 2999,
     image: "/assets/generated/grocery-ghee.dim_400x400.jpg",
@@ -3490,7 +3282,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 444,
     name: "Lavie Women's Handbag",
-    category: "Woman footwear & accessories",
+    category: "fashion",
     price: 1999,
     originalPrice: 3499,
     image: "/assets/generated/home-tiffin-box.dim_400x400.jpg",
@@ -3503,7 +3295,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 445,
     name: "Hidesign Leather Tote Bag",
-    category: "Woman footwear & accessories",
+    category: "fashion",
     price: 3499,
     originalPrice: 5999,
     image: "/assets/generated/home-tiffin-box.dim_400x400.jpg",
@@ -3516,7 +3308,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 446,
     name: "Titan Raga Women's Watch",
-    category: "Woman footwear & accessories",
+    category: "fashion",
     price: 4999,
     originalPrice: 7999,
     image: "/assets/generated/grocery-ghee.dim_400x400.jpg",
@@ -3529,7 +3321,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 447,
     name: "Accessorize Silk Scarf",
-    category: "Woman footwear & accessories",
+    category: "fashion",
     price: 599,
     originalPrice: 999,
     image: "/assets/generated/grocery-ghee.dim_400x400.jpg",
@@ -3542,7 +3334,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 448,
     name: "Aldo Crossbody Sling Bag",
-    category: "Woman footwear & accessories",
+    category: "fashion",
     price: 2499,
     originalPrice: 3999,
     image: "/assets/generated/home-tiffin-box.dim_400x400.jpg",
@@ -3555,7 +3347,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 449,
     name: "Jaipur Rajasthani Jutis",
-    category: "Woman footwear & accessories",
+    category: "fashion",
     price: 699,
     originalPrice: 1099,
     image: "/assets/generated/grocery-ghee.dim_400x400.jpg",
@@ -3570,7 +3362,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 450,
     name: "Jockey Women's Bra Pack of 2",
-    category: "Women's Essentials",
+    category: "fashion",
     price: 599,
     originalPrice: 899,
     image: "/assets/generated/grocery-ghee.dim_400x400.jpg",
@@ -3583,7 +3375,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 451,
     name: "Enamor Everyday Panty Pack of 3",
-    category: "Women's Essentials",
+    category: "fashion",
     price: 449,
     originalPrice: 699,
     image: "/assets/generated/grocery-ghee.dim_400x400.jpg",
@@ -3596,7 +3388,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 452,
     name: "Amante Sports Bra",
-    category: "Women's Essentials",
+    category: "fashion",
     price: 799,
     originalPrice: 1299,
     image: "/assets/generated/grocery-ghee.dim_400x400.jpg",
@@ -3609,7 +3401,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 453,
     name: "Prettysecrets Seamless Leggings",
-    category: "Women's Essentials",
+    category: "fashion",
     price: 699,
     originalPrice: 1099,
     image: "/assets/generated/grocery-ghee.dim_400x400.jpg",
@@ -3622,7 +3414,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 454,
     name: "Vero Moda Women's Camisole",
-    category: "Women's Essentials",
+    category: "fashion",
     price: 399,
     originalPrice: 599,
     image: "/assets/generated/grocery-ghee.dim_400x400.jpg",
@@ -3635,7 +3427,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 455,
     name: "Clovia Night Suit Set",
-    category: "Women's Essentials",
+    category: "fashion",
     price: 999,
     originalPrice: 1599,
     image: "/assets/generated/fashion-denim-jeans.dim_400x400.jpg",
@@ -3648,7 +3440,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 456,
     name: "Bodycare Cotton Thermal Set",
-    category: "Women's Essentials",
+    category: "fashion",
     price: 849,
     originalPrice: 1299,
     image: "/assets/generated/fashion-denim-jeans.dim_400x400.jpg",
@@ -3661,7 +3453,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 457,
     name: "Hanes Women's Crew Socks Pack of 6",
-    category: "Women's Essentials",
+    category: "fashion",
     price: 499,
     originalPrice: 799,
     image: "/assets/generated/fashion-mens-tshirt-pack.dim_400x400.jpg",
@@ -3674,7 +3466,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 458,
     name: "Libra Menstrual Cup",
-    category: "Women's Essentials",
+    category: "fashion",
     price: 299,
     originalPrice: 499,
     image: "/assets/generated/grocery-ghee.dim_400x400.jpg",
@@ -3687,7 +3479,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 459,
     name: "Whisper Ultra Sanitary Pads Pack",
-    category: "Women's Essentials",
+    category: "fashion",
     price: 249,
     originalPrice: 349,
     image: "/assets/generated/grocery-ghee.dim_400x400.jpg",
@@ -3702,7 +3494,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 460,
     name: "H&M Kids Denim Jacket",
-    category: "Kid's Fashion",
+    category: "fashion",
     price: 1299,
     originalPrice: 1999,
     image: "/assets/generated/fashion-denim-jeans.dim_400x400.jpg",
@@ -3715,7 +3507,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 461,
     name: "Mothercare Baby Romper Set",
-    category: "Kid's Fashion",
+    category: "fashion",
     price: 799,
     originalPrice: 1299,
     image: "/assets/generated/fashion-denim-jeans.dim_400x400.jpg",
@@ -3728,7 +3520,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 462,
     name: "Lilliput Boys Printed T-Shirt",
-    category: "Kid's Fashion",
+    category: "fashion",
     price: 499,
     originalPrice: 799,
     image: "/assets/generated/fashion-mens-tshirt-pack.dim_400x400.jpg",
@@ -3741,7 +3533,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 463,
     name: "UCB Kids Girls Frock",
-    category: "Kid's Fashion",
+    category: "fashion",
     price: 999,
     originalPrice: 1599,
     image: "/assets/generated/fashion-denim-jeans.dim_400x400.jpg",
@@ -3754,7 +3546,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 464,
     name: "Bata Kids Sports Shoes",
-    category: "Kid's Fashion",
+    category: "fashion",
     price: 1199,
     originalPrice: 1799,
     image: "/assets/generated/product-sports-shoes.dim_400x400.jpg",
@@ -3767,7 +3559,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 465,
     name: "Gini & Jony Boys Cargo Pants",
-    category: "Kid's Fashion",
+    category: "fashion",
     price: 799,
     originalPrice: 1299,
     image: "/assets/generated/fashion-denim-jeans.dim_400x400.jpg",
@@ -3780,7 +3572,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 466,
     name: "Polka Tots Newborn Gift Set",
-    category: "Kid's Fashion",
+    category: "fashion",
     price: 1499,
     originalPrice: 2499,
     image: "/assets/generated/fashion-denim-jeans.dim_400x400.jpg",
@@ -3793,7 +3585,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 467,
     name: "Disney Frozen Girls Dress",
-    category: "Kid's Fashion",
+    category: "fashion",
     price: 1199,
     originalPrice: 1899,
     image: "/assets/generated/fashion-denim-jeans.dim_400x400.jpg",
@@ -3806,7 +3598,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 468,
     name: "Puma Kids Running Shoes",
-    category: "Kid's Fashion",
+    category: "fashion",
     price: 1999,
     originalPrice: 2999,
     image: "/assets/generated/product-sports-shoes.dim_400x400.jpg",
@@ -3819,7 +3611,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 469,
     name: "Vitamins Baby Cartoon Socks Set",
-    category: "Kid's Fashion",
+    category: "fashion",
     price: 249,
     originalPrice: 399,
     image: "/assets/generated/fashion-denim-jeans.dim_400x400.jpg",
@@ -3834,7 +3626,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 470,
     name: "Daikin 1.5 Ton 5 Star Inverter AC",
-    category: "Air conditioners",
+    category: "appliances",
     price: 42999,
     originalPrice: 55999,
     image: "/assets/generated/grocery-ghee.dim_400x400.jpg",
@@ -3847,7 +3639,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 471,
     name: "Voltas 1 Ton 3 Star Window AC",
-    category: "Air conditioners",
+    category: "appliances",
     price: 27999,
     originalPrice: 35999,
     image: "/assets/generated/product-ac-unit.dim_400x400.jpg",
@@ -3860,7 +3652,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 472,
     name: "LG Dual Inverter 1.5 Ton 5 Star AC",
-    category: "Air conditioners",
+    category: "appliances",
     price: 45999,
     originalPrice: 60000,
     image: "/assets/generated/grocery-ghee.dim_400x400.jpg",
@@ -3873,7 +3665,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 473,
     name: "Samsung Wind-Free 1.5 Ton AC",
-    category: "Air conditioners",
+    category: "appliances",
     price: 48999,
     originalPrice: 63000,
     image: "/assets/generated/grocery-ghee.dim_400x400.jpg",
@@ -3886,7 +3678,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 474,
     name: "Carrier 2 Ton 3 Star Inverter AC",
-    category: "Air conditioners",
+    category: "appliances",
     price: 52999,
     originalPrice: 68000,
     image: "/assets/generated/grocery-ghee.dim_400x400.jpg",
@@ -3899,7 +3691,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 475,
     name: "Whirlpool 1.5 Ton 3 Star AC",
-    category: "Air conditioners",
+    category: "appliances",
     price: 33999,
     originalPrice: 44999,
     image: "/assets/generated/grocery-ghee.dim_400x400.jpg",
@@ -3912,7 +3704,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 476,
     name: "Hitachi 1 Ton 5 Star Inverter AC",
-    category: "Air conditioners",
+    category: "appliances",
     price: 38999,
     originalPrice: 49999,
     image: "/assets/generated/grocery-ghee.dim_400x400.jpg",
@@ -3925,7 +3717,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 477,
     name: "Blue Star 1.5 Ton Split AC",
-    category: "Air conditioners",
+    category: "appliances",
     price: 36999,
     originalPrice: 47999,
     image: "/assets/generated/product-ac-unit.dim_400x400.jpg",
@@ -3938,7 +3730,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 478,
     name: "Panasonic 2 Ton 5 Star AC",
-    category: "Air conditioners",
+    category: "appliances",
     price: 55999,
     originalPrice: 72000,
     image: "/assets/generated/grocery-ghee.dim_400x400.jpg",
@@ -3951,7 +3743,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 479,
     name: "Godrej 1.5 Ton Inverter AC",
-    category: "Air conditioners",
+    category: "appliances",
     price: 31999,
     originalPrice: 41999,
     image: "/assets/generated/grocery-ghee.dim_400x400.jpg",
@@ -3966,7 +3758,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 480,
     name: "Samsung 253L Double Door Fridge",
-    category: "Refrigerators",
+    category: "appliances",
     price: 28999,
     originalPrice: 38999,
     image: "/assets/generated/appliance-refrigerator.dim_400x400.jpg",
@@ -3979,7 +3771,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 481,
     name: "LG 190L Single Door Refrigerator",
-    category: "Refrigerators",
+    category: "appliances",
     price: 16999,
     originalPrice: 22999,
     image: "/assets/generated/appliance-refrigerator.dim_400x400.jpg",
@@ -3992,7 +3784,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 482,
     name: "Whirlpool 340L Triple Door Fridge",
-    category: "Refrigerators",
+    category: "appliances",
     price: 34999,
     originalPrice: 46999,
     image: "/assets/generated/appliance-refrigerator.dim_400x400.jpg",
@@ -4005,7 +3797,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 483,
     name: "Haier 320L French Door Refrigerator",
-    category: "Refrigerators",
+    category: "appliances",
     price: 42999,
     originalPrice: 58000,
     image: "/assets/generated/appliance-refrigerator.dim_400x400.jpg",
@@ -4018,7 +3810,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 484,
     name: "Godrej 99L Mini Fridge",
-    category: "Refrigerators",
+    category: "appliances",
     price: 8999,
     originalPrice: 12999,
     image: "/assets/generated/appliance-refrigerator.dim_400x400.jpg",
@@ -4031,7 +3823,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 485,
     name: "Bosch 559L Side-by-Side Fridge",
-    category: "Refrigerators",
+    category: "appliances",
     price: 89999,
     originalPrice: 115000,
     image: "/assets/generated/appliance-refrigerator.dim_400x400.jpg",
@@ -4044,7 +3836,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 486,
     name: "Panasonic 268L Double Door Fridge",
-    category: "Refrigerators",
+    category: "appliances",
     price: 27999,
     originalPrice: 37000,
     image: "/assets/generated/appliance-refrigerator.dim_400x400.jpg",
@@ -4057,7 +3849,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 487,
     name: "Voltas Beko 215L Fridge",
-    category: "Refrigerators",
+    category: "appliances",
     price: 19999,
     originalPrice: 26999,
     image: "/assets/generated/appliance-refrigerator.dim_400x400.jpg",
@@ -4070,7 +3862,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 488,
     name: "Hitachi 318L Frost Free Fridge",
-    category: "Refrigerators",
+    category: "appliances",
     price: 31999,
     originalPrice: 43000,
     image: "/assets/generated/appliance-refrigerator.dim_400x400.jpg",
@@ -4083,7 +3875,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 489,
     name: "IFB 300L Double Door Refrigerator",
-    category: "Refrigerators",
+    category: "appliances",
     price: 26999,
     originalPrice: 35999,
     image: "/assets/generated/appliance-refrigerator.dim_400x400.jpg",
@@ -4098,7 +3890,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 490,
     name: 'Sony Bravia 55" 4K OLED TV',
-    category: "Televisions",
+    category: "electronics",
     price: 129999,
     originalPrice: 165000,
     image: "/assets/generated/appliance-refrigerator.dim_400x400.jpg",
@@ -4111,7 +3903,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 491,
     name: 'Samsung 43" Crystal 4K UHD TV',
-    category: "Televisions",
+    category: "electronics",
     price: 42999,
     originalPrice: 58000,
     image: "/assets/generated/appliance-refrigerator.dim_400x400.jpg",
@@ -4124,7 +3916,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 492,
     name: 'LG 50" NanoCell 4K Smart TV',
-    category: "Televisions",
+    category: "electronics",
     price: 69999,
     originalPrice: 90000,
     image: "/assets/generated/appliance-refrigerator.dim_400x400.jpg",
@@ -4137,7 +3929,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 493,
     name: 'Mi 32" HD Ready Smart TV',
-    category: "Televisions",
+    category: "electronics",
     price: 12999,
     originalPrice: 18999,
     image: "/assets/generated/appliance-refrigerator.dim_400x400.jpg",
@@ -4150,7 +3942,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 494,
     name: 'OnePlus 65" QLED TV',
-    category: "Televisions",
+    category: "electronics",
     price: 89999,
     originalPrice: 119999,
     image: "/assets/generated/appliance-refrigerator.dim_400x400.jpg",
@@ -4163,7 +3955,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 495,
     name: 'TCL 55" QLED 4K Android TV',
-    category: "Televisions",
+    category: "electronics",
     price: 54999,
     originalPrice: 74999,
     image: "/assets/generated/appliance-refrigerator.dim_400x400.jpg",
@@ -4176,7 +3968,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 496,
     name: 'Hisense 40" Full HD Smart TV',
-    category: "Televisions",
+    category: "electronics",
     price: 22999,
     originalPrice: 31999,
     image: "/assets/generated/appliance-refrigerator.dim_400x400.jpg",
@@ -4189,7 +3981,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 497,
     name: 'Vu 75" Cinema TV 4K',
-    category: "Televisions",
+    category: "electronics",
     price: 74999,
     originalPrice: 99999,
     image: "/assets/generated/appliance-refrigerator.dim_400x400.jpg",
@@ -4202,7 +3994,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 498,
     name: 'Panasonic 49" 4K Smart TV',
-    category: "Televisions",
+    category: "electronics",
     price: 45999,
     originalPrice: 61999,
     image: "/assets/generated/appliance-refrigerator.dim_400x400.jpg",
@@ -4215,7 +4007,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 499,
     name: 'Toshiba 32" HD LED TV',
-    category: "Televisions",
+    category: "electronics",
     price: 10999,
     originalPrice: 15999,
     image: "/assets/generated/appliance-refrigerator.dim_400x400.jpg",
@@ -4230,7 +4022,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 500,
     name: "American Tourister 68cm Trolley Bag",
-    category: "Suitcase, Bags & backpacks",
+    category: "fashion",
     price: 5999,
     originalPrice: 9999,
     image: "/assets/generated/home-tiffin-box.dim_400x400.jpg",
@@ -4243,7 +4035,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 501,
     name: "Samsonite 55cm Cabin Trolley",
-    category: "Suitcase, Bags & backpacks",
+    category: "fashion",
     price: 8999,
     originalPrice: 14999,
     image: "/assets/generated/home-tiffin-box.dim_400x400.jpg",
@@ -4256,7 +4048,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 502,
     name: "VIP Skybag 78cm Large Trolley",
-    category: "Suitcase, Bags & backpacks",
+    category: "fashion",
     price: 4499,
     originalPrice: 7999,
     image: "/assets/generated/home-tiffin-box.dim_400x400.jpg",
@@ -4269,7 +4061,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 503,
     name: "Safari Cabin Trolley 55cm",
-    category: "Suitcase, Bags & backpacks",
+    category: "fashion",
     price: 3499,
     originalPrice: 5999,
     image: "/assets/generated/home-tiffin-box.dim_400x400.jpg",
@@ -4282,7 +4074,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 504,
     name: "Wildcraft 45L Trekking Backpack",
-    category: "Suitcase, Bags & backpacks",
+    category: "fashion",
     price: 2999,
     originalPrice: 4999,
     image: "/assets/generated/home-tiffin-box.dim_400x400.jpg",
@@ -4295,7 +4087,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 505,
     name: "Puma 30L Sports Backpack",
-    category: "Suitcase, Bags & backpacks",
+    category: "fashion",
     price: 1799,
     originalPrice: 2999,
     image: "/assets/generated/product-sports-shoes.dim_400x400.jpg",
@@ -4308,7 +4100,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 506,
     name: 'Dell 15.6" Laptop Backpack',
-    category: "Suitcase, Bags & backpacks",
+    category: "fashion",
     price: 1299,
     originalPrice: 1999,
     image: "/assets/generated/product-sports-shoes.dim_400x400.jpg",
@@ -4321,7 +4113,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 507,
     name: "Baggit Sling Bag",
-    category: "Suitcase, Bags & backpacks",
+    category: "fashion",
     price: 1499,
     originalPrice: 2499,
     image: "/assets/generated/home-tiffin-box.dim_400x400.jpg",
@@ -4334,7 +4126,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 508,
     name: "Skybags Trolley School Bag",
-    category: "Suitcase, Bags & backpacks",
+    category: "fashion",
     price: 999,
     originalPrice: 1799,
     image: "/assets/generated/home-tiffin-box.dim_400x400.jpg",
@@ -4347,7 +4139,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 509,
     name: "Fossil Men's Messenger Bag",
-    category: "Suitcase, Bags & backpacks",
+    category: "fashion",
     price: 3999,
     originalPrice: 6999,
     image: "/assets/generated/home-tiffin-box.dim_400x400.jpg",
@@ -4362,7 +4154,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 510,
     name: "LG 7kg Front Load Washing Machine",
-    category: "Washing machines",
+    category: "appliances",
     price: 35999,
     originalPrice: 48000,
     image: "/assets/generated/appliance-washing-machine.dim_400x400.jpg",
@@ -4375,7 +4167,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 511,
     name: "Samsung 6.5kg Top Load Washing Machine",
-    category: "Washing machines",
+    category: "appliances",
     price: 22999,
     originalPrice: 31999,
     image: "/assets/generated/appliance-washing-machine.dim_400x400.jpg",
@@ -4388,7 +4180,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 512,
     name: "Whirlpool 8kg Front Load Washer",
-    category: "Washing machines",
+    category: "appliances",
     price: 39999,
     originalPrice: 54999,
     image: "/assets/generated/appliance-washing-machine.dim_400x400.jpg",
@@ -4401,7 +4193,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 513,
     name: "IFB 6kg Fully Automatic Top Load",
-    category: "Washing machines",
+    category: "appliances",
     price: 18999,
     originalPrice: 25999,
     image: "/assets/generated/appliance-washing-machine.dim_400x400.jpg",
@@ -4414,7 +4206,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 514,
     name: "Bosch 7kg Front Load Washing Machine",
-    category: "Washing machines",
+    category: "appliances",
     price: 42999,
     originalPrice: 57000,
     image: "/assets/generated/appliance-washing-machine.dim_400x400.jpg",
@@ -4427,7 +4219,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 515,
     name: "Haier 9kg Top Load Washing Machine",
-    category: "Washing machines",
+    category: "appliances",
     price: 29999,
     originalPrice: 40000,
     image: "/assets/generated/appliance-washing-machine.dim_400x400.jpg",
@@ -4440,7 +4232,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 516,
     name: "Godrej 6.5kg Semi Automatic Washing Machine",
-    category: "Washing machines",
+    category: "appliances",
     price: 14999,
     originalPrice: 20999,
     image: "/assets/generated/appliance-washing-machine.dim_400x400.jpg",
@@ -4453,7 +4245,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 517,
     name: "Panasonic 8kg Front Load Washer",
-    category: "Washing machines",
+    category: "appliances",
     price: 38999,
     originalPrice: 52000,
     image: "/assets/generated/appliance-washing-machine.dim_400x400.jpg",
@@ -4466,7 +4258,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 518,
     name: "Voltas Beko 8kg Front Load",
-    category: "Washing machines",
+    category: "appliances",
     price: 32999,
     originalPrice: 44999,
     image: "/assets/generated/appliance-washing-machine.dim_400x400.jpg",
@@ -4479,7 +4271,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 519,
     name: "Siemens 9kg Front Load iQ500",
-    category: "Washing machines",
+    category: "appliances",
     price: 54999,
     originalPrice: 72000,
     image: "/assets/generated/appliance-washing-machine.dim_400x400.jpg",
@@ -4494,7 +4286,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 520,
     name: "Bajaj Room Heater 2000W",
-    category: "Seasonal appliances",
+    category: "appliances",
     price: 2499,
     originalPrice: 3999,
     image: "/assets/generated/product-ac-unit.dim_400x400.jpg",
@@ -4507,7 +4299,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 521,
     name: "Havells Desert Air Cooler 40L",
-    category: "Seasonal appliances",
+    category: "appliances",
     price: 8999,
     originalPrice: 12999,
     image: "/assets/generated/product-ac-unit.dim_400x400.jpg",
@@ -4520,7 +4312,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 522,
     name: "Orient Electric Fan Tower",
-    category: "Seasonal appliances",
+    category: "appliances",
     price: 4499,
     originalPrice: 6999,
     image: "/assets/generated/product-ac-unit.dim_400x400.jpg",
@@ -4533,7 +4325,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 523,
     name: "Usha 1500W Oil Filled Heater",
-    category: "Seasonal appliances",
+    category: "appliances",
     price: 5999,
     originalPrice: 8999,
     image: "/assets/generated/grocery-cooking-oil.dim_400x400.jpg",
@@ -4546,7 +4338,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 524,
     name: "Symphony Personal Air Cooler 12L",
-    category: "Seasonal appliances",
+    category: "appliances",
     price: 3999,
     originalPrice: 5999,
     image: "/assets/generated/product-ac-unit.dim_400x400.jpg",
@@ -4559,7 +4351,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 525,
     name: "Crompton Paddle Fan 400mm",
-    category: "Seasonal appliances",
+    category: "appliances",
     price: 1299,
     originalPrice: 1999,
     image: "/assets/generated/product-ac-unit.dim_400x400.jpg",
@@ -4572,7 +4364,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 526,
     name: "Polycab Ceiling Fan Premium",
-    category: "Seasonal appliances",
+    category: "appliances",
     price: 2999,
     originalPrice: 4499,
     image: "/assets/generated/product-ac-unit.dim_400x400.jpg",
@@ -4585,7 +4377,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 527,
     name: "Blue Star Personal Air Purifier",
-    category: "Seasonal appliances",
+    category: "appliances",
     price: 7999,
     originalPrice: 11999,
     image: "/assets/generated/appliance-mixer-grinder.dim_400x400.jpg",
@@ -4598,7 +4390,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 528,
     name: "Kenstar Air Cooler 50L",
-    category: "Seasonal appliances",
+    category: "appliances",
     price: 10999,
     originalPrice: 15999,
     image: "/assets/generated/product-ac-unit.dim_400x400.jpg",
@@ -4611,7 +4403,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 529,
     name: "Maharaja Whiteline Halogen Heater",
-    category: "Seasonal appliances",
+    category: "appliances",
     price: 1799,
     originalPrice: 2799,
     image: "/assets/generated/product-ac-unit.dim_400x400.jpg",
@@ -4626,7 +4418,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 530,
     name: "Prestige Induction Cooktop 2000W",
-    category: "Kitchen appliances",
+    category: "appliances",
     price: 2999,
     originalPrice: 4499,
     image: "/assets/generated/appliance-mixer-grinder.dim_400x400.jpg",
@@ -4639,7 +4431,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 531,
     name: "Philips Air Fryer 4.1L",
-    category: "Kitchen appliances",
+    category: "appliances",
     price: 7999,
     originalPrice: 11999,
     image: "/assets/generated/appliance-mixer-grinder.dim_400x400.jpg",
@@ -4652,7 +4444,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 532,
     name: "Bajaj Mixer Grinder 750W",
-    category: "Kitchen appliances",
+    category: "appliances",
     price: 2499,
     originalPrice: 3999,
     image: "/assets/generated/appliance-mixer-grinder.dim_400x400.jpg",
@@ -4665,7 +4457,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 533,
     name: "Inalsa Oven Toaster Grill 30L",
-    category: "Kitchen appliances",
+    category: "appliances",
     price: 4999,
     originalPrice: 7499,
     image: "/assets/generated/appliance-mixer-grinder.dim_400x400.jpg",
@@ -4678,7 +4470,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 534,
     name: "Butterfly Electric Kettle 1.5L",
-    category: "Kitchen appliances",
+    category: "appliances",
     price: 899,
     originalPrice: 1499,
     image: "/assets/generated/product-amul-ghee.dim_400x400.jpg",
@@ -4691,7 +4483,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 535,
     name: "Kent Cold Press Juicer",
-    category: "Kitchen appliances",
+    category: "appliances",
     price: 6999,
     originalPrice: 10999,
     image: "/assets/generated/product-juice-bottle.dim_400x400.jpg",
@@ -4704,7 +4496,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 536,
     name: "Havells Toaster Pop-up 2 Slice",
-    category: "Kitchen appliances",
+    category: "appliances",
     price: 1299,
     originalPrice: 1999,
     image: "/assets/generated/appliance-mixer-grinder.dim_400x400.jpg",
@@ -4717,7 +4509,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 537,
     name: "Usha Food Processor FP3811",
-    category: "Kitchen appliances",
+    category: "appliances",
     price: 4499,
     originalPrice: 6999,
     image: "/assets/generated/appliance-mixer-grinder.dim_400x400.jpg",
@@ -4730,7 +4522,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 538,
     name: "Panasonic Rice Cooker 1.8L",
-    category: "Kitchen appliances",
+    category: "appliances",
     price: 2999,
     originalPrice: 4499,
     image: "/assets/generated/grocery-basmati-rice.dim_400x400.jpg",
@@ -4743,7 +4535,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 539,
     name: "Morphy Richards Sandwich Maker",
-    category: "Kitchen appliances",
+    category: "appliances",
     price: 1499,
     originalPrice: 2299,
     image: "/assets/generated/appliance-mixer-grinder.dim_400x400.jpg",
@@ -4758,7 +4550,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 540,
     name: "Dyson V11 Cordless Vacuum Cleaner",
-    category: "Home appliances",
+    category: "appliances",
     price: 42999,
     originalPrice: 55999,
     image: "/assets/generated/appliance-mixer-grinder.dim_400x400.jpg",
@@ -4771,7 +4563,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 541,
     name: "Philips Iron GC2989 Steam Iron",
-    category: "Home appliances",
+    category: "appliances",
     price: 3999,
     originalPrice: 5999,
     image: "/assets/generated/product-tea-packet.dim_400x400.jpg",
@@ -4784,7 +4576,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 542,
     name: "Eureka Forbes Wet & Dry Vacuum",
-    category: "Home appliances",
+    category: "appliances",
     price: 8999,
     originalPrice: 13999,
     image: "/assets/generated/appliance-mixer-grinder.dim_400x400.jpg",
@@ -4797,7 +4589,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 543,
     name: "Kent RO Water Purifier Grand Plus",
-    category: "Home appliances",
+    category: "appliances",
     price: 19999,
     originalPrice: 28999,
     image: "/assets/generated/appliance-mixer-grinder.dim_400x400.jpg",
@@ -4810,7 +4602,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 544,
     name: "Honeywell Air Purifier HAC35M2101W",
-    category: "Home appliances",
+    category: "appliances",
     price: 12999,
     originalPrice: 18999,
     image: "/assets/generated/appliance-mixer-grinder.dim_400x400.jpg",
@@ -4823,7 +4615,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 545,
     name: "Bajaj Majesty Dry Iron 1000W",
-    category: "Home appliances",
+    category: "appliances",
     price: 699,
     originalPrice: 1099,
     image: "/assets/generated/appliance-mixer-grinder.dim_400x400.jpg",
@@ -4836,7 +4628,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 546,
     name: "Mi Robot Vacuum Mop 2 Pro",
-    category: "Home appliances",
+    category: "appliances",
     price: 22999,
     originalPrice: 32999,
     image: "/assets/generated/appliance-mixer-grinder.dim_400x400.jpg",
@@ -4849,7 +4641,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 547,
     name: "Aquaguard Water Purifier Aura",
-    category: "Home appliances",
+    category: "appliances",
     price: 15999,
     originalPrice: 22999,
     image: "/assets/generated/appliance-mixer-grinder.dim_400x400.jpg",
@@ -4862,7 +4654,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 548,
     name: "Usha Ceiling Fan 1200mm Bloom",
-    category: "Home appliances",
+    category: "appliances",
     price: 2199,
     originalPrice: 3299,
     image: "/assets/generated/product-ac-unit.dim_400x400.jpg",
@@ -4875,7 +4667,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 549,
     name: "Havells Exhaust Fan 200mm",
-    category: "Home appliances",
+    category: "appliances",
     price: 1299,
     originalPrice: 1999,
     image: "/assets/generated/product-ac-unit.dim_400x400.jpg",
@@ -4890,7 +4682,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 550,
     name: "LG 28L Convection Microwave MC2846BG",
-    category: "Microwave oven",
+    category: "appliances",
     price: 14999,
     originalPrice: 21999,
     image: "/assets/generated/appliance-mixer-grinder.dim_400x400.jpg",
@@ -4903,7 +4695,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 551,
     name: "Samsung 28L Convection MW Oven",
-    category: "Microwave oven",
+    category: "appliances",
     price: 16999,
     originalPrice: 23999,
     image: "/assets/generated/appliance-mixer-grinder.dim_400x400.jpg",
@@ -4916,7 +4708,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 552,
     name: "Bajaj 17L Solo Microwave 1701MT",
-    category: "Microwave oven",
+    category: "appliances",
     price: 5999,
     originalPrice: 8999,
     image: "/assets/generated/appliance-mixer-grinder.dim_400x400.jpg",
@@ -4929,7 +4721,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 553,
     name: "IFB 30L Convection Microwave 30BRC2",
-    category: "Microwave oven",
+    category: "appliances",
     price: 18999,
     originalPrice: 27999,
     image: "/assets/generated/appliance-mixer-grinder.dim_400x400.jpg",
@@ -4942,7 +4734,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 554,
     name: "Panasonic 27L Convection Microwave",
-    category: "Microwave oven",
+    category: "appliances",
     price: 13999,
     originalPrice: 20999,
     image: "/assets/generated/appliance-mixer-grinder.dim_400x400.jpg",
@@ -4955,7 +4747,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 555,
     name: "Whirlpool 25L Magicook Solo Microwave",
-    category: "Microwave oven",
+    category: "appliances",
     price: 7999,
     originalPrice: 11999,
     image: "/assets/generated/appliance-mixer-grinder.dim_400x400.jpg",
@@ -4968,7 +4760,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 556,
     name: "Godrej 23L Grill Microwave GME 23GT1 MKM",
-    category: "Microwave oven",
+    category: "appliances",
     price: 9499,
     originalPrice: 13999,
     image: "/assets/generated/appliance-mixer-grinder.dim_400x400.jpg",
@@ -4981,7 +4773,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 557,
     name: "Electrolux 30L Convection Microwave",
-    category: "Microwave oven",
+    category: "appliances",
     price: 15999,
     originalPrice: 23000,
     image: "/assets/generated/appliance-mixer-grinder.dim_400x400.jpg",
@@ -4994,7 +4786,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 558,
     name: "Morphy Richards 25L Solo Microwave",
-    category: "Microwave oven",
+    category: "appliances",
     price: 6999,
     originalPrice: 10999,
     image: "/assets/generated/appliance-mixer-grinder.dim_400x400.jpg",
@@ -5007,7 +4799,7 @@ const BASE_PRODUCTS: SampleProduct[] = [
   {
     id: 559,
     name: "Bosch 20L Solo Microwave HMT75M421I",
-    category: "Microwave oven",
+    category: "appliances",
     price: 11999,
     originalPrice: 17999,
     image: "/assets/generated/appliance-mixer-grinder.dim_400x400.jpg",

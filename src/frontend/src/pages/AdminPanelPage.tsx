@@ -35,6 +35,7 @@ import { useProducts } from "@/context/ProductsContext";
 import { useStores } from "@/context/StoresContext";
 import type { SampleProduct } from "@/data/sampleData";
 import { CATEGORIES } from "@/data/sampleData";
+import { useActor } from "@/hooks/useActor";
 import { Link } from "@tanstack/react-router";
 import {
   AlertTriangle,
@@ -2607,9 +2608,32 @@ function PaymentSection() {
 
 // ─── 6. Marketing ─────────────────────────────────────────────────────────────
 function MarketingSection() {
+  const { actor } = useActor();
+  const couponsBackendLoaded = useRef(false);
   const [coupons, setCoupons] = useState<CouponData[]>(() =>
     loadLS("dharma_admin_coupons", DEFAULT_COUPONS),
   );
+
+  useEffect(() => {
+    if (!actor || couponsBackendLoaded.current) return;
+    couponsBackendLoaded.current = true;
+    (actor as any)
+      .getCouponsSnapshot()
+      .then((snapshot: string) => {
+        if (snapshot && snapshot.length > 0) {
+          try {
+            const parsed = JSON.parse(snapshot);
+            if (Array.isArray(parsed) && parsed.length > 0) {
+              setCoupons(parsed);
+              saveLS("dharma_admin_coupons", parsed);
+            }
+          } catch {
+            /* ignore */
+          }
+        }
+      })
+      .catch(() => {});
+  }, [actor]);
   const [editCoupon, setEditCoupon] = useState<CouponData | null>(null);
   const [showCouponForm, setShowCouponForm] = useState(false);
   const [couponForm, setCouponForm] = useState<Partial<CouponData>>({});
@@ -2666,10 +2690,16 @@ function MarketingSection() {
       );
       setCoupons(updated);
       saveLS("dharma_admin_coupons", updated);
+      (actor as any)
+        .saveCouponsSnapshot(JSON.stringify(updated))
+        .catch(() => {});
     } else {
       const updated = [...coupons, couponForm as CouponData];
       setCoupons(updated);
       saveLS("dharma_admin_coupons", updated);
+      (actor as any)
+        .saveCouponsSnapshot(JSON.stringify(updated))
+        .catch(() => {});
     }
     setShowCouponForm(false);
     logActivity(
@@ -2681,6 +2711,7 @@ function MarketingSection() {
     const updated = coupons.filter((c) => c.code !== code);
     setCoupons(updated);
     saveLS("dharma_admin_coupons", updated);
+    (actor as any).saveCouponsSnapshot(JSON.stringify(updated)).catch(() => {});
     logActivity(`Coupon ${code} deleted`);
   };
 
